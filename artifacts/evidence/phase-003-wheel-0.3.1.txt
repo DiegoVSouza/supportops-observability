@@ -4,7 +4,7 @@ output=Successfully built artifacts\packages\supportops_obs-0.3.1-py3-none-any.w
 
 source_commit=e191f17d4649f40d6dea7057d3b52729dbbb1389
 artifact=artifacts/packages/supportops_obs-0.3.1-py3-none-any.whl
-sha256=82b3a79acd0ac4faa1082087c0237487264b2a6497d9b77b79c1d6bb86f66a8
+sha256=82b3a79aacd0ac4faa1082087c0237487264b2a6497d9b77b79c1d6bb86f66a8
 
 command=uv pip install --target artifacts/packages/.wheel-install-0.3.1 --no-deps artifacts/packages/supportops_obs-0.3.1-py3-none-any.whl
 exit_code=0

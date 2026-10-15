@@ -40,7 +40,7 @@
     "version": "0.3.1",
     "source_commit": "e191f17d4649f40d6dea7057d3b52729dbbb1389",
     "artifact": "artifacts/packages/supportops_obs-0.3.1-py3-none-any.whl",
-    "sha256": "82b3a79acd0ac4faa1082087c0237487264b2a6497d9b77b79c1d6bb86f66a8",
+    "sha256": "82b3a79aacd0ac4faa1082087c0237487264b2a6497d9b77b79c1d6bb86f66a8",
     "build_validation": "artifacts/evidence/phase-003-wheel-0.3.1.txt",
     "install_validation": "artifacts/evidence/phase-003-wheel-0.3.1.txt",
     "consumer_update_required": "P05 must update its local wheel pin and record this artifact SHA-256 before package integration."
