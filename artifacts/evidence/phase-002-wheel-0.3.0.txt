@@ -1,0 +1,15 @@
+command=uv build --wheel --offline --out-dir artifacts/packages
+exit_code=0
+output=Successfully built artifacts\packages\supportops_obs-0.3.0-py3-none-any.whl
+
+source_commit=58a7d8d11699a35caab6fed9ab63dde49cbfe054
+artifact=artifacts/packages/supportops_obs-0.3.0-py3-none-any.whl
+sha256=6592c8d2dd0892bdbbe9ed8f776e3ba28ea94c3e15e97c878545badc79455a16
+
+command=uv pip install --target artifacts/packages/.wheel-install-0.3.0 --no-deps artifacts/packages/supportops_obs-0.3.0-py3-none-any.whl
+exit_code=0
+command=uv run --locked python artifacts/evidence/wheel_consumer_smoke.py
+exit_code=0
+output=consumer_smoke=PASS version=0.3.0 exports=PASS
+
+The wheel is local-only and unpublished. P05 must update its local consumer pin before integration.

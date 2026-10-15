@@ -34,15 +34,16 @@
       "version_context": "Prometheus 3.14.0 image; promtool version is PENDING until executable is available"
     }
   },
-  "source_revision": "41af3f7eed8b6ee991e8d9d6d888037c386f7fcc",
+  "source_revision": "58a7d8d11699a35caab6fed9ab63dde49cbfe054",
   "built_package": {
     "name": "supportops-obs",
-    "version": "0.2.0",
-    "source_commit": "41af3f7eed8b6ee991e8d9d6d888037c386f7fcc",
-    "artifact": "artifacts/packages/supportops_obs-0.2.0-py3-none-any.whl",
-    "sha256": "531520844aa94ddbac121aec907533fe565ffceeff3e065d9f62eb9f87119257",
-    "build_validation": "artifacts/evidence/phase-002-wheel-build.txt",
-    "install_validation": "artifacts/evidence/phase-002-wheel-consumer.txt"
+    "version": "0.3.0",
+    "source_commit": "58a7d8d11699a35caab6fed9ab63dde49cbfe054",
+    "artifact": "artifacts/packages/supportops_obs-0.3.0-py3-none-any.whl",
+    "sha256": "6592c8d2dd0892bdbbe9ed8f776e3ba28ea94c3e15e97c878545badc79455a16",
+    "build_validation": "artifacts/evidence/phase-002-wheel-0.3.0.txt",
+    "install_validation": "artifacts/evidence/phase-002-wheel-0.3.0.txt",
+    "consumer_update_required": "P05 must update its local wheel pin and record this artifact SHA-256 before package integration."
   },
   "p01_artifact": "INCOMPLETE: no approved P01 wheel installed"
 }
