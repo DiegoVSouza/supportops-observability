@@ -16,6 +16,14 @@ failures = 0
 incomplete: list[str] = []
 
 
+def gate_status(failures: int, incomplete_gates: list[str]) -> tuple[str, int]:
+    if failures:
+        return "FAIL", 1
+    if incomplete_gates:
+        return "INCOMPLETE", 2
+    return "PASS", 0
+
+
 def record(command: str, code: int, output: str) -> None:
     lines.extend((f"$ {command}", f"exit_code={code}", output.rstrip() or "(no output)", ""))
 
@@ -66,20 +74,22 @@ def main() -> int:
     docker = shutil.which("docker")
     if docker:
         failures += int(run([docker, "compose", "-f", "stack/docker-compose.obs.yml", "config", "--quiet"], "docker compose config --quiet") != 0)
+        incomplete.append("dashboard and incident service E2E not executed by this structural gate")
     else:
         incomplete.append("Docker Compose validation: executable unavailable")
         record("docker compose config --quiet", 127, "INCOMPLETE: docker unavailable")
+        incomplete.append("dashboard and incident service E2E: Docker unavailable")
     if shutil.which("uv"):
         failures += int(run(["uv", "lock", "--check"], "uv lock --check") != 0)
     else:
         incomplete.append("lockfile consistency: uv unavailable")
         record("uv lock --check", 127, "INCOMPLETE: uv unavailable")
-    status = "PASS" if failures == 0 else "FAIL"
+    status, exit_code = gate_status(failures, incomplete)
     lines.append(f"result={status}; failures={failures}; incomplete={'; '.join(incomplete) if incomplete else 'none'}")
-    lines.append(f"outer_exit_code={1 if failures else 0}")
+    lines.append(f"outer_exit_code={exit_code}")
     EVIDENCE.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"check-full: {status}; failures={failures}; incomplete={len(incomplete)}")
-    return 1 if failures else 0
+    return exit_code
 
 
 if __name__ == "__main__":

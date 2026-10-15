@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+_________________ ERROR collecting tests/test_gate_status.py __________________
+ImportError while importing test module 'C:\estudo\Golpe\lab\projects\p03\tests\test_gate_status.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\dvsdi\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_gate_status.py:1: in <module>
+    from scripts.check_full import gate_status
+E   ImportError: cannot import name 'gate_status' from 'scripts.check_full' (C:\estudo\Golpe\lab\projects\p03\scripts\check_full.py)
+=========================== short test summary info ===========================
+ERROR tests/test_gate_status.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+exit_code=2

@@ -130,6 +130,36 @@ def test_setup_rejects_blank_service_name():
         inst.setup_telemetry("  ", otlp_endpoint=None)
 
 
+def test_setup_does_not_mutate_active_capture_configuration(monkeypatch):
+    monkeypatch.setattr(inst, "_provider", object())
+    monkeypatch.setattr(inst, "_capture_content", False)
+    inst.setup_telemetry("later-service", otlp_endpoint="http://ignored", capture_content=True)
+    assert inst._capture_content is False
+
+
+def test_provider_flush_and_shutdown_are_exposed(monkeypatch):
+    class Provider:
+        def __init__(self):
+            self.flushed = []
+            self.shutdowns = []
+
+        def force_flush(self, timeout_millis=30000):
+            self.flushed.append(timeout_millis)
+            return True
+
+        def shutdown(self):
+            self.shutdowns.append(True)
+
+    provider = Provider()
+    monkeypatch.setattr(inst, "_provider", provider)
+    monkeypatch.setattr(inst, "_provider_shutdown", False)
+    assert inst.flush_telemetry(timeout_millis=1234) is True
+    inst.shutdown_telemetry()
+    inst.shutdown_telemetry()
+    assert provider.flushed == [1234]
+    assert provider.shutdowns == [True]
+
+
 def test_async_tool_span_and_exception_status(monkeypatch):
     exporter = memory_tracer(monkeypatch)
 

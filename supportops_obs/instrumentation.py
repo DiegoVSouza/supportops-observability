@@ -6,6 +6,7 @@ import functools
 import inspect
 import logging
 import math
+import threading
 import time
 from dataclasses import dataclass
 from typing import Any, Callable, TypeVar
@@ -21,6 +22,8 @@ F = TypeVar("F", bound=Callable[..., Any])
 _tracer = trace.get_tracer("supportops_obs")
 _provider: TracerProvider | None = None
 _capture_content = False
+_provider_shutdown = False
+_provider_lock = threading.RLock()
 _registry = CollectorRegistry()
 llm_calls = Counter("supportops_llm_calls_total", "LLM calls", ["provider", "outcome"], registry=_registry)
 llm_tokens = Counter("supportops_llm_tokens_total", "LLM tokens", ["kind"], registry=_registry)
@@ -73,17 +76,41 @@ def _install_log_correlation() -> None:
 
 def setup_telemetry(service_name: str, *, otlp_endpoint: str | None, capture_content: bool = False) -> None:
     """Configure the process tracer. Repeated calls are safe and first call wins."""
-    global _provider, _capture_content
+    global _provider, _capture_content, _provider_shutdown
     if not service_name.strip():
         raise ValueError("service_name must not be blank")
-    _capture_content = bool(capture_content)
-    if _provider is not None:
-        return
-    _provider = TracerProvider(resource=Resource.create({"service.name": service_name}))
-    if otlp_endpoint:
-        _provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=otlp_endpoint, insecure=otlp_endpoint.startswith("http://"))))
-    trace.set_tracer_provider(_provider)
-    _install_log_correlation()
+    with _provider_lock:
+        if _provider is not None or _provider_shutdown:
+            return
+        provider = TracerProvider(resource=Resource.create({"service.name": service_name}))
+        if otlp_endpoint:
+            provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=otlp_endpoint, insecure=otlp_endpoint.startswith("http://"))))
+        trace.set_tracer_provider(provider)
+        _provider = provider
+        _capture_content = bool(capture_content)
+        _install_log_correlation()
+
+
+def flush_telemetry(*, timeout_millis: int = 30000) -> bool:
+    """Flush pending spans; return false when no live provider can flush them."""
+    if timeout_millis < 0:
+        raise ValueError("timeout_millis must be non-negative")
+    with _provider_lock:
+        if _provider is None:
+            return True
+        if _provider_shutdown:
+            return False
+        return bool(_provider.force_flush(timeout_millis=timeout_millis))
+
+
+def shutdown_telemetry() -> None:
+    """Flush and shut down the configured provider; repeated calls are safe."""
+    global _provider_shutdown
+    with _provider_lock:
+        if _provider is None or _provider_shutdown:
+            return
+        _provider.shutdown()
+        _provider_shutdown = True
 
 
 def _decorator(kind: str, name: str | None) -> Callable[[F], F]:

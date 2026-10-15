@@ -57,6 +57,8 @@ Use `traced_operation("http", "client.request")` for HTTP boundaries. Instrument
 
 Use `LoopDetector.observe(StepRecord(...))` at each runner step. It detects repeated tool plus normalized JSON arguments, repeating state cycles, and step-limit overrun. Call `reset()` between runs. Healthy varied paths do not trigger. `record_agent_execution` records steps and task outcome; `record_tool_retry` records retries.
 
+The first `setup_telemetry` call fixes the process provider and content-capture setting; later calls are ignored. Call `flush_telemetry()` before a controlled process exit to export pending spans, then call `shutdown_telemetry()` to release provider resources. Both functions are also available from the package root.
+
 ## Local stack
 
 ```powershell

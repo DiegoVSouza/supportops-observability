@@ -1,0 +1,8 @@
+command=python scripts/check_full.py
+exit_code=2
+rerun_command=python scripts/check_full.py
+rerun_exit_code=2
+final_command=python scripts/check_full.py
+final_exit_code=1
+post_lock_command=python scripts/check_full.py
+post_lock_exit_code=2

@@ -36,6 +36,8 @@ Use `setup_telemetry("nome-do-servico", otlp_endpoint="http://localhost:4317")`,
 
 `LoopDetector.observe(StepRecord(...))` reconhece repetição da mesma ferramenta e argumentos JSON, ciclo de estados e limite de passos. Chame `reset()` no início de cada execução. Caminhos variados não disparam alerta. `record_agent_execution` registra passos e resultado da tarefa; `record_tool_retry` registra retries.
 
+  A primeira chamada de `setup_telemetry` define o provider do processo e a configuração de captura de conteúdo; chamadas seguintes são ignoradas. Antes de encerrar o processo de forma controlada, use `flush_telemetry()` para exportar spans pendentes e `shutdown_telemetry()` para liberar os recursos do provider.
+
 As convenções GenAI do OTel continuam experimentais. O projeto usa APIs estáveis de traces e nomes próprios para custo/latência. Modelo e provedor aparecem em spans, não em labels de métricas, para limitar cardinalidade.
 
 ## Stack, dashboard e alertas

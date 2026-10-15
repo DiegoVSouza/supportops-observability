@@ -19,6 +19,21 @@
     "prometheus": {"image": "prom/prometheus:v3.14.0", "source": "https://github.com/prometheus/prometheus/releases"},
     "grafana": {"image": "grafana/grafana:12.4.11", "source": "https://hub.docker.com/r/grafana/grafana/tags"}
   },
+  "verification_sources": {
+    "accessed_at": "2026-10-15",
+    "otel_python_exporters": {
+      "url": "https://opentelemetry.io/docs/languages/python/exporters/",
+      "version_context": "opentelemetry-sdk 1.45.1; OTLP exporter 1.45.1"
+    },
+    "otel_trace_sdk_lifecycle": {
+      "url": "https://opentelemetry.io/docs/specs/otel/trace/sdk/",
+      "version_context": "OpenTelemetry Trace SDK; flush and shutdown lifecycle"
+    },
+    "prometheus_rule_validation": {
+      "url": "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/",
+      "version_context": "Prometheus 3.14.0 image; promtool version is PENDING until executable is available"
+    }
+  },
   "source_revision": "7d78bf63f42b03c510792773ad2c9915015120e9",
   "built_package": {
     "name": "supportops-obs",
