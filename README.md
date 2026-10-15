@@ -29,7 +29,7 @@ uv run python demo/runner_double.py
 uv run python scripts/check_full.py
 ```
 
-The demo runner is a local P01 contract double. It does not load P01 code from a sibling folder. P01 package integration is **INCOMPLETE** until a versioned package is built and installed, with version, source commit, and artifact SHA-256 recorded in `docs/harness/sources.lock.json`.
+The demo runner is a local P01 contract double. It does not load P01 code from a sibling folder. P01 0.1.1 has an approved local wheel and isolated consumer fixture; its version, source commit, artifact SHA-256, and consumer evidence are recorded in `docs/harness/sources.lock.json`. Framework-native runtime integration remains limited to the adapters documented in the comparison report.
 
 ## Instrument a service
 
