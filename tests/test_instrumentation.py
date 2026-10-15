@@ -1,0 +1,131 @@
+import logging
+from prometheus_client import generate_latest
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+import supportops_obs.instrumentation as inst
+from supportops_obs import LLMResponse, record_llm_call, traced_agent, traced_operation, traced_tool
+
+
+def memory_tracer(monkeypatch):
+    exporter = InMemorySpanExporter()
+    provider = TracerProvider(resource=Resource.create({"service.name": "tests"}))
+    provider.add_span_processor(SimpleSpanProcessor(exporter))
+    monkeypatch.setattr(inst, "_tracer", provider.get_tracer("tests"))
+    return exporter
+
+
+def test_nested_agent_tool_spans_and_error(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+
+    @traced_tool("lookup")
+    def lookup():
+        return "ok"
+
+    @traced_agent("triage")
+    def agent():
+        return lookup()
+
+    assert agent() == "ok"
+    spans = exporter.get_finished_spans()
+    by_name = {span.name: span for span in spans}
+    assert set(by_name) == {"agent.triage", "tool.lookup"}
+    assert by_name["tool.lookup"].parent.span_id == by_name["agent.triage"].context.span_id
+    assert by_name["tool.lookup"].context.trace_id == by_name["agent.triage"].context.trace_id
+    assert by_name["tool.lookup"].attributes["supportops.operation.kind"] == "tool"
+
+    @traced_tool("broken")
+    def broken():
+        raise RuntimeError("expected")
+
+    import pytest
+    with pytest.raises(RuntimeError):
+        broken()
+    assert exporter.get_finished_spans()[-1].status.status_code.name == "ERROR"
+
+
+def test_agent_tool_database_llm_tree_and_log_correlation(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    inst._install_log_correlation()
+    captured = {}
+
+    @traced_operation("database", "tickets.query")
+    def db():
+        captured["db_trace_id"] = logging.getLogger("supportops.demo.db").makeRecord("supportops.demo.db", logging.INFO, "", 1, "query", (), None).trace_id
+        return {"status": "open"}
+
+    @traced_tool("tickets.lookup")
+    def tool():
+        return db()
+
+    @traced_agent("support.triage")
+    def agent():
+        result = tool()
+        record_llm_call(LLMResponse("fake", "fixture-model", 2, 1, 0, 0.01))
+        return result
+
+    assert agent() == {"status": "open"}
+    spans = {span.name: span for span in exporter.get_finished_spans()}
+    root = spans["agent.support.triage"]
+    assert spans["tool.tickets.lookup"].parent.span_id == root.context.span_id
+    assert spans["database.tickets.query"].parent.span_id == spans["tool.tickets.lookup"].context.span_id
+    assert spans["gen_ai.inference"].parent.span_id == root.context.span_id
+    assert len({span.context.trace_id for span in spans.values()}) == 1
+    assert captured["db_trace_id"] == f"{root.context.trace_id:032x}"
+
+
+def test_log_filter_correlates_trace_and_span(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    inst._install_log_correlation()
+    logger = logging.getLogger("supportops.test.child")
+    captured = {}
+    with inst._tracer.start_as_current_span("parent"):
+        record = logger.makeRecord(logger.name, logging.INFO, "", 1, "hello", (), None)
+        captured.update(trace_id=record.trace_id, span_id=record.span_id)
+    span = exporter.get_finished_spans()[0]
+    assert captured == {"trace_id": f"{span.context.trace_id:032x}", "span_id": f"{span.context.span_id:016x}"}
+
+
+def test_llm_metrics_and_content_privacy(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    monkeypatch.setattr(inst, "_capture_content", False)
+    calls_before = inst.llm_calls.labels(provider="fake", outcome="success")._value.get()
+    tokens_before = inst.llm_tokens.labels(kind="output")._value.get()
+    record_llm_call(LLMResponse("fake", "fixture-model", 4, 6, 0.02, 0.4, content="PRIVATE PROMPT"))
+    span = exporter.get_finished_spans()[0]
+    assert "supportops.llm.content" not in span.attributes
+    assert span.attributes["gen_ai.usage.input_tokens"] == 4
+    payload = generate_latest(inst.metrics_registry()).decode()
+    assert inst.llm_calls.labels(provider="fake", outcome="success")._value.get() == calls_before + 1
+    assert inst.llm_tokens.labels(kind="output")._value.get() == tokens_before + 6
+    assert 'supportops_llm_calls_total{outcome="success",provider="fake"}' in payload
+    assert "supportops_llm_cost_usd_total" in payload
+
+
+def test_content_capture_requires_opt_in(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    monkeypatch.setattr(inst, "_capture_content", True)
+    record_llm_call(LLMResponse("fake", "fixture", 1, 1, 0, 0, content="explicit test payload"))
+    assert exporter.get_finished_spans()[0].attributes["supportops.llm.content"] == "explicit test payload"
+
+
+def test_invalid_llm_measurements_fail_closed():
+    import pytest
+    with pytest.raises(ValueError):
+        record_llm_call(LLMResponse("fake", "fixture", -1, 0, 0, 0))
+    with pytest.raises(ValueError):
+        record_llm_call(LLMResponse("fake", "fixture", 0, 0, -0.01, 0))
+
+
+def test_setup_rejects_blank_service_name():
+    import pytest
+    with pytest.raises(ValueError):
+        inst.setup_telemetry("  ", otlp_endpoint=None)
+
+
+def test_failed_llm_call_records_error_outcome(monkeypatch):
+    memory_tracer(monkeypatch)
+    record_llm_call(LLMResponse("fake", "fixture", 0, 0, 0, 0, success=False))
+    assert 'outcome="error"' in generate_latest(inst.metrics_registry()).decode()

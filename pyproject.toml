@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "supportops-obs"
+version = "0.1.0"
+description = "Privacy-conscious observability primitives for agent workflows"
+requires-python = ">=3.11"
+dependencies = [
+  "opentelemetry-api==1.45.1",
+  "opentelemetry-sdk==1.45.1",
+  "opentelemetry-exporter-otlp-proto-grpc==1.45.1",
+  "prometheus-client==0.26.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.2", "PyYAML==6.0.3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.hatch.build.targets.wheel]
+packages = ["supportops_obs"]
