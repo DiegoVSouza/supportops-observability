@@ -1,0 +1,4 @@
+command=uv run --locked python scripts/check_full.py
+reported_exit_code=1
+stdout=check-full: INCOMPLETE; failures=0; incomplete=2
+note=The check is nonzero and INCOMPLETE. Earlier evidence records exit_code=2 from a prior wrapper; this direct invocation returned 1.

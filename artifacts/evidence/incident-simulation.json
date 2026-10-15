@@ -24,62 +24,62 @@
         "supportops.simulated.duration_ms": 8200
       },
       "name": "tool.lookup",
-      "parent_span_id": "33917d8bf0f124a8",
-      "trace_id": "6d2b54c3c0319346403aba9f67a839fd"
+      "parent_span_id": "d8e4aa2b4f8e4b28",
+      "trace_id": "c1fb3b2b3d3c75d9e1c81e7774df354c"
     },
     {
       "attributes": {},
       "name": "agent.slow_tool",
       "parent_span_id": null,
-      "trace_id": "6d2b54c3c0319346403aba9f67a839fd"
+      "trace_id": "c1fb3b2b3d3c75d9e1c81e7774df354c"
     },
     {
       "attributes": {
         "supportops.simulated.step": 1
       },
       "name": "tool.search",
-      "parent_span_id": "3c615a53be120b9b",
-      "trace_id": "164660493e9d1c233762c4db2de369b9"
+      "parent_span_id": "e36e537ce083073b",
+      "trace_id": "614e5ca5d64d9915016bf2a94153ef06"
     },
     {
       "attributes": {
         "supportops.simulated.step": 2
       },
       "name": "tool.search",
-      "parent_span_id": "3c615a53be120b9b",
-      "trace_id": "164660493e9d1c233762c4db2de369b9"
+      "parent_span_id": "e36e537ce083073b",
+      "trace_id": "614e5ca5d64d9915016bf2a94153ef06"
     },
     {
       "attributes": {
         "supportops.simulated.step": 3
       },
       "name": "tool.search",
-      "parent_span_id": "3c615a53be120b9b",
-      "trace_id": "164660493e9d1c233762c4db2de369b9"
+      "parent_span_id": "e36e537ce083073b",
+      "trace_id": "614e5ca5d64d9915016bf2a94153ef06"
     },
     {
       "attributes": {
         "supportops.simulated.step": 4
       },
       "name": "tool.search",
-      "parent_span_id": "3c615a53be120b9b",
-      "trace_id": "164660493e9d1c233762c4db2de369b9"
+      "parent_span_id": "e36e537ce083073b",
+      "trace_id": "614e5ca5d64d9915016bf2a94153ef06"
     },
     {
       "attributes": {
         "supportops.simulated.step": 5
       },
       "name": "tool.search",
-      "parent_span_id": "3c615a53be120b9b",
-      "trace_id": "164660493e9d1c233762c4db2de369b9"
+      "parent_span_id": "e36e537ce083073b",
+      "trace_id": "614e5ca5d64d9915016bf2a94153ef06"
     },
     {
       "attributes": {
         "supportops.simulated.step": 6
       },
       "name": "tool.search",
-      "parent_span_id": "3c615a53be120b9b",
-      "trace_id": "164660493e9d1c233762c4db2de369b9"
+      "parent_span_id": "e36e537ce083073b",
+      "trace_id": "614e5ca5d64d9915016bf2a94153ef06"
     },
     {
       "attributes": {
@@ -88,7 +88,7 @@
       },
       "name": "agent.loop",
       "parent_span_id": null,
-      "trace_id": "164660493e9d1c233762c4db2de369b9"
+      "trace_id": "614e5ca5d64d9915016bf2a94153ef06"
     },
     {
       "attributes": {
@@ -101,14 +101,14 @@
         "supportops.llm.success": true
       },
       "name": "llm.inference",
-      "parent_span_id": "67dd7def8d737331",
-      "trace_id": "fe16609b878ae91e6964e92344aff4f0"
+      "parent_span_id": "8e85006b85fe10bf",
+      "trace_id": "1766c55a800bc58821f0ac0885b2a7c2"
     },
     {
       "attributes": {},
       "name": "agent.cost_spike",
       "parent_span_id": null,
-      "trace_id": "fe16609b878ae91e6964e92344aff4f0"
+      "trace_id": "1766c55a800bc58821f0ac0885b2a7c2"
     }
   ]
 }

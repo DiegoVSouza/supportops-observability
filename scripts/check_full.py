@@ -65,6 +65,7 @@ def main() -> int:
     record(f"{sys.executable} -m pytest tests", result.returncode, result.stdout + result.stderr)
     failures += int(result.returncode != 0)
     failures += int(run([sys.executable, "demo/runner_double.py", "--once"], "LLM_MODE=fake python demo/runner_double.py --once") != 0)
+    failures += int(run([sys.executable, "demo/integrated_trace.py"], "python demo/integrated_trace.py (synthetic local exporter)") != 0)
     failures += int(run([sys.executable, "incident-lab/simulate.py"], "python incident-lab/simulate.py") != 0)
     if shutil.which("promtool"):
         failures += int(run(["promtool", "check", "rules", "alerts/observability.yml"], "promtool check rules alerts/observability.yml") != 0)

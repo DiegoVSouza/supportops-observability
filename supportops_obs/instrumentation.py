@@ -32,6 +32,9 @@ llm_latency = Histogram("supportops_llm_latency_seconds", "LLM latency in second
 task_steps = Histogram("supportops_agent_steps", "Steps per agent execution", ["outcome"], registry=_registry)
 tool_retries = Counter("supportops_tool_retries_total", "Tool retries", ["tool"], registry=_registry)
 task_success = Counter("supportops_tasks_total", "Completed agent tasks", ["outcome"], registry=_registry)
+task_type_success = Counter("supportops_tasks_by_type_total", "Completed tasks by bounded task type and outcome", ["task_type", "outcome"], registry=_registry)
+task_cost = Histogram("supportops_task_cost_usd", "Caller-reported cost per task/request in USD", ["task_type"], registry=_registry)
+tool_retries_by_type = Counter("supportops_tool_retries_by_task_type_total", "Tool retries by bounded task type", ["tool", "task_type"], registry=_registry)
 loop_signals = Counter("supportops_agent_loop_signals_total", "Detected agent loop signals", ["reason"], registry=_registry)
 operation_calls = Counter("supportops_operation_calls_total", "Instrumented operation calls", ["kind", "outcome"], registry=_registry)
 operation_latency = Histogram("supportops_operation_latency_seconds", "Agent/tool/database/HTTP operation latency", ["kind", "outcome"], registry=_registry)
@@ -202,16 +205,21 @@ def metrics_registry() -> CollectorRegistry:
     return _registry
 
 
-def record_agent_execution(*, steps: int, success: bool) -> None:
-    if steps < 0:
-        raise ValueError("steps must be non-negative")
+def record_agent_execution(*, steps: int, success: bool, task_type: str = "other", cost_usd: float = 0.0) -> None:
+    if steps < 0 or not math.isfinite(cost_usd) or cost_usd < 0:
+        raise ValueError("steps and cost_usd must be non-negative and cost_usd finite")
+    task_type = task_type if task_type in {"billing", "refund", "technical", "other"} else "other"
     outcome = "success" if success else "error"
     task_steps.labels(outcome=outcome).observe(steps)
     task_success.labels(outcome=outcome).inc()
+    task_type_success.labels(task_type=task_type, outcome=outcome).inc()
+    task_cost.labels(task_type=task_type).observe(cost_usd)
 
 
-def record_tool_retry(tool: str) -> None:
+def record_tool_retry(tool: str, *, task_type: str = "other") -> None:
+    task_type = task_type if task_type in {"billing", "refund", "technical", "other"} else "other"
     tool_retries.labels(tool=tool or "unknown").inc()
+    tool_retries_by_type.labels(tool=tool or "unknown", task_type=task_type).inc()
 
 
 def record_loop_signal(reason: str) -> None:

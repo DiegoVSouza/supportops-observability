@@ -38,6 +38,8 @@ Use `setup_telemetry("nome-do-servico", otlp_endpoint="http://localhost:4317")`,
 
   A primeira chamada de `setup_telemetry` define o provider do processo e a configuração de captura de conteúdo; chamadas seguintes são ignoradas. Antes de encerrar o processo de forma controlada, use `flush_telemetry()` para exportar spans pendentes e `shutdown_telemetry()` para liberar os recursos do provider.
 
+  Execute `python demo/integrated_trace.py` para gerar um trace sintético e determinístico com doubles locais de API, fila, worker, agente, LLM fake, ferramenta e banco. O arquivo `artifacts/evidence/integrated-trace-synthetic.json` valida a árvore e a correlação dos spans, sem exercitar serviços de rede. As métricas Prometheus incluem resultado por tipo de tarefa e custo informado por tarefa.
+
 As convenções GenAI do OTel continuam experimentais. O projeto usa APIs estáveis de traces e nomes próprios para custo/latência. Modelo e provedor aparecem em spans, não em labels de métricas, para limitar cardinalidade.
 
 ## Stack, dashboard e alertas

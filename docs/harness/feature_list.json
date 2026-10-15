@@ -7,6 +7,9 @@
     {"id": "promtool-rules", "description": "Prometheus rule validation with promtool", "status": "INCOMPLETE", "evidence": "artifacts/evidence/check-full.txt"},
     {"id": "dashboard-service-e2e", "description": "Provisioned dashboard and incident scenarios exercised against local services", "status": "INCOMPLETE", "evidence": "artifacts/evidence/check-full.txt"},
     {"id": "production-metrics", "description": "Production traces, cost, latency, and model-quality measurements", "status": "PENDING", "evidence": "No authorized production run"},
-    {"id": "p01-runner-integration", "description": "Integration with an approved P01 package artifact", "status": "INCOMPLETE", "evidence": "No approved P01 wheel installed"}
+    {"id": "p01-runner-integration", "description": "Integration with an approved P01 package artifact", "status": "INCOMPLETE", "evidence": "No approved P01 wheel installed"},
+    {"id": "synthetic-integrated-trace", "description": "Deterministic correlated in-memory trace across local API/queue/worker/agent/fake-LLM/tool/database doubles", "status": "PASS", "evidence": "artifacts/evidence/integrated-trace-synthetic.json; tests/test_integrated_trace.py"},
+    {"id": "task-type-and-cost-metrics", "description": "Bounded task-type outcomes, per-task cost, retries and error metrics", "status": "PASS", "evidence": "tests/test_integrated_trace.py; metrics/README.md"},
+    {"id": "service-integrated-trace", "description": "Network API, durable broker/worker and database service trace", "status": "INCOMPLETE", "evidence": "Docker daemon unavailable; local function doubles only"}
   ]
 }

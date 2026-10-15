@@ -59,6 +59,8 @@ Use `LoopDetector.observe(StepRecord(...))` at each runner step. It detects repe
 
 The first `setup_telemetry` call fixes the process provider and content-capture setting; later calls are ignored. Call `flush_telemetry()` before a controlled process exit to export pending spans, then call `shutdown_telemetry()` to release provider resources. Both functions are also available from the package root.
 
+Run `python demo/integrated_trace.py` for the deterministic synthetic trace through local API, queue, worker, agent, fake LLM, tool, and database function doubles. It writes `artifacts/evidence/integrated-trace-synthetic.json`. This validates span topology and correlation only; it does not exercise network services. Task-type outcomes and per-task cost are available as bounded-cardinality Prometheus metrics.
+
 ## Local stack
 
 ```powershell
