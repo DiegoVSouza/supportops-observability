@@ -1,0 +1,1 @@
+{"scenario":"tool_slow","llm_mode":"fake","steps":[{"name":"agent.triage","duration_ms":40,"trace_id":"synthetic-tool-slow"},{"name":"tool.lookup","duration_ms":8200,"trace_id":"synthetic-tool-slow"},{"name":"db.query","duration_ms":12,"trace_id":"synthetic-tool-slow"}],"expected_cause":"tool.lookup dominates latency","evidence_status":"synthetic fixture; real trace PENDING"}

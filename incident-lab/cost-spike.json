@@ -1,0 +1,1 @@
+{"scenario":"cost_spike","llm_mode":"fake","calls":[{"model":"fixture-large","input_tokens":100000,"output_tokens":20000,"cost_usd":8.75,"latency_seconds":2.1}],"expected_cause":"cost counter exceeds configured alert threshold","evidence_status":"synthetic fixture; real trace PENDING"}

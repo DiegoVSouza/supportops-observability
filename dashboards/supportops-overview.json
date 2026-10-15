@@ -1,0 +1,18 @@
+{
+  "id": null,
+  "uid": "supportops-observability",
+  "title": "SupportOps Agent Observability",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {"id": 1, "type": "timeseries", "title": "LLM calls per second", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}, "targets": [{"expr": "sum by (outcome) (rate(supportops_llm_calls_total[5m]))", "legendFormat": "{{outcome}}"}]},
+    {"id": 2, "type": "timeseries", "title": "LLM p95 latency", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}, "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(supportops_llm_latency_seconds_bucket[5m])))", "legendFormat": "p95"}]},
+    {"id": 3, "type": "timeseries", "title": "Cumulative LLM cost (USD)", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}, "targets": [{"expr": "supportops_llm_cost_usd_total", "legendFormat": "USD"}]},
+    {"id": 4, "type": "timeseries", "title": "Detected agent loops", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}, "targets": [{"expr": "increase(supportops_agent_loop_signals_total[5m])", "legendFormat": "{{reason}}"}]},
+    {"id": 5, "type": "timeseries", "title": "LLM p50 latency", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}, "targets": [{"expr": "histogram_quantile(0.50, sum by (le) (rate(supportops_llm_latency_seconds_bucket[5m])))", "legendFormat": "p50"}]}
+  ],
+  "annotations": {"list": []},
+  "time": {"from": "now-1h", "to": "now"},
+  "templating": {"list": []}
+}

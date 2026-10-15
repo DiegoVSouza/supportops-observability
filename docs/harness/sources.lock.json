@@ -1,0 +1,32 @@
+{
+  "locked_at": "2026-10-15",
+  "python": "3.13.12 local validation; package requires >=3.11",
+  "dependencies": {
+    "opentelemetry-api": {"version": "1.45.1", "source": "https://pypi.org/project/opentelemetry-api/", "official_docs": "https://opentelemetry.io/docs/languages/python/instrumentation/", "evidence": "stable Python trace/metrics APIs; use only stable APIs"},
+    "opentelemetry-sdk": {"version": "1.45.1", "source": "https://pypi.org/project/opentelemetry-sdk/", "official_docs": "https://opentelemetry.io/docs/languages/python/", "evidence": "traces and metrics stable; logs development"},
+    "opentelemetry-exporter-otlp-proto-grpc": {"version": "1.45.1", "source": "https://pypi.org/project/opentelemetry-exporter-otlp-proto-grpc/", "official_docs": "https://opentelemetry.io/docs/languages/python/exporters/", "evidence": "version aligned with OTel SDK/API"},
+    "prometheus-client": {"version": "0.26.0", "source": "https://pypi.org/project/prometheus-client/", "official_docs": "https://prometheus.github.io/client_python/instrumenting/histogram/", "evidence": "official histogram client and bucket behavior"},
+    "pytest": {"version": "8.4.2", "source": "https://pypi.org/project/pytest/", "purpose": "unit and deterministic integration tests"},
+    "PyYAML": {"version": "6.0.3", "source": "https://pypi.org/project/PyYAML/", "purpose": "configuration structure validation"}
+  },
+  "conventions": {
+    "gen_ai": {"status": "Development; separate official repository has no packaged releases as of 2026-10-15", "official_docs": "https://github.com/open-telemetry/semantic-conventions-genai", "release_source": "https://github.com/open-telemetry/semantic-conventions-genai/releases", "implementation": "not consumed; package uses supportops.* attributes to avoid assuming experimental convention stability"},
+    "python_logs": {"status": "development", "official_docs": "https://opentelemetry.io/docs/languages/python/", "implementation": "stdlib logging LogRecord enrichment; no OTel Logs SDK dependency"}
+  },
+  "stack_images": {
+    "collector": {"image": "otel/opentelemetry-collector-contrib:0.161.0", "source": "https://github.com/open-telemetry/opentelemetry-collector-releases/releases"},
+    "jaeger": {"image": "jaegertracing/jaeger:2.18.0", "source": "https://hub.docker.com/r/jaegertracing/jaeger/tags"},
+    "prometheus": {"image": "prom/prometheus:v3.14.0", "source": "https://github.com/prometheus/prometheus/releases"},
+    "grafana": {"image": "grafana/grafana:12.4.11", "source": "https://hub.docker.com/r/grafana/grafana/tags"}
+  },
+  "source_revision": "7d78bf63f42b03c510792773ad2c9915015120e9",
+  "built_package": {
+    "name": "supportops-obs",
+    "version": "0.1.0",
+    "source_commit": "7d78bf63f42b03c510792773ad2c9915015120e9",
+    "artifact": "artifacts/packages/supportops_obs-0.1.0-py3-none-any.whl",
+    "sha256": "e4e80cd664c97cf38b8fbe5557f10d4c8d247af275412569fb6a1bcbc0f11575",
+    "install_validation": "artifacts/evidence/package-build.md"
+  },
+  "p01_artifact": "INCOMPLETE: no approved P01 wheel installed"
+}

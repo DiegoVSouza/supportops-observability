@@ -1,0 +1,51 @@
+$ parse YAML stack\docker-compose.obs.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\dashboards\provider.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\datasources\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML alerts\observability.yml
+exit_code=0
+valid YAML
+
+$ validate JSON artifacts
+exit_code=0
+dashboard, source lock and incident fixtures valid
+
+$ C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests
+exit_code=0
+.....................                                                    [100%]
+21 passed in 0.45s
+
+$ LLM_MODE=fake python demo/runner_double.py --once
+exit_code=0
+LLM_MODE=fake; metrics=http://localhost:8000; P01 integration=INCOMPLETE (local contract double); result={'ticket_id': 'T-DEMO', 'status': 'open', 'classification': 'billing_question'}
+
+$ python incident-lab/simulate.py
+exit_code=0
+simulated_incidents=3 spans=11 output=artifacts\evidence\incident-simulation.json real_incident_traces=PENDING
+
+$ promtool check rules alerts/observability.yml
+exit_code=127
+INCOMPLETE: promtool unavailable
+
+$ docker compose config --quiet
+exit_code=0
+(no output)
+
+$ uv lock --check
+exit_code=0
+Resolved 20 packages in 0.61ms
+
+result=PASS; failures=0; incomplete=promtool rule validation: executable unavailable
+outer_exit_code=0

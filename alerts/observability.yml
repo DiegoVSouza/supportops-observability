@@ -1,0 +1,29 @@
+groups:
+  - name: supportops-observability
+    rules:
+      - alert: AgentLoopDetected
+        expr: increase(supportops_agent_loop_signals_total[5m]) > 0
+        for: 0m
+        labels: { severity: warning }
+        annotations:
+          summary: Agent loop detector signaled a repeated action or state cycle
+          runbook: incident-lab/loop-agent.md
+      - alert: LLMCostAnomaly
+        expr: increase(supportops_llm_cost_usd_total[15m]) > 5
+        for: 2m
+        labels: { severity: warning }
+        annotations:
+          summary: LLM spend exceeded the local configured threshold
+          runbook: incident-lab/cost-spike.md
+      - alert: AgentErrorRateHigh
+        expr: sum(rate(supportops_llm_calls_total{outcome="error"}[5m])) / clamp_min(sum(rate(supportops_llm_calls_total[5m])), 0.001) > 0.1
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: LLM call error rate exceeds 10 percent
+      - alert: LLMp95LatencyHigh
+        expr: histogram_quantile(0.95, sum by (le) (rate(supportops_llm_latency_seconds_bucket[5m]))) > 5
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: LLM p95 latency exceeds five seconds

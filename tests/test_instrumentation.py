@@ -7,7 +7,7 @@ from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 
 import supportops_obs.instrumentation as inst
-from supportops_obs import LLMResponse, record_llm_call, traced_agent, traced_operation, traced_tool
+from supportops_obs import LLMResponse, record_agent_execution, record_llm_call, record_tool_retry, traced_agent, traced_operation, traced_tool
 
 
 def memory_tracer(monkeypatch):
@@ -145,3 +145,14 @@ def test_failed_llm_call_records_error_outcome(monkeypatch):
     memory_tracer(monkeypatch)
     record_llm_call(LLMResponse("fake", "fixture", 0, 0, 0, 0, success=False))
     assert 'outcome="error"' in generate_latest(inst.metrics_registry()).decode()
+
+
+def test_task_steps_success_and_tool_retries_are_recorded():
+    task_before = inst.task_success.labels(outcome="success")._value.get()
+    retry_before = inst.tool_retries.labels(tool="ticket.lookup")._value.get()
+    step_sum_before = inst.task_steps.labels(outcome="success")._sum.get()
+    record_agent_execution(steps=3, success=True)
+    record_tool_retry("ticket.lookup")
+    assert inst.task_success.labels(outcome="success")._value.get() == task_before + 1
+    assert inst.task_steps.labels(outcome="success")._sum.get() == step_sum_before + 3
+    assert inst.tool_retries.labels(tool="ticket.lookup")._value.get() == retry_before + 1
