@@ -5,6 +5,7 @@ from __future__ import annotations
 import functools
 import inspect
 import logging
+import math
 import time
 from dataclasses import dataclass
 from typing import Any, Callable, TypeVar
@@ -145,19 +146,21 @@ def traced_operation(kind: str, name: str | None = None) -> Callable[[F], F]:
 
 def record_llm_call(resp: LLMResponse) -> None:
     """Record bounded-cardinality measurements; content is opt-in."""
-    if min(resp.input_tokens, resp.output_tokens) < 0 or resp.cost_usd < 0 or resp.latency_seconds < 0:
-        raise ValueError("token counts, cost, and latency must be non-negative")
+    if any(not isinstance(token, int) or isinstance(token, bool) or token < 0 for token in (resp.input_tokens, resp.output_tokens)):
+        raise ValueError("token counts must be non-negative integers")
+    if any(not math.isfinite(value) or value < 0 for value in (resp.cost_usd, resp.latency_seconds)):
+        raise ValueError("cost and latency must be finite and non-negative")
     outcome = "success" if resp.success else "error"
     llm_calls.labels(provider=resp.provider or "unknown", outcome=outcome).inc()
     llm_tokens.labels(kind="input").inc(resp.input_tokens)
     llm_tokens.labels(kind="output").inc(resp.output_tokens)
     llm_cost.inc(resp.cost_usd)
     llm_latency.observe(resp.latency_seconds)
-    with _tracer.start_as_current_span("gen_ai.inference") as span:
+    with _tracer.start_as_current_span("llm.inference") as span:
         span.set_attribute("supportops.llm.provider", resp.provider or "unknown")
         span.set_attribute("supportops.llm.model", resp.model or "unknown")
-        span.set_attribute("gen_ai.usage.input_tokens", resp.input_tokens)
-        span.set_attribute("gen_ai.usage.output_tokens", resp.output_tokens)
+        span.set_attribute("supportops.llm.input_tokens", resp.input_tokens)
+        span.set_attribute("supportops.llm.output_tokens", resp.output_tokens)
         span.set_attribute("supportops.llm.cost_usd", resp.cost_usd)
         span.set_attribute("supportops.llm.latency_seconds", resp.latency_seconds)
         span.set_attribute("supportops.llm.success", resp.success)

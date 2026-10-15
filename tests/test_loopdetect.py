@@ -51,3 +51,10 @@ def test_invalid_limits_rejected(kwargs):
 def test_negative_step_number_rejected():
     with pytest.raises(ValueError):
         LoopDetector().observe(StepRecord(step_number=-1))
+
+
+def test_non_json_tool_arguments_rejected_without_consuming_step():
+    detector = LoopDetector(max_steps=1)
+    with pytest.raises(ValueError):
+        detector.observe(StepRecord(tool="search", arguments={"unsupported": object()}))
+    assert not detector.observe(StepRecord(state="healthy")).detected

@@ -42,7 +42,7 @@ class LoopDetector:
     def observe(self, step: StepRecord) -> LoopSignal:
         if step.step_number < 0:
             raise ValueError("step_number must be non-negative")
-        self._count += 1
+        action: str | None = None
         if step.tool is not None:
             try:
                 normalized = json.dumps(step.arguments, sort_keys=True, separators=(",", ":"))
@@ -50,6 +50,8 @@ class LoopDetector:
                 raise ValueError("tool arguments must be JSON-serializable") from exc
             digest = hashlib.sha256(normalized.encode()).hexdigest()
             action = f"{step.tool}:{digest}"
+        self._count += 1
+        if action is not None:
             self._actions.append(action)
             if len(self._actions) >= self.repeat_threshold and len(set(list(self._actions)[-self.repeat_threshold:])) == 1:
                 return self._signal("repeated_tool_arguments", self.repeat_threshold)

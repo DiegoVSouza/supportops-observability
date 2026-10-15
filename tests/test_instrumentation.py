@@ -1,4 +1,5 @@
 import logging
+import asyncio
 from prometheus_client import generate_latest
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -71,7 +72,7 @@ def test_agent_tool_database_llm_tree_and_log_correlation(monkeypatch):
     root = spans["agent.support.triage"]
     assert spans["tool.tickets.lookup"].parent.span_id == root.context.span_id
     assert spans["database.tickets.query"].parent.span_id == spans["tool.tickets.lookup"].context.span_id
-    assert spans["gen_ai.inference"].parent.span_id == root.context.span_id
+    assert spans["llm.inference"].parent.span_id == root.context.span_id
     assert len({span.context.trace_id for span in spans.values()}) == 1
     assert captured["db_trace_id"] == f"{root.context.trace_id:032x}"
 
@@ -96,7 +97,7 @@ def test_llm_metrics_and_content_privacy(monkeypatch):
     record_llm_call(LLMResponse("fake", "fixture-model", 4, 6, 0.02, 0.4, content="PRIVATE PROMPT"))
     span = exporter.get_finished_spans()[0]
     assert "supportops.llm.content" not in span.attributes
-    assert span.attributes["gen_ai.usage.input_tokens"] == 4
+    assert span.attributes["supportops.llm.input_tokens"] == 4
     payload = generate_latest(inst.metrics_registry()).decode()
     assert inst.llm_calls.labels(provider="fake", outcome="success")._value.get() == calls_before + 1
     assert inst.llm_tokens.labels(kind="output")._value.get() == tokens_before + 6
@@ -117,12 +118,27 @@ def test_invalid_llm_measurements_fail_closed():
         record_llm_call(LLMResponse("fake", "fixture", -1, 0, 0, 0))
     with pytest.raises(ValueError):
         record_llm_call(LLMResponse("fake", "fixture", 0, 0, -0.01, 0))
+    with pytest.raises(ValueError):
+        record_llm_call(LLMResponse("fake", "fixture", 1, 0, float("nan"), 0))
+    with pytest.raises(ValueError):
+        record_llm_call(LLMResponse("fake", "fixture", 1.5, 0, 0, 0))
 
 
 def test_setup_rejects_blank_service_name():
     import pytest
     with pytest.raises(ValueError):
         inst.setup_telemetry("  ", otlp_endpoint=None)
+
+
+def test_async_tool_span_and_exception_status(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+
+    @traced_tool("async.lookup")
+    async def lookup():
+        return "ok"
+
+    assert asyncio.run(lookup()) == "ok"
+    assert exporter.get_finished_spans()[0].name == "tool.async.lookup"
 
 
 def test_failed_llm_call_records_error_outcome(monkeypatch):
