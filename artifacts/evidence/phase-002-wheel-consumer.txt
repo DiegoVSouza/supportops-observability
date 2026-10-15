@@ -1,0 +1,13 @@
+Using CPython 3.13.12 interpreter at: .venv\Scripts\python.exe
+Resolved 1 package in 7ms
+Prepared 1 package in 13ms
+Installed 1 package in 8ms
+ + supportops-obs==0.2.0 (from file:///C:/estudo/Golpe/lab/projects/p03/artifacts/packages/supportops_obs-0.2.0-py3-none-any.whl)
+  File "<string>", line 1
+    import importlib.metadata as m, supportops_obs; print(m.version(\
+                                                                   ^
+SyntaxError: '(' was never closed
+consumer_test_exit_code=1
+0.2.0
+True True
+consumer_test_exit_code=0

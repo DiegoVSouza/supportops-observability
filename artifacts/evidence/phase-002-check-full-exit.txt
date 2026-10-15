@@ -6,3 +6,5 @@ final_command=python scripts/check_full.py
 final_exit_code=1
 post_lock_command=python scripts/check_full.py
 post_lock_exit_code=2
+post_package_metadata_command=python scripts/check_full.py
+post_package_metadata_exit_code=2

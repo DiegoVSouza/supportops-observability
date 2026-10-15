@@ -34,14 +34,15 @@
       "version_context": "Prometheus 3.14.0 image; promtool version is PENDING until executable is available"
     }
   },
-  "source_revision": "7d78bf63f42b03c510792773ad2c9915015120e9",
+  "source_revision": "41af3f7eed8b6ee991e8d9d6d888037c386f7fcc",
   "built_package": {
     "name": "supportops-obs",
-    "version": "0.1.0",
-    "source_commit": "7d78bf63f42b03c510792773ad2c9915015120e9",
-    "artifact": "artifacts/packages/supportops_obs-0.1.0-py3-none-any.whl",
-    "sha256": "e4e80cd664c97cf38b8fbe5557f10d4c8d247af275412569fb6a1bcbc0f11575",
-    "install_validation": "artifacts/evidence/package-build.md"
+    "version": "0.2.0",
+    "source_commit": "41af3f7eed8b6ee991e8d9d6d888037c386f7fcc",
+    "artifact": "artifacts/packages/supportops_obs-0.2.0-py3-none-any.whl",
+    "sha256": "531520844aa94ddbac121aec907533fe565ffceeff3e065d9f62eb9f87119257",
+    "build_validation": "artifacts/evidence/phase-002-wheel-build.txt",
+    "install_validation": "artifacts/evidence/phase-002-wheel-consumer.txt"
   },
   "p01_artifact": "INCOMPLETE: no approved P01 wheel installed"
 }

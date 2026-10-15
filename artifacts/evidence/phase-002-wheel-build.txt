@@ -1,0 +1,4 @@
+Building wheel...
+Successfully built artifacts\packages\supportops_obs-0.2.0-py3-none-any.whl
+command=uv build --wheel --offline --out-dir artifacts/packages
+exit_code=0
