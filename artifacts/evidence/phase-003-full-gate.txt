@@ -1,0 +1,5 @@
+command=uv run --locked python scripts/check_full.py
+reported_exit_code=1
+stdout=check-full: INCOMPLETE; failures=0; incomplete=2
+incomplete_gates=promtool unavailable; dashboard and incident service E2E not executed
+note=Direct invocation in this environment returned 1. Gate is correctly nonzero and classified INCOMPLETE.

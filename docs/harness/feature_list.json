@@ -10,6 +10,7 @@
     {"id": "p01-runner-integration", "description": "Integration with an approved P01 package artifact", "status": "INCOMPLETE", "evidence": "No approved P01 wheel installed"},
     {"id": "synthetic-integrated-trace", "description": "Deterministic correlated in-memory trace across local API/queue/worker/agent/fake-LLM/tool/database doubles", "status": "PASS", "evidence": "artifacts/evidence/integrated-trace-synthetic.json; tests/test_integrated_trace.py"},
     {"id": "task-type-and-cost-metrics", "description": "Bounded task-type outcomes, per-task cost, retries and error metrics", "status": "PASS", "evidence": "tests/test_integrated_trace.py; metrics/README.md"},
-    {"id": "service-integrated-trace", "description": "Network API, durable broker/worker and database service trace", "status": "INCOMPLETE", "evidence": "Docker daemon unavailable; local function doubles only"}
+    {"id": "service-integrated-trace", "description": "Network API, durable broker/worker and database service trace", "status": "INCOMPLETE", "evidence": "Docker daemon unavailable; local function doubles only"},
+    {"id": "non-recording-span-metrics", "description": "Database/HTTP operation metrics work when tracing is disabled or provider is non-recording", "status": "PASS", "evidence": "tests/test_instrumentation.py::test_operation_metrics_work_with_non_recording_span; artifacts/evidence/phase-003-nonrecording-green.txt"}
   ]
 }

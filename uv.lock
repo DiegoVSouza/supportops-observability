@@ -316,7 +316,7 @@ wheels = [
 
 [[package]]
 name = "supportops-obs"
-version = "0.3.0"
+version = "0.3.1"
 source = { editable = "." }
 dependencies = [
     { name = "opentelemetry-api" },

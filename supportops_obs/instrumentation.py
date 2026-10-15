@@ -125,17 +125,18 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
                 with _tracer.start_as_current_span(f"{kind}.{span_name}") as span:
                     span.set_attribute("supportops.operation.kind", kind)
                     started = time.perf_counter()
+                    outcome = "success"
                     try:
                         result = await fn(*args, **kwargs)
                         operation_calls.labels(kind=kind, outcome="success").inc()
                         return result
                     except Exception as exc:
+                        outcome = "error"
                         operation_calls.labels(kind=kind, outcome="error").inc()
                         span.record_exception(exc)
                         span.set_status(trace.Status(trace.StatusCode.ERROR))
                         raise
                     finally:
-                        outcome = "error" if span.status.status_code == trace.StatusCode.ERROR else "success"
                         operation_latency.labels(kind=kind, outcome=outcome).observe(time.perf_counter() - started)
             return async_wrapped  # type: ignore[return-value]
 
@@ -144,17 +145,18 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
             with _tracer.start_as_current_span(f"{kind}.{span_name}") as span:
                 span.set_attribute("supportops.operation.kind", kind)
                 started = time.perf_counter()
+                outcome = "success"
                 try:
                     result = fn(*args, **kwargs)
                     operation_calls.labels(kind=kind, outcome="success").inc()
                     return result
                 except Exception as exc:
+                    outcome = "error"
                     operation_calls.labels(kind=kind, outcome="error").inc()
                     span.record_exception(exc)
                     span.set_status(trace.Status(trace.StatusCode.ERROR))
                     raise
                 finally:
-                    outcome = "error" if span.status.status_code == trace.StatusCode.ERROR else "success"
                     operation_latency.labels(kind=kind, outcome=outcome).observe(time.perf_counter() - started)
         return wrapped  # type: ignore[return-value]
     return decorate

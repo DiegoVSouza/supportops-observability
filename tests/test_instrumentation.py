@@ -47,6 +47,20 @@ def test_nested_agent_tool_spans_and_error(monkeypatch):
     assert exporter.get_finished_spans()[-1].status.status_code.name == "ERROR"
 
 
+def test_operation_metrics_work_with_non_recording_span(monkeypatch):
+    from opentelemetry import trace
+
+    monkeypatch.setattr(inst, "_tracer", trace.NoOpTracerProvider().get_tracer("noop-test"))
+
+    @traced_operation("database", "tickets.add")
+    def add_ticket():
+        return "created"
+
+    before = inst.operation_calls.labels(kind="database", outcome="success")._value.get()
+    assert add_ticket() == "created"
+    assert inst.operation_calls.labels(kind="database", outcome="success")._value.get() == before + 1
+
+
 def test_agent_tool_database_llm_tree_and_log_correlation(monkeypatch):
     exporter = memory_tracer(monkeypatch)
     inst._install_log_correlation()

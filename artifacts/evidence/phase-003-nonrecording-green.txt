@@ -1,0 +1,3 @@
+command=uv run --locked pytest tests/test_instrumentation.py -q
+exit_code=0
+output=13 passed
