@@ -10,7 +10,10 @@ No external deployment/publication, no live LLM, no changes to other repositorie
 Docker CLI/daemon and image pull availability; existing P03 dependencies; official Prometheus v3.14.0 image already pinned; isolated project name and host ports.
 
 ## Observable tasks
-`n- 1. Run and save rule validation and alert tests. `n- 2. Run isolated stack and verify Prometheus/Grafana provisioning and alert data when feasible. `n- 3. Exercise fail-closed full gate and full checks. `n- 4. Reconcile feature/progress/agent/docs/matrix using only saved evidence.
+- Run and save Dockerized Prometheus rule validation and alert tests.
+- Run the isolated stack and verify Prometheus/Grafana provisioning and alert data when feasible.
+- Exercise full-gate fail-closed behavior and run local checks.
+- Reconcile feature, progress, agent-card, and docs using saved evidence only.
 
 ## Checks
 Dockerized promtool check rules; representative rule unit tests; Compose config and isolated services/dashboard/alert verification if viable; forced unavailable-validator full-gate behavior; full local gate.
@@ -20,3 +23,4 @@ Stop service claims at the first unavailable required service/validator and reco
 
 ## Review
 Plan reviewed before execution: scope is evidence-first, tasks are observable, path ownership is explicit, and unavailable services cannot become PASS.
+
