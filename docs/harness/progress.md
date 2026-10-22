@@ -21,7 +21,7 @@
 - P05's isolated-wheel failure is covered by a consumer smoke against the 0.3.1 wheel: `traced_operation("database", "tickets.add")` returns successfully with the default non-recording tracer. The new wheel is recorded in `sources.lock.json`; P05 must consume 0.3.1. Service-backed gates remain INCOMPLETE.
 - Phase 008: Dockerized Prometheus 3.14.0 `promtool check rules` and representative alert-rule test passed (outputs in `artifacts/evidence/phase-008-prometheus-rules.txt` and `phase-008-promtool-alert-test.txt`). The isolated Prometheus/Grafana/Jaeger/OTel stack is healthy; synthetic metrics scrape is up; Grafana dashboard provisioning and a seven-span synthetic OTLP trace were queried successfully. The two immediate synthetic alerts fired; error-rate and latency rules were still pending when captured. `check_full.py` returned exit 2 with zero failures and two incomplete required gates, so full acceptance remains INCOMPLETE. Product service tracing, incident workflow acceptance, P01 package integration, and production model/cost/latency evidence remain INCOMPLETE/PENDING.
 
-## 2026-10-22 — Executable service acceptance
+## 2026-10-22 â€” Executable service acceptance
 
 Phase 009 executes Docker promtool syntax and all four rule tests, real HTTP/SQS/P04-worker/P01/PostgreSQL incident traces, dashboard and live alerts. Full gate passed (31 tests, exit 0). Explicitly omitting the required service gate returned INCOMPLETE/exit 2. Production model metrics remain PENDING.
 

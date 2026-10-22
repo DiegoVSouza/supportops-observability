@@ -20,7 +20,7 @@ No network API, durable queue, separate worker, live model, MCP tool, or databas
 
 An isolated Docker stack also received one explicitly synthetic OTLP trace over the local collector and exposed it in Jaeger with seven spans (API, queue, worker, agent, fake LLM, tool, database). Prometheus scraped only the synthetic exporter, and Grafana provisioned the SupportOps dashboard. This validates local telemetry transport and dashboard provisioning; it does not represent the product's API, durable broker, worker, or database. Promtool validated the rules and a representative alert fixture. The live synthetic rule run reached `firing` for all four alert rules, including the two with a five-minute hold. Full service acceptance remains `INCOMPLETE`; real model, cost, latency, and quality measurements remain `PENDING`.
 
-## 2026-10-22 — Executable service acceptance
+## 2026-10-22 â€” Executable service acceptance
 
 Phase 009 replaces the service trace double with loopback HTTP, LocalStack SQS, the installed P04 worker and P01 core runner, and PostgreSQL operations. All three deliberately synthetic incidents were exported to Jaeger; no real model or customer content is used.
 

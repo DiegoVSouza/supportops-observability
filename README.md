@@ -1,6 +1,10 @@
-# P03 â€” Agent Observability
+# P03 — Agent Observability
 
 `supportops_obs` instruments Python agent workflows with OpenTelemetry traces, trace-correlated standard-library logs, Prometheus metrics, and deterministic loop detection. Content capture is disabled by default. No LLM calls are required.
+
+## Problem
+
+Agent workflows can hide repeated actions, retries, and expensive calls across several services. Teams need a way to connect those events without collecting prompt content by default.
 
 ## Architecture
 
@@ -18,7 +22,7 @@ flowchart LR
   Prometheus --> Grafana[Grafana dashboard and alerts]
 ```
 
-## Install and run
+## Quickstart
 
 Python 3.11 or newer is required. Dependencies are pinned in `pyproject.toml` and `uv.lock`.
 
@@ -31,7 +35,7 @@ uv run python scripts/check_full.py
 
 The demo runner is a local P01 contract double. It does not load P01 code from a sibling folder. P01 0.1.1 has an approved local wheel and isolated consumer fixture; its version, source commit, artifact SHA-256, and consumer evidence are recorded in `docs/harness/sources.lock.json`. Framework-native runtime integration remains limited to the adapters documented in the comparison report.
 
-## Instrument a service
+## How it works
 
 ```python
 from supportops_obs import LLMResponse, record_llm_call, setup_telemetry, traced_agent, traced_operation, traced_tool
@@ -98,14 +102,18 @@ Run all three model-free scenarios and export synthetic in-memory spans with `uv
 
 Screenshots and exported live traces are **PENDING**. Never attach prompts or arguments unless the privacy decision explicitly allows content capture.
 
-## Validation status
+## Testing
 
 `uv run python scripts/check_full.py` runs unit tests, demo smoke, YAML/JSON validation, Docker Compose config validation when Docker exists, Prometheus rule validation when `promtool` exists, and lock consistency. Its command/exit/output is saved in `artifacts/evidence/check-full.txt`. Unit tests and local in-memory exporter integration are not E2E or agent quality evaluations.
 
-## Phase 009 local service acceptance
+## Results
 
 The full local gate uses Docker promtool and isolated HTTP/SQS/P04/P01/PostgreSQL services. Three synthetic incident traces, the provisioned dashboard and all four synthetic alerts passed. The reproducible command is `uv run --locked python scripts/check_full.py`; evidence and exit code are saved in `artifacts/evidence/phase-009-full-gate-v013-final.txt` and its detail file. Model quality, cost, comparable latency and production signals remain PENDING.
 
-## Phase 009 local service acceptance
+## Design decisions
 
 The full local gate uses Docker promtool and isolated HTTP/SQS/P04/P01/PostgreSQL services. Three synthetic incident traces, the provisioned dashboard and all four synthetic alerts passed. The reproducible command is `uv run --locked python scripts/check_full.py`; evidence and exit code are saved in `artifacts/evidence/phase-009-full-gate-v013-final.txt` and its detail file. Model quality, cost, comparable latency and production signals remain PENDING.
+
+## Limitations
+
+Synthetic traces and fake cost values validate instrumentation behavior only. They do not establish production traffic characteristics, model quality, or live provider cost.
