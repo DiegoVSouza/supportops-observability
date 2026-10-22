@@ -1,0 +1,38 @@
+rule_files: [/rules/observability.yml]
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'supportops_agent_loop_signals_total{synthetic="true"}'
+        values: '0+1x12'
+      - series: 'supportops_llm_cost_usd_total{synthetic="true"}'
+        values: '0+2x12'
+      - series: 'supportops_llm_calls_total{outcome="error"}'
+        values: '0+10x12'
+      - series: 'supportops_llm_latency_seconds_bucket{le="5"}'
+        values: '0+0x12'
+      - series: 'supportops_llm_latency_seconds_bucket{le="10"}'
+        values: '0+10x12'
+      - series: 'supportops_llm_latency_seconds_bucket{le="+Inf"}'
+        values: '0+10x12'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: AgentLoopDetected
+        exp_alerts:
+          - exp_labels: {severity: warning, synthetic: 'true'}
+            exp_annotations: {summary: Agent loop detector signaled a repeated action or state cycle, runbook: incident-lab/loop-agent.md}
+      - eval_time: 10m
+        alertname: LLMCostAnomaly
+        exp_alerts:
+          - exp_labels: {severity: warning, synthetic: 'true'}
+            exp_annotations: {summary: LLM spend exceeded the local configured threshold, runbook: incident-lab/cost-spike.md}
+      - eval_time: 10m
+        alertname: AgentErrorRateHigh
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations: {summary: LLM call error rate exceeds 10 percent}
+      - eval_time: 10m
+        alertname: LLMp95LatencyHigh
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations: {summary: LLM p95 latency exceeds five seconds}

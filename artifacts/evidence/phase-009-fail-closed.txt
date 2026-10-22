@@ -1,0 +1,2 @@
+check-full: INCOMPLETE; failures=0; incomplete=1
+Command: P03_SKIP_SERVICES=1 uv run --locked python scripts/check_full.py; Exit code: 2

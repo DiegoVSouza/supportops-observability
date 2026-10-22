@@ -1,16 +1,76 @@
 {
   "features": [
-    {"id": "setup-first-call-wins", "description": "Later telemetry setup calls cannot mutate provider identity or content capture configuration", "status": "PASS", "evidence": "tests/test_instrumentation.py::test_setup_does_not_mutate_active_capture_configuration"},
-    {"id": "provider-flush-shutdown", "description": "Explicit provider flush and idempotent shutdown API", "status": "PASS", "evidence": "tests/test_instrumentation.py::test_provider_flush_and_shutdown_are_exposed"},
-    {"id": "fake-instrumentation-regression", "description": "Unit and in-memory exporter instrumentation behavior", "status": "PASS", "evidence": "artifacts/evidence/phase-002-regression-green.txt"},
-    {"id": "required-gate-fail-closed", "description": "Missing required validator or service E2E returns INCOMPLETE and nonzero from full check", "status": "PASS", "evidence": "tests/test_gate_status.py; artifacts/evidence/check-full.txt"},
-    {"id": "promtool-rules", "description": "Prometheus rule validation with promtool", "status": "PASS_DOCKER_PROMTOOL; FULL_GATE_INCOMPLETE_HOST_PROMTOOL", "evidence": "artifacts/evidence/phase-008-prometheus-rules.txt; artifacts/evidence/phase-008-promtool-alert-test.txt; artifacts/evidence/phase-008-full-gate-summary.txt"},
-    {"id": "dashboard-service-e2e", "description": "Provisioned dashboard, all four synthetic alert rules, and service telemetry exercised against the isolated local stack", "status": "PASS_LOCAL_SYNTHETIC_DASHBOARD_ALERTS; INCOMPLETE_PRODUCT_SERVICE_E2E", "evidence": "artifacts/evidence/phase-008-dashboard-jaeger.txt; artifacts/evidence/phase-008-prometheus-runtime.txt"},
-    {"id": "production-metrics", "description": "Production traces, cost, latency, and model-quality measurements", "status": "PENDING", "evidence": "No authorized production run"},
-    {"id": "p01-runner-integration", "description": "Integration with an approved P01 package artifact", "status": "INCOMPLETE", "evidence": "No approved P01 wheel installed"},
-    {"id": "synthetic-integrated-trace", "description": "Deterministic correlated in-memory trace across local API/queue/worker/agent/fake-LLM/tool/database doubles", "status": "PASS", "evidence": "artifacts/evidence/integrated-trace-synthetic.json; tests/test_integrated_trace.py"},
-    {"id": "task-type-and-cost-metrics", "description": "Bounded task-type outcomes, per-task cost, retries and error metrics", "status": "PASS", "evidence": "tests/test_integrated_trace.py; metrics/README.md"},
-    {"id": "service-integrated-trace", "description": "Network API, durable broker/worker and database service trace", "status": "INCOMPLETE_SYNTHETIC_OTLP_TRACE_ONLY", "evidence": "artifacts/evidence/phase-008-otlp-trace.txt; artifacts/evidence/phase-008-dashboard-jaeger.txt"},
-    {"id": "non-recording-span-metrics", "description": "Database/HTTP operation metrics work when tracing is disabled or provider is non-recording", "status": "PASS", "evidence": "tests/test_instrumentation.py::test_operation_metrics_work_with_non_recording_span; artifacts/evidence/phase-003-nonrecording-green.txt"}
+    {
+      "id": "setup-first-call-wins",
+      "description": "Later telemetry setup calls cannot mutate provider identity or content capture configuration",
+      "status": "PASS",
+      "evidence": "tests/test_instrumentation.py::test_setup_does_not_mutate_active_capture_configuration"
+    },
+    {
+      "id": "provider-flush-shutdown",
+      "description": "Explicit provider flush and idempotent shutdown API",
+      "status": "PASS",
+      "evidence": "tests/test_instrumentation.py::test_provider_flush_and_shutdown_are_exposed"
+    },
+    {
+      "id": "fake-instrumentation-regression",
+      "description": "Unit and in-memory exporter instrumentation behavior",
+      "status": "PASS",
+      "evidence": "artifacts/evidence/phase-002-regression-green.txt"
+    },
+    {
+      "id": "required-gate-fail-closed",
+      "description": "Missing required validator or service E2E returns INCOMPLETE and nonzero from full check",
+      "status": "PASS",
+      "evidence": "tests/test_gate_status.py; artifacts/evidence/check-full.txt"
+    },
+    {
+      "id": "promtool-rules",
+      "description": "Prometheus rule validation with promtool",
+      "status": "PASS",
+      "evidence": "artifacts/evidence/phase-009-full-gate-detail.txt; artifacts/evidence/phase-009-jaeger-export.json; artifacts/evidence/phase-009-live-alerts.json"
+    },
+    {
+      "id": "dashboard-service-e2e",
+      "description": "Provisioned dashboard, all four synthetic alert rules, and service telemetry exercised against the isolated local stack",
+      "status": "PASS",
+      "evidence": "artifacts/evidence/phase-009-full-gate-detail.txt; artifacts/evidence/phase-009-jaeger-export.json; artifacts/evidence/phase-009-live-alerts.json"
+    },
+    {
+      "id": "production-metrics",
+      "description": "Production traces, cost, latency, and model-quality measurements",
+      "status": "PENDING",
+      "evidence": "No authorized production run"
+    },
+    {
+      "id": "p01-runner-integration",
+      "description": "Integration with an approved P01 package artifact",
+      "status": "PASS",
+      "evidence": "artifacts/evidence/phase-009-full-gate-detail.txt; artifacts/evidence/phase-009-jaeger-export.json; artifacts/evidence/phase-009-live-alerts.json"
+    },
+    {
+      "id": "synthetic-integrated-trace",
+      "description": "Deterministic correlated in-memory trace across local API/queue/worker/agent/fake-LLM/tool/database doubles",
+      "status": "PASS",
+      "evidence": "artifacts/evidence/integrated-trace-synthetic.json; tests/test_integrated_trace.py"
+    },
+    {
+      "id": "task-type-and-cost-metrics",
+      "description": "Bounded task-type outcomes, per-task cost, retries and error metrics",
+      "status": "PASS",
+      "evidence": "tests/test_integrated_trace.py; metrics/README.md"
+    },
+    {
+      "id": "service-integrated-trace",
+      "description": "Network API, durable broker/worker and database service trace",
+      "status": "PASS",
+      "evidence": "artifacts/evidence/phase-009-full-gate-detail.txt; artifacts/evidence/phase-009-jaeger-export.json; artifacts/evidence/phase-009-live-alerts.json"
+    },
+    {
+      "id": "non-recording-span-metrics",
+      "description": "Database/HTTP operation metrics work when tracing is disabled or provider is non-recording",
+      "status": "PASS",
+      "evidence": "tests/test_instrumentation.py::test_operation_metrics_work_with_non_recording_span; artifacts/evidence/phase-003-nonrecording-green.txt"
+    }
   ]
 }

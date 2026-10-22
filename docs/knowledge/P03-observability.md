@@ -29,3 +29,8 @@ Sampling reduz volume de traces, mas deve preservar erros e execuções raras. P
 **EN — Why avoid prompt content in telemetry?** Traces are broadly searchable and retained for operational analysis. Content may contain private data or credentials. Correlation IDs, token counts, latency, outcome, and explicit content-capture controls usually support debugging with less exposure.
 
 **PT — Por que evitar prompts na telemetria?** Traces costumam ser pesquisáveis e retidos para análise operacional. O conteúdo pode conter dados privados ou credenciais. IDs de correlação, contagem de tokens, latência, resultado e controles explícitos de captura geralmente ajudam a depurar com menor exposição.
+## Phase 009 accepted local service gates
+
+The reproducible command is `uv run --locked python scripts/check_full.py`. It runs unit/package checks, Docker `promtool check rules` and `test rules`, then the isolated local service flow. Evidence in `artifacts/evidence/phase-009-full-gate-v013-final.txt` and `phase-009-full-gate-v013-detail-final.txt` records exit 0. The service run uses P01 0.1.1 and P04 0.1.3 wheels, LocalStack SQS, PostgreSQL, HTTP, Jaeger, Grafana, and Prometheus; it exercises three synthetic incidents and all four synthetic alerts.
+
+Setting `P03_SKIP_SERVICES=1` intentionally omits a required gate. The full check reports INCOMPLETE and exits 2, saved in `phase-009-fail-closed.txt` and `phase-009-fail-closed-detail.txt`. Metrics and model quality from production traffic remain PENDING; the local fixtures do not support production readiness claims.

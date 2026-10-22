@@ -1,0 +1,3 @@
+check-full: PASS; failures=0; incomplete=0
+
+Exit code: 0

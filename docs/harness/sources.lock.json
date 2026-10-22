@@ -1,5 +1,5 @@
 {
-  "locked_at": "2026-10-15",
+  "locked_at": "2026-10-22",
   "python": "3.13.12 local validation; package requires >=3.11",
   "dependencies": {
     "opentelemetry-api": {
@@ -105,5 +105,34 @@
     "artifact": "artifacts/packages/supportops_obs-0.3.0-py3-none-any.whl",
     "sha256": "6592c8d2dd0892bdbbe9ed8f776e3ba28ea94c3e15e97c878545badc79455a16"
   },
-  "p01_artifact": "INCOMPLETE: no approved P01 wheel installed"
+  "p01_artifact": {
+    "version": "0.1.1",
+    "source_commit": "4c70b1ea3e23606dfe60ffae77567417de53a3f7",
+    "sha256": "dd77e9b91f2d9ba7ac84178bbb557e0ea50bde954554a528b4632dec18ddb51f",
+    "artifact_path": "artifacts/packages/supportops_agents-0.1.1-py3-none-any.whl",
+    "consumer_verified": "phase-009 full local gate"
+  },
+  "phase009_integrations": {
+    "P01": {
+      "version": "0.1.1",
+      "source_commit": "4c70b1ea3e23606dfe60ffae77567417de53a3f7",
+      "sha256": "dd77e9b91f2d9ba7ac84178bbb557e0ea50bde954554a528b4632dec18ddb51f"
+    },
+    "P04": {
+      "version": "0.1.3",
+      "source_commit": "ef1fe4398d30a91d471ef6ddab226160050c5eaf",
+      "sha256": "b9e0bc47793c1cebb29471db087084c52495ab20d6ee5debabca95d1d42156f8"
+    },
+    "consumer_test": "demo/service_trace.py; real HTTP/SQS/P04 worker/P01/PostgreSQL traces in Jaeger",
+    "services": {
+      "postgres": "17.11",
+      "localstack": "4.14.0",
+      "promtool": "3.14.0"
+    },
+    "sources": [
+      "https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/",
+      "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html"
+    ],
+    "service_evidence": "artifacts/evidence/phase-009-full-gate-v013-final.txt; Docker promtool rules + fixtures, P03/P04/P01/PostgreSQL trace, dashboard and four firing alerts"
+  }
 }

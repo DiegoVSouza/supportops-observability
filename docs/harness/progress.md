@@ -20,3 +20,14 @@
 - Phase 003 fixed operation metric decorators raising `AttributeError` when the configured tracer returns `NonRecordingSpan`; outcome is now tracked in control flow for sync and async operations. Regression: red reproduced, 13 instrumentation tests pass, full suite 29 passed. Full gate remains INCOMPLETE (promtool and service E2E not executed). See `artifacts/evidence/phase-003-nonrecording-red.txt`, `phase-003-nonrecording-green.txt`, and `phase-003-full-gate.txt`.
 - P05's isolated-wheel failure is covered by a consumer smoke against the 0.3.1 wheel: `traced_operation("database", "tickets.add")` returns successfully with the default non-recording tracer. The new wheel is recorded in `sources.lock.json`; P05 must consume 0.3.1. Service-backed gates remain INCOMPLETE.
 - Phase 008: Dockerized Prometheus 3.14.0 `promtool check rules` and representative alert-rule test passed (outputs in `artifacts/evidence/phase-008-prometheus-rules.txt` and `phase-008-promtool-alert-test.txt`). The isolated Prometheus/Grafana/Jaeger/OTel stack is healthy; synthetic metrics scrape is up; Grafana dashboard provisioning and a seven-span synthetic OTLP trace were queried successfully. The two immediate synthetic alerts fired; error-rate and latency rules were still pending when captured. `check_full.py` returned exit 2 with zero failures and two incomplete required gates, so full acceptance remains INCOMPLETE. Product service tracing, incident workflow acceptance, P01 package integration, and production model/cost/latency evidence remain INCOMPLETE/PENDING.
+
+## 2026-10-22 — Executable service acceptance
+
+Phase 009 executes Docker promtool syntax and all four rule tests, real HTTP/SQS/P04-worker/P01/PostgreSQL incident traces, dashboard and live alerts. Full gate passed (31 tests, exit 0). Explicitly omitting the required service gate returned INCOMPLETE/exit 2. Production model metrics remain PENDING.
+
+## 2026-10-22 â€” Phase 009 executable acceptance
+
+- Docker promtool validated the alert file and all four alert fixtures. The full gate passed with P01 0.1.1 and P04 0.1.3 installed wheels, service traces, three synthetic incident cases, dashboard, and four live synthetic alerts.
+- `P03_SKIP_SERVICES=1` returned exit 2 and `INCOMPLETE` with no failures; omission of a required gate cannot pass.
+- Current proof: `artifacts/evidence/phase-009-full-gate-v013-final.txt`, `phase-009-full-gate-v013-detail-final.txt`, `phase-009-jaeger-export.json`, `phase-009-live-alerts.json`.
+- Production traces, model quality, cost, and comparable latency remain PENDING; no production run was performed.

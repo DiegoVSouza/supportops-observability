@@ -1,4 +1,4 @@
-# P03 — Agent Observability
+# P03 â€” Agent Observability
 
 `supportops_obs` instruments Python agent workflows with OpenTelemetry traces, trace-correlated standard-library logs, Prometheus metrics, and deterministic loop detection. Content capture is disabled by default. No LLM calls are required.
 
@@ -101,3 +101,11 @@ Screenshots and exported live traces are **PENDING**. Never attach prompts or ar
 ## Validation status
 
 `uv run python scripts/check_full.py` runs unit tests, demo smoke, YAML/JSON validation, Docker Compose config validation when Docker exists, Prometheus rule validation when `promtool` exists, and lock consistency. Its command/exit/output is saved in `artifacts/evidence/check-full.txt`. Unit tests and local in-memory exporter integration are not E2E or agent quality evaluations.
+
+## Phase 009 local service acceptance
+
+The full local gate uses Docker promtool and isolated HTTP/SQS/P04/P01/PostgreSQL services. Three synthetic incident traces, the provisioned dashboard and all four synthetic alerts passed. The reproducible command is `uv run --locked python scripts/check_full.py`; evidence and exit code are saved in `artifacts/evidence/phase-009-full-gate-v013-final.txt` and its detail file. Model quality, cost, comparable latency and production signals remain PENDING.
+
+## Phase 009 local service acceptance
+
+The full local gate uses Docker promtool and isolated HTTP/SQS/P04/P01/PostgreSQL services. Three synthetic incident traces, the provisioned dashboard and all four synthetic alerts passed. The reproducible command is `uv run --locked python scripts/check_full.py`; evidence and exit code are saved in `artifacts/evidence/phase-009-full-gate-v013-final.txt` and its detail file. Model quality, cost, comparable latency and production signals remain PENDING.
