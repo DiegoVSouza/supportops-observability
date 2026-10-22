@@ -1,0 +1,4 @@
+$ uv run --project projects/p03 --locked python projects/p03/scripts/check_full.py
+Promtool host executable intentionally unavailable; Docker promtool was separately executed
+exit_code=2
+check-full: INCOMPLETE; failures=0; incomplete=2

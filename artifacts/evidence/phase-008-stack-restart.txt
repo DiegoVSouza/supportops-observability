@@ -1,0 +1,33 @@
+$ docker compose -p p03-remediation -f projects/p03/stack/docker-compose.obs.yml -f projects/p03/artifacts/evidence/phase-008-compose.override.yml up -d
+exit_code=0
+time="2026-10-21T21:48:17-03:00" level=warning msg="No services to build"
+ Container p03-remediation-prometheus-1 Starting
+ Container p03-remediation-jaeger-1 Starting
+ Container p03-remediation-grafana-1 Starting
+ Container p03-remediation-jaeger-1 Started
+ Container p03-remediation-otel-collector-1 Starting
+ Container p03-remediation-grafana-1 Started
+ Container p03-remediation-prometheus-1 Started
+ Container p03-remediation-otel-collector-1 Started
+$ docker compose -p p04-remediation -f projects/p04/docker-compose.async.yml -f projects/p04/docker-compose.remediation.yml up -d
+exit_code=0
+time="2026-10-21T21:48:19-03:00" level=warning msg="No services to build"
+ Container p04-remediation-postgres-1 Starting
+ Container p04-remediation-localstack-1 Starting
+ Container p04-remediation-postgres-1 Started
+ Container p04-remediation-localstack-1 Started
+ Container p04-remediation-localstack-1 Waiting
+ Container p04-remediation-postgres-1 Waiting
+ Container p04-remediation-postgres-1 Waiting
+ Container p04-remediation-localstack-1 Waiting
+ Container p04-remediation-postgres-1 Healthy
+ Container p04-remediation-postgres-1 Healthy
+ Container p04-remediation-localstack-1 Healthy
+ Container p04-remediation-api-1 Starting
+ Container p04-remediation-localstack-1 Healthy
+ Container p04-remediation-worker-1 Starting
+ Container p04-remediation-api-1 Started
+ Container p04-remediation-worker-1 Started
+$ docker start p05-pgvector-008
+exit_code=0
+p05-pgvector-008

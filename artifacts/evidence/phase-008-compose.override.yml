@@ -1,0 +1,17 @@
+services:
+  otel-collector:
+    ports: !override ["127.0.0.1:24317:4317", "127.0.0.1:24318:4318"]
+  jaeger:
+    ports: !override ["127.0.0.1:24686:16686", "127.0.0.1:24319:4317"]
+  prometheus:
+    ports: !override ["127.0.0.1:29090:9090"]
+    volumes: !override
+      - ../artifacts/evidence/phase-008-prometheus.synthetic.yml:/etc/prometheus/prometheus.yml:ro
+      - ../alerts:/etc/prometheus/rules:ro
+  grafana:
+    ports: !override ["127.0.0.1:23000:3000"]
+  synthetic-metrics:
+    image: python:3.13.12-slim
+    command: ["python", "/metrics.py"]
+    volumes:
+      - ../artifacts/evidence/phase-008-synthetic-metrics-server.py:/metrics.py:ro

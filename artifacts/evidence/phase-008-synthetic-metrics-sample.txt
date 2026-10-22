@@ -1,0 +1,15 @@
+# TYPE supportops_agent_loop_signals_total counter
+supportops_agent_loop_signals_total{task_type="triage",synthetic="true"} 1
+# TYPE supportops_llm_cost_usd_total counter
+supportops_llm_cost_usd_total{synthetic="true"} 1
+# TYPE supportops_llm_calls_total counter
+supportops_llm_calls_total{outcome="error",synthetic="true"} 1
+supportops_llm_calls_total{outcome="success",synthetic="true"} 0
+# TYPE supportops_llm_latency_seconds_bucket counter
+supportops_llm_latency_seconds_bucket{le="5",synthetic="true"} 0
+supportops_llm_latency_seconds_bucket{le="10",synthetic="true"} 1
+supportops_llm_latency_seconds_bucket{le="+Inf",synthetic="true"} 1
+# TYPE supportops_llm_latency_seconds_count counter
+supportops_llm_latency_seconds_count{synthetic="true"} 1
+# TYPE supportops_llm_latency_seconds_sum counter
+supportops_llm_latency_seconds_sum{synthetic="true"} 6

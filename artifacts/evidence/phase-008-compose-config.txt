@@ -1,0 +1,1 @@
+$ docker compose -p p03-remediation -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml config --quiet exit_code=0

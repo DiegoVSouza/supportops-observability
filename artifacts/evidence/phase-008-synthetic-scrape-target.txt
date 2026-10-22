@@ -1,0 +1,64 @@
+{
+  "status": "success",
+  "data": {
+    "activeTargets": [
+      {
+        "discoveredLabels": {
+          "__address__": "prometheus:9090",
+          "__always_scrape_classic_histograms__": "false",
+          "__convert_classic_histograms_to_nhcb__": "false",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "15s",
+          "__scrape_native_histograms__": "false",
+          "__scrape_timeout__": "10s",
+          "job": "prometheus"
+        },
+        "labels": {
+          "instance": "prometheus:9090",
+          "job": "prometheus"
+        },
+        "scrapePool": "prometheus",
+        "scrapeUrl": "http://prometheus:9090/metrics",
+        "globalUrl": "http://prometheus:9090/metrics",
+        "lastError": "",
+        "lastScrape": "0001-01-01T00:00:00Z",
+        "lastScrapeDuration": 0,
+        "health": "unknown",
+        "scrapeInterval": "15s",
+        "scrapeTimeout": "10s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "synthetic-metrics:8000",
+          "__always_scrape_classic_histograms__": "false",
+          "__convert_classic_histograms_to_nhcb__": "false",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "15s",
+          "__scrape_native_histograms__": "false",
+          "__scrape_timeout__": "10s",
+          "job": "supportops-demo"
+        },
+        "labels": {
+          "instance": "synthetic-metrics:8000",
+          "job": "supportops-demo"
+        },
+        "scrapePool": "supportops-demo",
+        "scrapeUrl": "http://synthetic-metrics:8000/metrics",
+        "globalUrl": "http://synthetic-metrics:8000/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-22T00:49:22.790719901Z",
+        "lastScrapeDuration": 0.002418433,
+        "health": "up",
+        "scrapeInterval": "15s",
+        "scrapeTimeout": "10s"
+      }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": {
+      "prometheus": 0,
+      "supportops-demo": 0
+    }
+  }
+}

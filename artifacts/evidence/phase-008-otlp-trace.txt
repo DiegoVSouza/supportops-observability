@@ -1,0 +1,5 @@
+$ uv run --project projects/p03 --locked python projects/p03/artifacts/evidence/phase-008-otlp-trace.py
+exit_code=0
+synthetic OTLP trace exported; service=p03-phase-008-synthetic trace_id=6b6d87727087ca4c6d270065636807fc spans=7
+attributes include supportops.synthetic=true; no ticket/customer content was emitted
+export_result=flush

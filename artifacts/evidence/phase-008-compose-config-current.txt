@@ -1,0 +1,107 @@
+Command: docker compose -p p03-remediation -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml config
+Exit code: 0
+name: p03-remediation
+services:
+  grafana:
+    image: grafana/grafana:12.4.11
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 3000
+        published: "23000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\estudo\Golpe\lab\projects\p03\dashboards
+        target: /var/lib/grafana/dashboards
+        read_only: true
+        bind: {}
+      - type: bind
+        source: C:\estudo\Golpe\lab\projects\p03\stack\grafana-provisioning
+        target: /etc/grafana/provisioning
+        read_only: true
+        bind: {}
+  jaeger:
+    image: jaegertracing/jaeger:2.18.0
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 16686
+        published: "24686"
+        protocol: tcp
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 4317
+        published: "24319"
+        protocol: tcp
+  otel-collector:
+    command:
+      - --config=/etc/otelcol/config.yaml
+    depends_on:
+      jaeger:
+        condition: service_started
+        required: true
+    image: otel/opentelemetry-collector-contrib:0.161.0
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 4317
+        published: "24317"
+        protocol: tcp
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 4318
+        published: "24318"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\estudo\Golpe\lab\projects\p03\stack\otel-collector.yaml
+        target: /etc/otelcol/config.yaml
+        read_only: true
+        bind: {}
+  prometheus:
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-lifecycle
+    image: prom/prometheus:v3.14.0
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 9090
+        published: "29090"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\estudo\Golpe\lab\projects\p03\artifacts\evidence\phase-008-prometheus.synthetic.yml
+        target: /etc/prometheus/prometheus.yml
+        read_only: true
+        bind: {}
+      - type: bind
+        source: C:\estudo\Golpe\lab\projects\p03\alerts
+        target: /etc/prometheus/rules
+        read_only: true
+        bind: {}
+  synthetic-metrics:
+    command:
+      - python
+      - /metrics.py
+    image: python:3.13.12-slim
+    networks:
+      default: null
+    volumes:
+      - type: bind
+        source: C:\estudo\Golpe\lab\projects\p03\artifacts\evidence\phase-008-synthetic-metrics-server.py
+        target: /metrics.py
+        read_only: true
+        bind: {}
+networks:
+  default:
+    name: p03-remediation_default

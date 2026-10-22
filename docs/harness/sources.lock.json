@@ -2,22 +2,71 @@
   "locked_at": "2026-10-15",
   "python": "3.13.12 local validation; package requires >=3.11",
   "dependencies": {
-    "opentelemetry-api": {"version": "1.45.1", "source": "https://pypi.org/project/opentelemetry-api/", "official_docs": "https://opentelemetry.io/docs/languages/python/instrumentation/", "evidence": "stable Python trace/metrics APIs; use only stable APIs"},
-    "opentelemetry-sdk": {"version": "1.45.1", "source": "https://pypi.org/project/opentelemetry-sdk/", "official_docs": "https://opentelemetry.io/docs/languages/python/", "evidence": "traces and metrics stable; logs development"},
-    "opentelemetry-exporter-otlp-proto-grpc": {"version": "1.45.1", "source": "https://pypi.org/project/opentelemetry-exporter-otlp-proto-grpc/", "official_docs": "https://opentelemetry.io/docs/languages/python/exporters/", "evidence": "version aligned with OTel SDK/API"},
-    "prometheus-client": {"version": "0.26.0", "source": "https://pypi.org/project/prometheus-client/", "official_docs": "https://prometheus.github.io/client_python/instrumenting/histogram/", "evidence": "official histogram client and bucket behavior"},
-    "pytest": {"version": "8.4.2", "source": "https://pypi.org/project/pytest/", "purpose": "unit and deterministic integration tests"},
-    "PyYAML": {"version": "6.0.3", "source": "https://pypi.org/project/PyYAML/", "purpose": "configuration structure validation"}
+    "opentelemetry-api": {
+      "version": "1.45.1",
+      "source": "https://pypi.org/project/opentelemetry-api/",
+      "official_docs": "https://opentelemetry.io/docs/languages/python/instrumentation/",
+      "evidence": "stable Python trace/metrics APIs; use only stable APIs"
+    },
+    "opentelemetry-sdk": {
+      "version": "1.45.1",
+      "source": "https://pypi.org/project/opentelemetry-sdk/",
+      "official_docs": "https://opentelemetry.io/docs/languages/python/",
+      "evidence": "traces and metrics stable; logs development"
+    },
+    "opentelemetry-exporter-otlp-proto-grpc": {
+      "version": "1.45.1",
+      "source": "https://pypi.org/project/opentelemetry-exporter-otlp-proto-grpc/",
+      "official_docs": "https://opentelemetry.io/docs/languages/python/exporters/",
+      "evidence": "version aligned with OTel SDK/API"
+    },
+    "prometheus-client": {
+      "version": "0.26.0",
+      "source": "https://pypi.org/project/prometheus-client/",
+      "official_docs": "https://prometheus.github.io/client_python/instrumenting/histogram/",
+      "evidence": "official histogram client and bucket behavior"
+    },
+    "pytest": {
+      "version": "8.4.2",
+      "source": "https://pypi.org/project/pytest/",
+      "purpose": "unit and deterministic integration tests"
+    },
+    "PyYAML": {
+      "version": "6.0.3",
+      "source": "https://pypi.org/project/PyYAML/",
+      "purpose": "configuration structure validation"
+    }
   },
   "conventions": {
-    "gen_ai": {"status": "Development; separate official repository has no packaged releases as of 2026-10-15", "official_docs": "https://github.com/open-telemetry/semantic-conventions-genai", "release_source": "https://github.com/open-telemetry/semantic-conventions-genai/releases", "implementation": "not consumed; package uses supportops.* attributes to avoid assuming experimental convention stability"},
-    "python_logs": {"status": "development", "official_docs": "https://opentelemetry.io/docs/languages/python/", "implementation": "stdlib logging LogRecord enrichment; no OTel Logs SDK dependency"}
+    "gen_ai": {
+      "status": "Development; separate official repository has no packaged releases as of 2026-10-15",
+      "official_docs": "https://github.com/open-telemetry/semantic-conventions-genai",
+      "release_source": "https://github.com/open-telemetry/semantic-conventions-genai/releases",
+      "implementation": "not consumed; package uses supportops.* attributes to avoid assuming experimental convention stability"
+    },
+    "python_logs": {
+      "status": "development",
+      "official_docs": "https://opentelemetry.io/docs/languages/python/",
+      "implementation": "stdlib logging LogRecord enrichment; no OTel Logs SDK dependency"
+    }
   },
   "stack_images": {
-    "collector": {"image": "otel/opentelemetry-collector-contrib:0.161.0", "source": "https://github.com/open-telemetry/opentelemetry-collector-releases/releases"},
-    "jaeger": {"image": "jaegertracing/jaeger:2.18.0", "source": "https://hub.docker.com/r/jaegertracing/jaeger/tags"},
-    "prometheus": {"image": "prom/prometheus:v3.14.0", "source": "https://github.com/prometheus/prometheus/releases"},
-    "grafana": {"image": "grafana/grafana:12.4.11", "source": "https://hub.docker.com/r/grafana/grafana/tags"}
+    "collector": {
+      "image": "otel/opentelemetry-collector-contrib:0.161.0",
+      "source": "https://github.com/open-telemetry/opentelemetry-collector-releases/releases"
+    },
+    "jaeger": {
+      "image": "jaegertracing/jaeger:2.18.0",
+      "source": "https://hub.docker.com/r/jaegertracing/jaeger/tags"
+    },
+    "prometheus": {
+      "image": "prom/prometheus:v3.14.0",
+      "source": "https://github.com/prometheus/prometheus/releases"
+    },
+    "grafana": {
+      "image": "grafana/grafana:12.4.11",
+      "source": "https://hub.docker.com/r/grafana/grafana/tags"
+    }
   },
   "verification_sources": {
     "accessed_at": "2026-10-15",
@@ -31,7 +80,12 @@
     },
     "prometheus_rule_validation": {
       "url": "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/",
-      "version_context": "Prometheus 3.14.0 image; promtool version is PENDING until executable is available"
+      "version_context": "Prometheus 3.14.0 official image; Dockerized promtool check rules and test rules were run",
+      "promtool_version": "3.14.0",
+      "validation_image": "prom/prometheus:v3.14.0",
+      "checked": "2026-10-21",
+      "rule_check_evidence": "artifacts/evidence/phase-008-prometheus-rules.txt",
+      "alert_test_evidence": "artifacts/evidence/phase-008-promtool-alert-test.txt"
     }
   },
   "source_revision": "e191f17d4649f40d6dea7057d3b52729dbbb1389",

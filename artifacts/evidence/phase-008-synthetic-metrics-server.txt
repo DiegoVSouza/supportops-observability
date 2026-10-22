@@ -1,0 +1,11 @@
+command=Start-Process projects/p03/.venv/Scripts/python.exe artifacts/evidence/phase-008-synthetic-metrics-server.py
+status=
+started
+pid=35444
+bind=0.0.0.0:8000
+metrics=synthetic=true
+command=Start-Process projects/p03/.venv/Scripts/python.exe artifacts/evidence/phase-008-synthetic-metrics-server.py
+process_id=16620
+started=True
+bind=0.0.0.0:8000
+metrics=synthetic=true

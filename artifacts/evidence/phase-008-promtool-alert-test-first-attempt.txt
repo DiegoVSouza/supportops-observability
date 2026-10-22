@@ -1,0 +1,17 @@
+$ docker run --rm --entrypoint promtool -v alerts:/rules:ro -v artifacts/evidence/phase-008-alert-rules.test.yml:/tests/rules.test.yml:ro prom/prometheus:v3.14.0 test rules /tests/rules.test.yml
+exit_code=1
+
+  FAILED:
+
+    name: agent-loop-alert-fires-after-counter-increase,
+    alertname: AgentLoopDetected, time: 2m,
+        exp:[
+            0:
+              Labels:{alertname="AgentLoopDetected", severity="warning", task_type="triage"}
+              Annotations:{}
+            ],
+        got:[
+            0:
+              Labels:{alertname="AgentLoopDetected", severity="warning", task_type="triage"}
+              Annotations:{runbook="incident-lab/loop-agent.md", summary="Agent loop detector signaled a repeated action or state cycle"}
+            ]

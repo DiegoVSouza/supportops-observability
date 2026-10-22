@@ -1,0 +1,19 @@
+rule_files:
+  - /rules/observability.yml
+evaluation_interval: 1m
+tests:
+  - name: agent-loop-alert-fires-after-counter-increase
+    interval: 1m
+    input_series:
+      - series: supportops_agent_loop_signals_total{task_type="triage"}
+        values: '0+1x10'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: AgentLoopDetected
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              task_type: triage
+            exp_annotations:
+              runbook: incident-lab/loop-agent.md
+              summary: Agent loop detector signaled a repeated action or state cycle

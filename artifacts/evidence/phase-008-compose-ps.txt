@@ -1,0 +1,6 @@
+NAME                                  IMAGE                                          COMMAND                  SERVICE             CREATED          STATUS          PORTS
+p03-remediation-grafana-1             grafana/grafana:12.4.11                        "/run.sh"                grafana             7 hours ago      Up 11 minutes   127.0.0.1:23000->3000/tcp
+p03-remediation-jaeger-1              jaegertracing/jaeger:2.18.0                    "/cmd/jaeger/jaeger-…"   jaeger              7 hours ago      Up 11 minutes   127.0.0.1:24319->4317/tcp, 127.0.0.1:24686->16686/tcp
+p03-remediation-otel-collector-1      otel/opentelemetry-collector-contrib:0.161.0   "/otelcol-contrib --…"   otel-collector      7 hours ago      Up 11 minutes   127.0.0.1:24317->4317/tcp, 127.0.0.1:24318->4318/tcp
+p03-remediation-prometheus-1          prom/prometheus:v3.14.0                        "/bin/prometheus --c…"   prometheus          11 minutes ago   Up 11 minutes   127.0.0.1:29090->9090/tcp
+p03-remediation-synthetic-metrics-1   python:3.13.12-slim                            "python /metrics.py"     synthetic-metrics   11 minutes ago   Up 11 minutes

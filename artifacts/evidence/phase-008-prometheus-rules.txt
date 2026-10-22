@@ -1,0 +1,4 @@
+$ docker run --rm --entrypoint promtool -v C:/estudo/Golpe/lab/projects/p03/alerts:/rules:ro prom/prometheus:v3.14.0 check rules /rules/observability.yml
+exit_code=0
+Checking /rules/observability.yml
+  SUCCESS: 4 rules found

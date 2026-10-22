@@ -25,7 +25,7 @@ dashboard, source lock and incident fixtures valid
 $ C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests
 exit_code=0
 .............................                                            [100%]
-29 passed in 0.37s
+29 passed in 0.59s
 
 $ LLM_MODE=fake python demo/runner_double.py --once
 exit_code=0
@@ -49,7 +49,7 @@ exit_code=0
 
 $ uv lock --check
 exit_code=0
-Resolved 20 packages in 0.51ms
+Resolved 20 packages in 1ms
 
 result=INCOMPLETE; failures=0; incomplete=promtool rule validation: executable unavailable; dashboard and incident service E2E not executed by this structural gate
 outer_exit_code=2

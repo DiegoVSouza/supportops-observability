@@ -1,0 +1,2 @@
+Command: uv run --locked pytest tests/test_gate_status.py -q
+Exit code: 0
