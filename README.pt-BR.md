@@ -1,6 +1,6 @@
 # P03 — Observabilidade de agentes
 
-`supportops_obs` instrumenta fluxos Python com traces OpenTelemetry, logs correlacionados ao trace, métricas Prometheus e detecção determinística de loops. A captura de conteúdo fica desativada por padrão. Nenhuma chamada a LLM é necessária.
+`supportops_obs` instrumenta fluxos Python com traces OpenTelemetry, logs ligados ao trace, métricas Prometheus e detecção determinística de loops. A captura de conteúdo começa desativada. Nenhuma chamada a LLM é necessária.
 
 ## Arquitetura
 
@@ -36,9 +36,9 @@ Use `setup_telemetry("nome-do-servico", otlp_endpoint="http://localhost:4317")`,
 
 `LoopDetector.observe(StepRecord(...))` reconhece repetição da mesma ferramenta e argumentos JSON, ciclo de estados e limite de passos. Chame `reset()` no início de cada execução. Caminhos variados não disparam alerta. `record_agent_execution` registra passos e resultado da tarefa; `record_tool_retry` registra retries.
 
-  A primeira chamada de `setup_telemetry` define o provider do processo e a configuração de captura de conteúdo; chamadas seguintes são ignoradas. Antes de encerrar o processo de forma controlada, use `flush_telemetry()` para exportar spans pendentes e `shutdown_telemetry()` para liberar os recursos do provider.
+`setup_telemetry` só configura o provider na primeira chamada do processo; as seguintes são ignoradas. Antes de encerrar o processo de forma controlada, use `flush_telemetry()` para exportar spans pendentes e `shutdown_telemetry()` para liberar o provider.
 
-  Execute `python demo/integrated_trace.py` para gerar um trace sintético e determinístico com doubles locais de API, fila, worker, agente, LLM fake, ferramenta e banco. O arquivo `artifacts/evidence/integrated-trace-synthetic.json` valida a árvore e a correlação dos spans, sem exercitar serviços de rede. As métricas Prometheus incluem resultado por tipo de tarefa e custo informado por tarefa.
+Execute `python demo/integrated_trace.py` para gerar um trace sintético com doubles locais de API, fila, worker, agente, LLM fake, ferramenta e banco. `artifacts/evidence/integrated-trace-synthetic.json` valida a árvore e a correlação dos spans sem chamar serviços de rede. As métricas Prometheus incluem o resultado e o custo informado por tarefa.
 
 As convenções GenAI do OTel continuam experimentais. O projeto usa APIs estáveis de traces e nomes próprios para custo/latência. Modelo e provedor aparecem em spans, não em labels de métricas, para limitar cardinalidade.
 
