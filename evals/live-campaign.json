@@ -1,0 +1,62 @@
+{
+  "campaign": "p03-live-v1",
+  "dataset_manifest": "evals/datasets/live-v1/manifest.json",
+  "cases_path": "evals/datasets/live-v1/cases.jsonl",
+  "runner_scope": "supportops_obs operational telemetry; no customer or production instrumentation",
+  "provider": "Groq",
+  "preferred_model": "openai/gpt-oss-20b",
+  "model_catalog_preflight": "required before any separately authorized run; not performed in preparation",
+  "trials_per_case": 3,
+  "pilot_trials_per_case": 1,
+  "per_case_caps": {
+    "provider_calls_per_trial": 1,
+    "input_tokens_per_trial": 4096,
+    "output_tokens_per_trial": 512,
+    "scenario_timeout_seconds": 45
+  },
+  "planned_reservations": {
+    "pilot_cases": 6,
+    "pilot_max_calls": 6,
+    "development_max_calls": 27,
+    "holdout_max_calls": 63,
+    "primary_campaign_max_calls": 90,
+    "primary_campaign_max_input_tokens": 368640,
+    "primary_campaign_max_output_tokens": 46080,
+    "confirmation_fresh_cases": 20,
+    "confirmation_max_calls": 60,
+    "confirmation_max_input_tokens": 245760,
+    "confirmation_max_output_tokens": 30720,
+    "all_stages_max_calls_if_additive": 156,
+    "all_stages_max_input_tokens_if_additive": 638976,
+    "all_stages_max_output_tokens_if_additive": 79872
+  },
+  "cumulative_caps": {
+    "authorized_paid_spend_usd": 0,
+    "requests": "PENDING",
+    "input_tokens": "PENDING",
+    "output_tokens": "PENDING",
+    "provider_account_quota": "PENDING",
+    "confirmation_funding": "PENDING"
+  },
+  "approval": {
+    "expanded_campaign_approval": "PENDING",
+    "budget_source": "harness.yaml USD 0 and decisions.md; no expanded authorization",
+    "independent_dataset_and_rubric_review": "PENDING",
+    "clean_context_phase_verification": "PENDING"
+  },
+  "execution": {
+    "timeout_seconds_per_call": 45,
+    "max_retries": 0,
+    "semantic_failure_retry": false,
+    "chunk_scenarios": 5,
+    "min_seconds_between_calls": "PENDING",
+    "max_wall_clock_minutes": "PENDING",
+    "persistent_cumulative_ledger": "NOT_IMPLEMENTED",
+    "serialized_campaign_lease": "NOT_IMPLEMENTED",
+    "prompt_capture": false,
+    "raw_provider_content_persisted": false,
+    "max_exporter_attempts_per_scenario": 3
+  },
+  "generation_enabled": false,
+  "offline_simulation_counts_as_live_evidence": false
+}

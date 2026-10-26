@@ -1,0 +1,19 @@
+{
+  "dataset": "p03-live-v1",
+  "case_count": 30,
+  "development": 9,
+  "holdout": "fixed in version control; not access controlled",
+  "language": "NOT_APPLICABLE",
+  "families": [
+    "parent_child_correlation",
+    "usage_accounting",
+    "provider_model_identity",
+    "content_exclusion",
+    "exporter_outage_recovery",
+    "alert_fire_recovery"
+  ],
+  "minimum_per_family": 5,
+  "sha256_cases_jsonl": "e9b9ac4d1b1c3c85ffd48d3b30b932734d47ababa3f777b76bb5c6c538e68633",
+  "authorship": "synthetic operational scenarios; independent review pending",
+  "provider_calls": 0
+}

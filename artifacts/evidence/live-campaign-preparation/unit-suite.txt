@@ -1,0 +1,7 @@
+COMMAND: uv run --locked python -m pytest tests
+EXIT_CODE: 0
+STDOUT:
+.......................................                                  [100%]
+39 passed in 1.56s
+
+STDERR:

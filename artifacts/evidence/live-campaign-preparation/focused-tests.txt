@@ -1,0 +1,17 @@
+COMMAND: uv run --locked python -m unittest discover -s tests -p test_live_campaign_preparation.py -v
+EXIT_CODE: 0
+STDOUT:
+
+STDERR:
+test_dataset_denominators_and_families (test_live_campaign_preparation.CampaignPreparationTests.test_dataset_denominators_and_families) ... ok
+test_dataset_rejects_cross_split_source (test_live_campaign_preparation.CampaignPreparationTests.test_dataset_rejects_cross_split_source) ... ok
+test_offline_dry_run_and_generation_block (test_live_campaign_preparation.CampaignPreparationTests.test_offline_dry_run_and_generation_block) ... ok
+test_privacy_exporter_and_alert_fail_closed (test_live_campaign_preparation.CampaignPreparationTests.test_privacy_exporter_and_alert_fail_closed) ... ok
+test_simulation_never_counts_as_live_evidence (test_live_campaign_preparation.CampaignPreparationTests.test_simulation_never_counts_as_live_evidence) ... ok
+test_trace_grader_rejects_correlation_mismatch (test_live_campaign_preparation.CampaignPreparationTests.test_trace_grader_rejects_correlation_mismatch) ... ok
+test_usage_and_identity_mismatches_fail (test_live_campaign_preparation.CampaignPreparationTests.test_usage_and_identity_mismatches_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.266s
+
+OK
