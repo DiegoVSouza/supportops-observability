@@ -1,0 +1,65 @@
+$ parse YAML stack\docker-compose.integration.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\docker-compose.obs.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\dashboards\provider.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\datasources\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML alerts\observability.yml
+exit_code=0
+valid YAML
+
+$ validate JSON artifacts
+exit_code=0
+dashboard, source lock and incident fixtures valid
+
+$ C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests
+exit_code=0
+...............................                                          [100%]
+31 passed in 0.35s
+
+$ LLM_MODE=fake python demo/runner_double.py --once
+exit_code=0
+LLM_MODE=fake; metrics=http://localhost:8000; P01 integration=INCOMPLETE (local contract double); result={'ticket_id': 'T-DEMO', 'status': 'open', 'classification': 'billing_question'}
+
+$ python demo/integrated_trace.py (synthetic local exporter)
+exit_code=0
+synthetic_trace=PASS; spans=8; trace_id=00000000000000000000000000000042; output=artifacts\evidence\integrated-trace-synthetic.json
+
+$ python incident-lab/simulate.py
+exit_code=0
+simulated_incidents=3 spans=11 output=artifacts\evidence\incident-simulation.json real_incident_traces=PENDING
+
+$ promtool check rules alerts/observability.yml
+exit_code=127
+INCOMPLETE: promtool unavailable
+
+$ docker compose config --quiet
+exit_code=0
+(no output)
+
+$ python scripts/check_services.py
+exit_code=2
+Command: docker compose -p p03-remediation -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml up -d --wait
+Exit code: 1
+unable to get image 'otel/opentelemetry-collector-contrib:0.161.0': error during connect: Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.51/images/otel/opentelemetry-collector-contrib:0.161.0/json": open //./pipe/dockerDesktopLinuxEngine: O sistema nÃƒÂ£o pode encontrar o arquivo especificado.
+
+$ uv lock --check
+exit_code=0
+Resolved 50 packages in 2ms
+
+result=INCOMPLETE; failures=0; incomplete=promtool rule validation: executable unavailable; required service integration unavailable or incomplete
+outer_exit_code=2

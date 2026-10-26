@@ -1,0 +1,41 @@
+Command: C:\estudo\Golpe\lab\projects\p00\.venv\Scripts\ruff.exe check --isolated --select I,F scripts/run_live_groq_eval.py
+Exit code: 1
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\run_live_groq_eval.py:3:1
+   |
+ 1 |   """One synthetic Groq completion recorded through the observability API."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import json
+ 6 | | import os
+ 7 | | import random
+ 8 | | import time
+ 9 | | from datetime import UTC, datetime
+10 | | from pathlib import Path
+11 | |
+12 | | import supportops_obs.instrumentation as inst
+13 | | from groq import Groq
+14 | | from opentelemetry.sdk.trace import TracerProvider
+15 | | from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+16 | | from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+17 | | from supportops_obs import LLMResponse, record_llm_call
+   | |_______________________________________________________^
+18 |
+19 |   PROJECT = Path(__file__).resolve().parents[1]
+   |
+help: Organize imports
+   |
+11 |
+   - import supportops_obs.instrumentation as inst
+12 | from groq import Groq
+13 | from opentelemetry.sdk.trace import TracerProvider
+14 | from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+15 | from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+16 +
+17 + import supportops_obs.instrumentation as inst
+18 | from supportops_obs import LLMResponse, record_llm_call
+   |
+
+Found 1 error.
+[*] 1 fixable with `--fix`.

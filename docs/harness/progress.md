@@ -36,3 +36,9 @@ Phase 009 executes Docker promtool syntax and all four rule tests, real HTTP/SQS
 
 - Added optional Groq 1.7.0 live evaluation and enabled capability evals. The real response recorded model, provider, token usage, latency and estimated token cost in the existing instrumentation with content capture disabled.
 - Final four-key run passed: 103 input / 82 output tokens, 0.420243 s, estimated cost USD 0.000032325; billed cost `PENDING`. All 31 focused tests passed. Full validation is incomplete only because Docker and promtool are unavailable.
+
+## 2026-10-26 — Live evaluation readability cleanup
+
+- Separate model catalog lookup, completion, retry timing, telemetry assertions and artifact writing into named local functions.
+- Full offline gate: INCOMPLETE (31 tests pass; promtool and Docker service validation unavailable).
+- Offline helper and static checks passed; no live calls were needed. Evidence: artifacts/evidence/code-cleanup/.
