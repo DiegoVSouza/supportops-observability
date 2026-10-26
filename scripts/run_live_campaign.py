@@ -1,8 +1,12 @@
 """Offline preparation and reservation dry-run for P03 telemetry evaluation."""
 from __future__ import annotations
-import argparse, hashlib, json, sys
+import argparse, hashlib, json, re, sys
 from pathlib import Path
 from typing import Any
+try:
+ from .campaign_ledger import CampaignLedger
+except ImportError:
+ from campaign_ledger import CampaignLedger
 ROOT=Path(__file__).resolve().parents[1]
 FAMILIES={'parent_child_correlation','usage_accounting','provider_model_identity','content_exclusion','exporter_outage_recovery','alert_fire_recovery'}
 CONTENT_TERMS=('prompt','response','content','argument','message')
@@ -83,8 +87,17 @@ def summarize(stage:str,rows:list[dict[str,Any]],config:dict[str,Any],manifest:d
  return {'status':'DRY_RUN','stage':stage,'dataset_sha256':manifest['sha256_cases_jsonl'],'cases':len(selected),'logical_trials':trials,'max_provider_calls':calls,'max_input_tokens':trials*caps['input_tokens_per_trial'],'max_output_tokens':trials*caps['output_tokens_per_trial'],'strata':{'family':{f:sum(r['family']==f for r in selected) for f in sorted(FAMILIES)},'split':{s:sum(r['split']==s for r in selected) for s in ('development','holdout')}},'campaign_plan':{k:planned[k] for k in ('primary_campaign_max_calls','primary_campaign_max_input_tokens','primary_campaign_max_output_tokens','confirmation_fresh_cases','confirmation_max_calls','confirmation_max_input_tokens','confirmation_max_output_tokens','all_stages_max_calls_if_additive','all_stages_max_input_tokens_if_additive','all_stages_max_output_tokens_if_additive')},'authorized_paid_spend_usd':0,'blockers':blockers,'generation_authorized':False,'provider_accessed':False,'credentials_read':False,'network_accessed':False,'docker_mutated':False}
 
 def main(argv:list[str]|None=None)->int:
- parser=argparse.ArgumentParser(description=__doc__); parser.add_argument('--config',type=Path,default=ROOT/'evals/live-campaign.json'); parser.add_argument('--stage',choices=('pilot','development','holdout'),required=True); parser.add_argument('--dry-run',action='store_true'); args=parser.parse_args(argv)
+ parser=argparse.ArgumentParser(description=__doc__); parser.add_argument('--config',type=Path,default=ROOT/'evals/live-campaign.json'); command=parser.add_mutually_exclusive_group(required=True); command.add_argument('--stage',choices=('pilot','development','holdout')); command.add_argument('--resume',metavar='CAMPAIGN_ID'); parser.add_argument('--dry-run',action='store_true'); args=parser.parse_args(argv)
  try:
+  if args.resume is not None:
+   if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,79}',args.resume): raise CampaignError('invalid campaign ID')
+   ledger_path=ROOT/'artifacts/evals/live/ledger.sqlite'
+   if not ledger_path.is_file(): raise CampaignError('campaign ledger does not exist')
+   ledger=CampaignLedger(ledger_path,campaign_id=args.resume,read_only=True); attempts=ledger.reserved_trials()
+   if not attempts: raise CampaignError('campaign has no recorded attempts')
+   report={'project':'p03','campaign_id':args.resume,'mode':'read-only-resume-inspection','attempts':attempts,'cumulative_usage':{k:str(v) for k,v in ledger.totals().items()},'provider_accessed':False}
+   if args.dry_run: print(json.dumps(report,ensure_ascii=False,sort_keys=True,indent=2)); return 0
+   print(json.dumps({**report,'status':'INCOMPLETE'},sort_keys=True)); return 2
   cfg=read_json(args.config if args.config.is_absolute() else ROOT/args.config); manifest=read_json(ROOT/cfg['dataset_manifest']); rows=read_cases(ROOT/cfg['cases_path'],manifest); validate_config(cfg); report=summarize(args.stage,rows,cfg,manifest)
  except (CampaignError,KeyError,TypeError) as exc: print(json.dumps({'status':'INCOMPLETE','error':str(exc)},sort_keys=True)); return 2
  if args.dry_run: print(json.dumps(report,ensure_ascii=False,sort_keys=True,indent=2)); return 0

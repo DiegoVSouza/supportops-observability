@@ -46,3 +46,8 @@ Phase 009 executes Docker promtool syntax and all four rule tests, real HTTP/SQS
 ## 2026-10-26 — Live Docker acceptance
 
 The first Docker gate exceeded its cold-start synthetic-alert wait. All four alerts later fired; increasing the configurable wait to 600 seconds preserved thresholds. The subsequent full gate passed with no incomplete checks. A real Groq completion (103 input / 64 output tokens) exported parent and inference spans over OTLP. Jaeger independently confirmed provider, model, usage and absent content. Evidence: artifacts/evidence/live-docker/.
+## 2026-10-26 — Phase 013 bounded campaign ledger
+
+- Added P03-local append-only reservations, atomic cumulative caps, a cross-process lease, and content-free read-only resume inspection. Unknown usage remains reserved; attempts are not replayed.
+- Focused checks passed: 6 ledger tests and 8 campaign preparation tests. Fast check passed. Full gate returned 2 (`INCOMPLETE`) with zero failures because Docker/promtool validators and service integration were intentionally skipped; deterministic tests/eval/simulation/lock checks passed.
+- Groq dispatch, authorized finite limits/reviews, crash recovery, live-path lease integration, and clean-context review remain pending. No provider or telemetry service call occurred. Evidence: `artifacts/evidence/live-campaign-ledger/`.

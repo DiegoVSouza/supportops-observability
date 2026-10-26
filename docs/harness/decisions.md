@@ -17,3 +17,7 @@ Use opt-in Groq live mode with numbered credentials and authenticated model pref
 ## 2026-10-26 — Broad observability campaign preparation
 
 Prepare 30 synthetic operational scenarios with 9 development / 21 holdout and `NOT_APPLICABLE` language. Keep prompt capture disabled and do not mutate Docker or service stacks during preparation. The project profile remains USD 0; the prior single instrumentation request does not authorize campaign or confirmation calls. Expanded quota and cumulative limits, human review, and a durable lease/ledger remain pending.
+
+## 2026-10-26 — Bounded telemetry campaign ledger
+
+Phase 013 adds P03-local reservation accounting, process exclusion, and read-only resume inspection. It does not enable Groq dispatch or authorize additional free-tier requests. Paid budget remains USD 0; quota, cumulative limits, confirmation reserve, human review, pacing, wall-clock ceiling, and model preflight remain `PENDING`. Prompt capture and raw provider content remain disabled.
