@@ -30,4 +30,9 @@ Phase 009 executes Docker promtool syntax and all four rule tests, real HTTP/SQS
 - Docker promtool validated the alert file and all four alert fixtures. The full gate passed with P01 0.1.1 and P04 0.1.3 installed wheels, service traces, three synthetic incident cases, dashboard, and four live synthetic alerts.
 - `P03_SKIP_SERVICES=1` returned exit 2 and `INCOMPLETE` with no failures; omission of a required gate cannot pass.
 - Current proof: `artifacts/evidence/phase-009-full-gate-v013-final.txt`, `phase-009-full-gate-v013-detail-final.txt`, `phase-009-jaeger-export.json`, `phase-009-live-alerts.json`.
-- Production traces, model quality, cost, and comparable latency remain PENDING; no production run was performed.
+- Production traces and model quality remain PENDING; no production run was performed.
+
+## 2026-10-26 — Phase 010 real LLM instrumentation
+
+- Added optional Groq 1.7.0 live evaluation and enabled capability evals. The real response recorded model, provider, token usage, latency and estimated token cost in the existing instrumentation with content capture disabled.
+- Final four-key run passed: 103 input / 82 output tokens, 0.420243 s, estimated cost USD 0.000032325; billed cost `PENDING`. All 31 focused tests passed. Full validation is incomplete only because Docker and promtool are unavailable.

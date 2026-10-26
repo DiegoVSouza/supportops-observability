@@ -1,0 +1,3 @@
+Command: uv run --extra dev python scripts/check_full.py
+Exit code: 2 (INCOMPLETE)
+Output: 31 tests passed; synthetic demos and Compose configuration passed. promtool was unavailable and Docker daemon could not be reached. No test failure occurred.

@@ -1,0 +1,25 @@
+{
+  "assertions": {
+    "content_absent": true,
+    "model": true,
+    "provider": true,
+    "span_recorded": true,
+    "usage": true
+  },
+  "content_capture": false,
+  "cost_usd": "PENDING",
+  "credential_count": 4,
+  "estimated_cost_usd": 3.232499999999999e-05,
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-26T10:39:18.714892+00:00",
+  "input_tokens": 103,
+  "latency_seconds": 0.420243,
+  "metrics_recorded": true,
+  "model": "openai/gpt-oss-20b",
+  "model_available_key_count": 4,
+  "output_tokens": 82,
+  "provider": "groq",
+  "span_count": 1,
+  "started_at_utc": "2026-10-26T10:39:16.077440+00:00",
+  "status": "PASS"
+}
