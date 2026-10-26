@@ -1,0 +1,28 @@
+{
+  "command": "GET http://127.0.0.1:24686/api/traces/b710cde2215cb55c0a98993ca2a6c052",
+  "exit_code": 0,
+  "assertions": {
+    "agent_span": true,
+    "inference_span": true,
+    "provider": true,
+    "model": true,
+    "usage": true,
+    "no_content": true
+  },
+  "trace_id": "b710cde2215cb55c0a98993ca2a6c052",
+  "span_names": [
+    "llm.inference",
+    "agent.live-evaluation"
+  ],
+  "llm_tags": {
+    "otel.scope.name": "supportops_obs.live",
+    "supportops.llm.cost_usd": 2.6924999999999997e-05,
+    "supportops.llm.input_tokens": 103,
+    "supportops.llm.latency_seconds": 0.401475,
+    "supportops.llm.model": "openai/gpt-oss-20b",
+    "supportops.llm.output_tokens": 64,
+    "supportops.llm.provider": "groq",
+    "supportops.llm.success": true,
+    "span.kind": "internal"
+  }
+}

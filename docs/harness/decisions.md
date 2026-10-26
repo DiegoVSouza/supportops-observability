@@ -9,3 +9,7 @@
 - External integration: P01 package is not currently an installed dependency; P01 integration gate remains INCOMPLETE until package version, source commit, and artifact hash are recorded.
 - API compatibility: use stable OpenTelemetry tracing/metrics APIs; do not claim vendor GenAI semantic conventions as stable. Record official source and version findings in `docs/harness/sources.lock.json`.
 - Phase 010 decision (2026-10-26): make one synthetic Groq completion in an opt-in evaluation to validate real LLM span/token/latency instrumentation. Keep prompt capture disabled, use free-plan allowance only, and leave billed cost `PENDING` until confirmed. No product provider runtime is enabled by this evaluation.
+
+## 2026-10-26 — Live Docker acceptance
+
+Use opt-in Groq live mode with numbered credentials and authenticated model preflight. Preserve deterministic fake defaults and fail closed on provider/contract failures. Only local synthetic acceptance and the designated free allowance are authorized; billed cost remains PENDING. Evidence: artifacts/evidence/live-docker/.

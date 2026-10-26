@@ -42,3 +42,7 @@ Phase 009 executes Docker promtool syntax and all four rule tests, real HTTP/SQS
 - Separate model catalog lookup, completion, retry timing, telemetry assertions and artifact writing into named local functions.
 - Full offline gate: INCOMPLETE (31 tests pass; promtool and Docker service validation unavailable).
 - Offline helper and static checks passed; no live calls were needed. Evidence: artifacts/evidence/code-cleanup/.
+
+## 2026-10-26 — Live Docker acceptance
+
+The first Docker gate exceeded its cold-start synthetic-alert wait. All four alerts later fired; increasing the configurable wait to 600 seconds preserved thresholds. The subsequent full gate passed with no incomplete checks. A real Groq completion (103 input / 64 output tokens) exported parent and inference spans over OTLP. Jaeger independently confirmed provider, model, usage and absent content. Evidence: artifacts/evidence/live-docker/.

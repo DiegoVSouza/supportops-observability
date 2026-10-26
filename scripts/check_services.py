@@ -21,7 +21,8 @@ def fetch(url,auth=None):
 
 def main():
     try:
-        compose=['docker','compose','-p','p03-remediation','-f','stack/docker-compose.obs.yml','-f','artifacts/evidence/phase-008-compose.override.yml','-f','stack/docker-compose.integration.yml']
+        project=os.getenv('P03_COMPOSE_PROJECT','p03-remediation')
+        compose=['docker','compose','-p',project,'-f','stack/docker-compose.obs.yml','-f','artifacts/evidence/phase-008-compose.override.yml','-f','stack/docker-compose.integration.yml']
         result=subprocess.run(compose+['up','-d','--wait'],cwd=ROOT,capture_output=True,text=True)
         print('Command: '+' '.join(compose+['up','-d','--wait'])+'\nExit code: '+str(result.returncode))
         print(result.stdout+result.stderr)
@@ -52,7 +53,7 @@ def main():
         (ROOT/'artifacts/evidence/phase-009-jaeger-export.json').write_text(json.dumps(exported,indent=2)+'\n')
         dashboard=fetch('http://127.0.0.1:23000/api/search?query=SupportOps',os.getenv('P03_GRAFANA_AUTH','admin:admin'))
         assert any(row['type']=='dash-db' for row in dashboard)
-        deadline=time.monotonic()+390
+        deadline=time.monotonic()+int(os.getenv('P03_ALERT_TIMEOUT_S','600'))
         while True:
             alerts=fetch('http://127.0.0.1:29090/api/v1/alerts')
             fired={a['labels']['alertname'] for a in alerts['data']['alerts'] if a['state']=='firing'}

@@ -1,6 +1,6 @@
 # Live Groq and Docker acceptance
 
-Status: planned.
+Status: verified for the bounded acceptance case.
 
 Pass the real Docker observability gate and export one Groq response through OTLP to Jaeger with content capture disabled.
 

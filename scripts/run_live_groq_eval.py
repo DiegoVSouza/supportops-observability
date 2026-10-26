@@ -10,6 +10,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from groq import Groq
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
@@ -102,50 +103,69 @@ def request_completion(api_keys: list[str]):
 
 def record_response(response, latency: float) -> dict[str, object]:
     usage = response.usage
+    actual_model = getattr(response, "model", MODEL)
     exporter = InMemorySpanExporter()
     provider = TracerProvider()
     provider.add_span_processor(SimpleSpanProcessor(exporter))
+    endpoint = os.getenv("P03_LIVE_OTLP_ENDPOINT")
+    if endpoint:
+        provider.add_span_processor(
+            SimpleSpanProcessor(
+                OTLPSpanExporter(
+                    endpoint=endpoint, insecure=endpoint.startswith("http://")
+                )
+            )
+        )
+    previous_tracer = inst._tracer
     inst._tracer = provider.get_tracer("supportops_obs.live")
     estimated_cost = (
         usage.prompt_tokens * 0.075 + usage.completion_tokens * 0.30
     ) / 1_000_000
-    record_llm_call(
-        LLMResponse(
-            "groq",
-            MODEL,
-            usage.prompt_tokens,
-            usage.completion_tokens,
-            estimated_cost,
-            latency,
-            content=None,
+    try:
+        with inst._tracer.start_as_current_span("agent.live-evaluation") as parent:
+            record_llm_call(
+                LLMResponse(
+                    "groq",
+                    actual_model,
+                    usage.prompt_tokens,
+                    usage.completion_tokens,
+                    estimated_cost,
+                    latency,
+                    content=None,
+                )
+            )
+        if not provider.force_flush():
+            raise RuntimeError("live trace flush did not complete")
+        spans = exporter.get_finished_spans()
+        inference = next((span for span in spans if span.name == "llm.inference"), None)
+        attrs = inference.attributes if inference else {}
+        checks = {
+            "span_recorded": inference is not None,
+            "provider": attrs.get("supportops.llm.provider") == "groq",
+            "model": attrs.get("supportops.llm.model") == MODEL,
+            "usage": attrs.get("supportops.llm.input_tokens") == usage.prompt_tokens
+            and attrs.get("supportops.llm.output_tokens") == usage.completion_tokens,
+            "content_absent": all(
+                "content" not in key for span in spans for key in span.attributes
+            ),
+        }
+        return dict(
+            status="PASS" if all(checks.values()) else "FAIL",
+            assertions=checks,
+            input_tokens=usage.prompt_tokens,
+            output_tokens=usage.completion_tokens,
+            latency_seconds=latency,
+            estimated_cost_usd=estimated_cost,
+            cost_usd="PENDING",
+            span_count=len(spans),
+            metrics_recorded=True,
+            actual_model=actual_model,
+            trace_id=format(parent.get_span_context().trace_id, "032x"),
+            otlp_export_enabled=bool(endpoint),
         )
-    )
-    spans = exporter.get_finished_spans()
-    attrs = spans[-1].attributes if spans else {}
-    checks = {
-        "span_recorded": bool(spans),
-        "provider": attrs.get("supportops.llm.provider") == "groq",
-        "model": attrs.get("supportops.llm.model") == MODEL,
-        "usage": attrs.get("supportops.llm.input_tokens") == usage.prompt_tokens
-        and attrs.get("supportops.llm.output_tokens") == usage.completion_tokens,
-        "content_absent": all(
-            "content" not in k for span in spans for k in span.attributes
-        ),
-    }
-    code = 0 if all(checks.values()) else 1
-    summary = dict(
-        status="PASS" if code == 0 else "FAIL",
-        assertions=checks,
-        input_tokens=usage.prompt_tokens,
-        output_tokens=usage.completion_tokens,
-        latency_seconds=latency,
-        estimated_cost_usd=estimated_cost,
-        cost_usd="PENDING",
-        span_count=len(spans),
-        metrics_recorded=True,
-    )
-    provider.shutdown()
-    return summary
+    finally:
+        inst._tracer = previous_tracer
+        provider.shutdown()
 
 
 def write_result(result: dict[str, object], code: int) -> None:

@@ -1,0 +1,32 @@
+Command: C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests/test_live_groq_eval.py -q --basetemp artifacts\evidence\live-docker\red-tmp
+Exit code: 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_live_response_exports_content_safe_agent_and_llm_spans _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002577FC30B00>
+
+    def test_live_response_exports_content_safe_agent_and_llm_spans(monkeypatch):
+        from scripts import run_live_groq_eval as evaluation
+
+        exported = []
+        class Exporter:
+            def __init__(self, **kwargs):
+                assert kwargs["endpoint"] == "http://127.0.0.1:24317"
+            def export(self, spans):
+                exported.extend(spans)
+                return SpanExportResult.SUCCESS
+            def shutdown(self):
+                pass
+        monkeypatch.setenv("P03_LIVE_OTLP_ENDPOINT", "http://127.0.0.1:24317")
+        monkeypatch.setattr(evaluation, "OTLPSpanExporter", Exporter, raising=False)
+        response = SimpleNamespace(usage=SimpleNamespace(prompt_tokens=2, completion_tokens=3))
+        summary = evaluation.record_response(response, 0.1)
+        assert summary["status"] == "PASS"
+>       assert summary["trace_id"]
+               ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'trace_id'
+
+tests\test_live_groq_eval.py:23: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_live_groq_eval.py::test_live_response_exports_content_safe_agent_and_llm_spans

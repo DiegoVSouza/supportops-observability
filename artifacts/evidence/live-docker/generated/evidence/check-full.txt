@@ -1,0 +1,120 @@
+$ parse YAML stack\docker-compose.integration.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\docker-compose.obs.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\dashboards\provider.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\datasources\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML alerts\observability.yml
+exit_code=0
+valid YAML
+
+$ validate JSON artifacts
+exit_code=0
+dashboard, source lock and incident fixtures valid
+
+$ C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests
+exit_code=0
+...............................                                          [100%]
+31 passed in 0.50s
+
+$ LLM_MODE=fake python demo/runner_double.py --once
+exit_code=0
+LLM_MODE=fake; metrics=http://localhost:8000; P01 integration=INCOMPLETE (local contract double); result={'ticket_id': 'T-DEMO', 'status': 'open', 'classification': 'billing_question'}
+
+$ python demo/integrated_trace.py (synthetic local exporter)
+exit_code=0
+synthetic_trace=PASS; spans=8; trace_id=00000000000000000000000000000042; output=artifacts\evidence\integrated-trace-synthetic.json
+
+$ python incident-lab/simulate.py
+exit_code=0
+simulated_incidents=3 spans=11 output=artifacts\evidence\incident-simulation.json real_incident_traces=PENDING
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 check rules /rules/observability.yml
+exit_code=0
+Checking /rules/observability.yml
+  SUCCESS: 4 rules found
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 test rules /tests.yml
+exit_code=0
+  SUCCESS
+
+$ docker compose config --quiet
+exit_code=0
+(no output)
+
+$ python scripts/check_services.py
+exit_code=2
+Command: docker compose -p p03-live-012 -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml up -d --wait
+Exit code: 0
+time="2026-10-26T08:16:48-03:00" level=warning msg="No services to build"
+ Network p03-live-012_default Creating
+ Network p03-live-012_default Created
+ Container p03-live-012-jaeger-1 Creating
+ Container p03-live-012-prometheus-1 Creating
+ Container p03-live-012-grafana-1 Creating
+ Container p03-live-012-postgres-1 Creating
+ Container p03-live-012-synthetic-metrics-1 Creating
+ Container p03-live-012-localstack-1 Creating
+ Container p03-live-012-grafana-1 Created
+ Container p03-live-012-jaeger-1 Created
+ Container p03-live-012-otel-collector-1 Creating
+ Container p03-live-012-prometheus-1 Created
+ Container p03-live-012-postgres-1 Created
+ Container p03-live-012-synthetic-metrics-1 Created
+ Container p03-live-012-localstack-1 Created
+ Container p03-live-012-otel-collector-1 Created
+ Container p03-live-012-grafana-1 Starting
+ Container p03-live-012-localstack-1 Starting
+ Container p03-live-012-jaeger-1 Starting
+ Container p03-live-012-postgres-1 Starting
+ Container p03-live-012-synthetic-metrics-1 Starting
+ Container p03-live-012-prometheus-1 Starting
+ Container p03-live-012-grafana-1 Started
+ Container p03-live-012-localstack-1 Started
+ Container p03-live-012-jaeger-1 Started
+ Container p03-live-012-otel-collector-1 Starting
+ Container p03-live-012-synthetic-metrics-1 Started
+ Container p03-live-012-postgres-1 Started
+ Container p03-live-012-prometheus-1 Started
+ Container p03-live-012-otel-collector-1 Started
+ Container p03-live-012-postgres-1 Waiting
+ Container p03-live-012-localstack-1 Waiting
+ Container p03-live-012-otel-collector-1 Waiting
+ Container p03-live-012-jaeger-1 Waiting
+ Container p03-live-012-prometheus-1 Waiting
+ Container p03-live-012-grafana-1 Waiting
+ Container p03-live-012-synthetic-metrics-1 Waiting
+ Container p03-live-012-grafana-1 Healthy
+ Container p03-live-012-prometheus-1 Healthy
+ Container p03-live-012-jaeger-1 Healthy
+ Container p03-live-012-otel-collector-1 Healthy
+ Container p03-live-012-synthetic-metrics-1 Healthy
+ Container p03-live-012-localstack-1 Healthy
+ Container p03-live-012-postgres-1 Healthy
+
+Command: C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe demo/service_trace.py
+Exit code: 0
+{"traces": [{"incident": "slow_tool", "task_id": "719eaac7-7503-4329-9f08-0d802573969c", "trace_id": "82c59549fb56fa1c36292b301aaf5917"}, {"incident": "agent_loop", "task_id": "a32d0e15-f726-4242-89c1-a41576c5ae0c", "trace_id": "86790b1ec042a77a112b39c84c4b5922"}, {"incident": "cost_spike", "task_id": "c2505c92-43a2-4dbb-9144-7e123b996663", "trace_id": "775bee504de7611f781ce191f2fdf1a5"}], "synthetic": true}
+
+service-integration: INCOMPLETE; RuntimeError: required synthetic alerts did not fire
+
+$ uv lock --check
+exit_code=0
+Resolved 50 packages in 2ms
+
+result=INCOMPLETE; failures=0; incomplete=required service integration unavailable or incomplete
+outer_exit_code=2
