@@ -7,4 +7,5 @@ Result: PASS for offline phase scope; implementer self-check only, not independe
 - Confirmed `setup_telemetry`, `flush_telemetry`, and `shutdown_telemetry` use a real `TracerProvider`/OTLP exporter lifecycle; lifecycle exceptions are not currently converted to a safe status.
 - The three tasks cover tests, implementation, and evidence. Write paths exclude stack/services and historical telemetry/evaluation evidence.
 - Fake/in-memory validation requires no provider allocation, cloud budget, credentials, network, or Docker mutation.
+- Full-gate inspection found its default service check executes Compose `up -d --wait` and can mutate/start project services. Phase validation therefore explicitly sets `P03_SKIP_SERVICES=1`, records read-only Docker identities before/after, and allows only the cached local Prometheus validator container; no service lifecycle or image pull is in scope.
 - Service-gate omissions will remain INCOMPLETE, and no independent or human review is claimed.
