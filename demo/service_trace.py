@@ -99,5 +99,11 @@ def run():
 if __name__=="__main__":
     from pathlib import Path
     output=run()
-    Path("artifacts/evidence/phase-009-service-traces.json").write_text(json.dumps(output,indent=2)+"\n",encoding="utf-8")
+    root=Path(__file__).resolve().parents[1]
+    evidence_root=(root/"artifacts"/"evidence").resolve()
+    evidence_dir=(root/os.getenv("P03_SERVICE_EVIDENCE_DIR","artifacts/evidence")).resolve()
+    if not evidence_dir.is_relative_to(evidence_root):
+        raise ValueError("P03_SERVICE_EVIDENCE_DIR must be inside artifacts/evidence")
+    evidence_dir.mkdir(parents=True,exist_ok=True)
+    (evidence_dir/"phase-009-service-traces.json").write_text(json.dumps(output,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"traces":output["traces"],"synthetic":True}))

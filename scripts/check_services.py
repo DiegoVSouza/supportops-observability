@@ -21,6 +21,11 @@ def fetch(url,auth=None):
 
 def main():
     try:
+        evidence_root=(ROOT/'artifacts'/'evidence').resolve()
+        evidence_dir=(ROOT/os.getenv('P03_SERVICE_EVIDENCE_DIR','artifacts/evidence')).resolve()
+        if not evidence_dir.is_relative_to(evidence_root):
+            raise ValueError('P03_SERVICE_EVIDENCE_DIR must be inside artifacts/evidence')
+        evidence_dir.mkdir(parents=True,exist_ok=True)
         project=os.getenv('P03_COMPOSE_PROJECT','p03-remediation')
         compose=['docker','compose','-p',project,'-f','stack/docker-compose.obs.yml','-f','artifacts/evidence/phase-008-compose.override.yml','-f','stack/docker-compose.integration.yml']
         result=subprocess.run(compose+['up','-d','--wait'],cwd=ROOT,capture_output=True,text=True)
@@ -33,7 +38,7 @@ def main():
         print('Command: '+sys.executable+' demo/service_trace.py\nExit code: '+str(run.returncode))
         print(run.stdout+run.stderr)
         if run.returncode: return 1
-        traces=json.loads((ROOT/'artifacts/evidence/phase-009-service-traces.json').read_text())
+        traces=json.loads((evidence_dir/'phase-009-service-traces.json').read_text())
         exported=[]
         for item in traces['traces']:
             deadline=time.monotonic()+30
@@ -50,7 +55,7 @@ def main():
             required={'api.request','queue.publish','worker.run','agent.triage','llm.fake','tool.incident.lookup','database.incident.lookup'}
             if not required<=names: raise RuntimeError('trace lacks required service stages: '+str(required-names))
             exported.extend(found)
-        (ROOT/'artifacts/evidence/phase-009-jaeger-export.json').write_text(json.dumps(exported,indent=2)+'\n')
+        (evidence_dir/'phase-009-jaeger-export.json').write_text(json.dumps(exported,indent=2)+'\n')
         dashboard=fetch('http://127.0.0.1:23000/api/search?query=SupportOps',os.getenv('P03_GRAFANA_AUTH','admin:admin'))
         assert any(row['type']=='dash-db' for row in dashboard)
         deadline=time.monotonic()+int(os.getenv('P03_ALERT_TIMEOUT_S','600'))
@@ -60,7 +65,7 @@ def main():
             if {'AgentLoopDetected','LLMCostAnomaly','AgentErrorRateHigh','LLMp95LatencyHigh'}<=fired: break
             if time.monotonic()>deadline: raise RuntimeError('required synthetic alerts did not fire')
             time.sleep(5)
-        (ROOT/'artifacts/evidence/phase-009-live-alerts.json').write_text(json.dumps(alerts,indent=2)+'\n')
+        (evidence_dir/'phase-009-live-alerts.json').write_text(json.dumps(alerts,indent=2)+'\n')
         print('service-integration: PASS; real HTTP/SQS/P04/P01/PostgreSQL trace; three synthetic incidents; dashboard; four live synthetic alerts')
         return 0
     except Exception as exc:
