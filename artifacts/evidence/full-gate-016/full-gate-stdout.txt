@@ -1,0 +1,1 @@
+check-full: PASS; failures=0; incomplete=0

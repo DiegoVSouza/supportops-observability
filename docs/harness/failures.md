@@ -19,3 +19,7 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 ## 2026-10-27 - Phase 015 evidence destination
 
 - `demo/service_trace.py` and `scripts/check_services.py` previously wrote service results to phase-009 files unconditionally. Added `P03_SERVICE_EVIDENCE_DIR`, constrained to the project's evidence subtree, and confirmed an outside path exits INCOMPLETE before Compose. The isolated recheck wrote only new phase evidence; all 134 pre-existing evidence files kept their exact SHA-256 and size.
+
+## 2026-10-27 - Phase 016 full-gate evidence destination
+
+- The project full gate, integrated-trace demo, and incident simulator each wrote into fixed historical evidence paths. Added `P03_CHECK_EVIDENCE_DIR`, constrained to `artifacts/evidence/`, and verified an outside path fails before checks. The full service gate then passed using a new run directory; all prior 160 evidence files remained byte-identical.

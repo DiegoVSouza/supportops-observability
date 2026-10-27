@@ -1,0 +1,18 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.12, pytest-8.4.2, pluggy-1.7.0
+rootdir: C:\estudo\Golpe\lab\projects\p03
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collected 50 items
+
+tests\test_alert_rules.py .                                              [  2%]
+tests\test_campaign_ledger.py ......                                     [ 14%]
+tests\test_gate_status.py ...                                            [ 20%]
+tests\test_instrumentation.py .................                          [ 54%]
+tests\test_integrated_trace.py ..                                        [ 58%]
+tests\test_live_campaign_preparation.py ........                         [ 74%]
+tests\test_live_groq_eval.py .                                           [ 76%]
+tests\test_loopdetect.py ..........                                      [ 96%]
+tests\test_validator_fallback.py ..                                      [100%]
+
+============================= 50 passed in 1.85s ==============================

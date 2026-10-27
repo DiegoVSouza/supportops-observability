@@ -1,0 +1,1 @@
+check-full: FAIL unsafe evidence directory: P03_CHECK_EVIDENCE_DIR must be inside artifacts/evidence

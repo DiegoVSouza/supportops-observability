@@ -1,0 +1,2 @@
+COMMAND: docker compose -p p03-phase016-full-gate -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml down --volumes --remove-orphans
+EXIT_CODE: 0

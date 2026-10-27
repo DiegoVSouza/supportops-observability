@@ -65,3 +65,10 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 - Actual local integration passed: HTTP task ingress, PostgreSQL/SQS worker, installed P01/P04 adapters, three Jaeger traces with required stages, Grafana dashboard, and four synthetic Prometheus alerts firing. Runner used fake LLM behavior; no provider was contacted.
 - Offline suite passed 50 tests; fast and Compose config checks passed. 134 prior evidence files remained byte-identical. Docker remained at 102 containers, 21 networks, and 89 volumes after phase cleanup; prior container identities/states, network IDs, and volume names matched.
 - The P03 service scenario is PASS, but the service-enabled full project gate, model quality/account limits, and human/independent/promotion reviews remain INCOMPLETE/PENDING. Evidence: `artifacts/evidence/service-recheck-015/`.
+
+## 2026-10-27 - Phase 016 historical-safe full gate
+
+- Routed all deterministic full-gate, incident simulation, and integrated-trace output to a fresh `P03_CHECK_EVIDENCE_DIR` under the evidence tree. Outside paths fail before any gate checks. The phase-015 service evidence routing is reused for trace/alert output.
+- Candidate `489aaf9cfa24633cdceb20c8a2f948e9b230e910` passed the complete service-enabled `scripts/check_full.py`: 50 tests, Prometheus rule check/test, synthetic traces/incidents, service traces/dashboard/four alerts, Compose config, and `uv lock --check`; exit 0, zero incomplete checks.
+- All 160 pre-existing evidence files remained byte-identical. Docker returned to 102 containers, 21 networks, 89 volumes; all pre-existing IDs, normalized states, images, network and volume identities matched, and phase namespace is empty. Cached images only; no provider/model call.
+- This is local synthetic acceptance, not Groq quality/billing, customer telemetry, independent/human review, or promotion approval. Those remain PENDING/INCOMPLETE. Evidence: `artifacts/evidence/full-gate-016/`.

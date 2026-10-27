@@ -1,0 +1,15 @@
+{
+  "historical_evidence_unchanged": true,
+  "historical_evidence_files": 160,
+  "preexisting_container_ids_state_images_unchanged": true,
+  "containers_before": 102,
+  "containers_after": 102,
+  "networks_unchanged": true,
+  "networks_before": 21,
+  "networks_after": 21,
+  "volumes_unchanged": true,
+  "volumes_before": 89,
+  "volumes_after": 89,
+  "images_unchanged": true,
+  "phase_namespace_empty": true
+}

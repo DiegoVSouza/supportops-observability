@@ -1,0 +1,2 @@
+COMMAND: python -m py_compile scripts/check_full.py demo/integrated_trace.py incident-lab/simulate.py
+EXIT_CODE: 0

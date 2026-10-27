@@ -1,0 +1,3 @@
+COMMAND: P03_CHECK_EVIDENCE_DIR=artifacts/evidence/full-gate-016/run P03_SERVICE_EVIDENCE_DIR=artifacts/evidence/full-gate-016/run P03_COMPOSE_PROJECT=p03-phase016-full-gate LLM_MODE=fake PYTHONPATH=. uv run --locked python scripts/check_full.py
+EXIT_CODE: 0
+SOURCE_CANDIDATE: 489aaf9cfa24633cdceb20c8a2f948e9b230e910

@@ -1,0 +1,97 @@
+$ parse YAML stack\docker-compose.integration.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\docker-compose.obs.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\dashboards\provider.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\datasources\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML alerts\observability.yml
+exit_code=0
+valid YAML
+
+$ validate JSON artifacts
+exit_code=0
+dashboard, source lock and incident fixtures valid
+
+$ C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests
+exit_code=0
+..................................................                       [100%]
+50 passed in 2.27s
+
+$ LLM_MODE=fake python demo/runner_double.py --once
+exit_code=0
+LLM_MODE=fake; metrics=http://localhost:8000; P01 integration=INCOMPLETE (local contract double); result={'ticket_id': 'T-DEMO', 'status': 'open', 'classification': 'billing_question'}
+
+$ python demo/integrated_trace.py (synthetic local exporter)
+exit_code=0
+synthetic_trace=PASS; spans=8; trace_id=00000000000000000000000000000042; output=C:\estudo\Golpe\lab\projects\p03\artifacts\evidence\full-gate-016\run\integrated-trace-synthetic.json
+
+$ python incident-lab/simulate.py
+exit_code=0
+simulated_incidents=3 spans=11 output=artifacts\evidence\full-gate-016\run\incident-simulation.json real_incident_traces=PENDING
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 check rules /rules/observability.yml
+exit_code=0
+Checking /rules/observability.yml
+  SUCCESS: 4 rules found
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 test rules /tests.yml
+exit_code=0
+  SUCCESS
+
+$ docker compose config --quiet
+exit_code=0
+(no output)
+
+$ python scripts/check_services.py
+exit_code=0
+Command: docker compose -p p03-phase016-full-gate -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml up -d --wait
+Exit code: 0
+time="2026-10-27T20:04:49-03:00" level=warning msg="No services to build"
+ Container p03-phase016-full-gate-grafana-1 Running
+ Container p03-phase016-full-gate-localstack-1 Running
+ Container p03-phase016-full-gate-jaeger-1 Running
+ Container p03-phase016-full-gate-synthetic-metrics-1 Running
+ Container p03-phase016-full-gate-postgres-1 Running
+ Container p03-phase016-full-gate-prometheus-1 Running
+ Container p03-phase016-full-gate-otel-collector-1 Running
+ Container p03-phase016-full-gate-grafana-1 Waiting
+ Container p03-phase016-full-gate-otel-collector-1 Waiting
+ Container p03-phase016-full-gate-synthetic-metrics-1 Waiting
+ Container p03-phase016-full-gate-postgres-1 Waiting
+ Container p03-phase016-full-gate-localstack-1 Waiting
+ Container p03-phase016-full-gate-jaeger-1 Waiting
+ Container p03-phase016-full-gate-prometheus-1 Waiting
+ Container p03-phase016-full-gate-jaeger-1 Healthy
+ Container p03-phase016-full-gate-prometheus-1 Healthy
+ Container p03-phase016-full-gate-synthetic-metrics-1 Healthy
+ Container p03-phase016-full-gate-postgres-1 Healthy
+ Container p03-phase016-full-gate-otel-collector-1 Healthy
+ Container p03-phase016-full-gate-grafana-1 Healthy
+ Container p03-phase016-full-gate-localstack-1 Healthy
+
+Command: C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe demo/service_trace.py
+Exit code: 0
+{"traces": [{"incident": "slow_tool", "task_id": "de7c6bfe-7c04-4274-88d0-f283f75f7150", "trace_id": "c7e066302cc4a3dc81d9f8a721c8ed30"}, {"incident": "agent_loop", "task_id": "5986e7d0-11a1-411a-becf-15bd02000bf7", "trace_id": "0109849e6f60b3b57bc6d53620fbe312"}, {"incident": "cost_spike", "task_id": "20f0b995-bc71-46c8-a2c4-b8acb1aac599", "trace_id": "1a8f793c6d20b21601ce75a44cdec2f7"}], "synthetic": true}
+
+service-integration: PASS; real HTTP/SQS/P04/P01/PostgreSQL trace; three synthetic incidents; dashboard; four live synthetic alerts
+
+$ uv lock --check
+exit_code=0
+Resolved 50 packages in 2ms
+
+result=PASS; failures=0; incomplete=none
+outer_exit_code=0
