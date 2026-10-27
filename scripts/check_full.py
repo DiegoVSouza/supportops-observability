@@ -10,8 +10,24 @@ import sys
 import os
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-EVIDENCE = ROOT / "artifacts" / "evidence" / "check-full.txt"
-EVIDENCE.parent.mkdir(parents=True, exist_ok=True)
+
+
+def evidence_dir() -> pathlib.Path:
+    root = (ROOT / "artifacts" / "evidence").resolve()
+    configured = (ROOT / os.getenv("P03_CHECK_EVIDENCE_DIR", "artifacts/evidence")).resolve()
+    if not configured.is_relative_to(root):
+        raise ValueError("P03_CHECK_EVIDENCE_DIR must be inside artifacts/evidence")
+    configured.mkdir(parents=True, exist_ok=True)
+    return configured
+
+
+try:
+    EVIDENCE_DIR = evidence_dir()
+except (OSError, ValueError) as exc:
+    print(f"check-full: FAIL unsafe evidence directory: {exc}")
+    sys.exit(1)
+
+EVIDENCE = EVIDENCE_DIR / "check-full.txt"
 lines: list[str] = []
 failures = 0
 incomplete: list[str] = []
@@ -32,7 +48,7 @@ def rule_commands(native: str | None, docker_ready: bool) -> list[list[str]]:
         return [base+["check","rules","/rules/observability.yml"],base+["test","rules","/tests.yml"]]
     if native:
         fixture=(ROOT/'tests/fixtures/alert_rules.yml').read_text().replace('/rules/observability.yml',str(ROOT/'alerts/observability.yml').replace('\\','/'))
-        target=ROOT/'artifacts/evidence/phase-009-native-alert-tests.yml'
+        target=EVIDENCE_DIR/'phase-009-native-alert-tests.yml'
         target.write_text(fixture)
         return [[native,'check','rules','alerts/observability.yml'],[native,'test','rules',str(target)]]
     return []

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
@@ -118,7 +119,13 @@ def main() -> int:
         raise SystemExit("synthetic trace correlation mismatch")
     if not all(span["synthetic"] for span in evidence["spans"]):
         raise SystemExit("synthetic trace labeling missing")
-    path = Path("artifacts/evidence/integrated-trace-synthetic.json")
+    root = Path(__file__).resolve().parents[1]
+    evidence_root = (root / "artifacts" / "evidence").resolve()
+    evidence_dir = (root / os.getenv("P03_CHECK_EVIDENCE_DIR", "artifacts/evidence")).resolve()
+    if not evidence_dir.is_relative_to(evidence_root):
+        raise ValueError("P03_CHECK_EVIDENCE_DIR must be inside artifacts/evidence")
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    path = evidence_dir / "integrated-trace-synthetic.json"
     path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"synthetic_trace=PASS; spans={len(evidence['spans'])}; trace_id=00000000000000000000000000000042; output={path}")
     return 0

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from opentelemetry.sdk.resources import Resource
@@ -54,7 +55,12 @@ def simulate() -> dict[str, object]:
 
 def main() -> None:
     output = simulate()
-    target = ROOT / "artifacts" / "evidence" / "incident-simulation.json"
+    evidence_root = (ROOT / "artifacts" / "evidence").resolve()
+    evidence_dir = (ROOT / os.getenv("P03_CHECK_EVIDENCE_DIR", "artifacts/evidence")).resolve()
+    if not evidence_dir.is_relative_to(evidence_root):
+        raise ValueError("P03_CHECK_EVIDENCE_DIR must be inside artifacts/evidence")
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    target = evidence_dir / "incident-simulation.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(output, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     scenarios = output["scenarios"]
