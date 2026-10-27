@@ -7,11 +7,11 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F1812DE00>
     def test_sync_failure_span_omits_exception_message_and_traceback(monkeypatch):
         exporter = memory_tracer(monkeypatch)
         secret = "private prompt and ticket body"
-    
+
         @traced_tool("private-failure")
         def fails():
             raise ValueError(secret)
-    
+
         import pytest
         with pytest.raises(ValueError, match="private prompt"):
             fails()
@@ -20,7 +20,7 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F1812DE00>
 >       assert span.attributes["supportops.error.category"] == "validation"
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests\test_instrumentation.py:63: 
+tests\test_instrumentation.py:63:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = {'supportops.operation.kind': 'tool'}, key = 'supportops.error.category'
@@ -38,11 +38,11 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F180D3650>
     def test_async_failure_span_omits_exception_message_and_traceback(monkeypatch):
         exporter = memory_tracer(monkeypatch)
         secret = "private async prompt"
-    
+
         @traced_tool("private-async-failure")
         async def fails():
             raise RuntimeError(secret)
-    
+
         import pytest
         with pytest.raises(RuntimeError, match="private async prompt"):
             asyncio.run(fails())
@@ -51,7 +51,7 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F180D3650>
 >       assert span.attributes["supportops.error.category"] == "application"
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests\test_instrumentation.py:82: 
+tests\test_instrumentation.py:82:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = {'supportops.operation.kind': 'tool'}, key = 'supportops.error.category'
@@ -70,14 +70,14 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F181582F0>
         class BrokenProvider:
             def __init__(self):
                 self.shutdowns = 0
-    
+
             def force_flush(self, timeout_millis=30000):
                 raise RuntimeError("private exporter response")
-    
+
             def shutdown(self):
                 self.shutdowns += 1
                 raise RuntimeError("private shutdown detail")
-    
+
         provider = BrokenProvider()
         monkeypatch.setattr(inst, "_provider", provider)
         monkeypatch.setattr(inst, "_provider_shutdown", False)
@@ -94,13 +94,13 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F18150BB0>
         class Provider:
             def __init__(self, **kwargs):
                 self.processors = []
-    
+
             def add_span_processor(self, processor):
                 self.processors.append(processor)
-    
+
         def broken_exporter(**kwargs):
             raise RuntimeError("private endpoint detail")
-    
+
         monkeypatch.setattr(inst, "_provider", None)
         monkeypatch.setattr(inst, "_provider_shutdown", False)
         monkeypatch.setattr(inst, "TracerProvider", Provider)
