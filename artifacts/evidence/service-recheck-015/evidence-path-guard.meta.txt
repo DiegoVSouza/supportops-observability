@@ -1,0 +1,3 @@
+COMMAND: P03_SERVICE_EVIDENCE_DIR=../../outside-evidence uv run --locked python scripts/check_services.py
+EXIT_CODE: 2
+EXPECTED: 2 (INCOMPLETE, rejected before Compose)

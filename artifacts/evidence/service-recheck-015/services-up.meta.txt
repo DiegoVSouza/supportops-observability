@@ -1,0 +1,2 @@
+COMMAND: docker compose -p p03-phase015-service -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml up --pull never -d --wait
+EXIT_CODE: 0

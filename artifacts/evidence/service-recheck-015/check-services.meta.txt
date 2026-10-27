@@ -1,0 +1,4 @@
+COMMAND: P03_COMPOSE_PROJECT=p03-phase015-service P03_SERVICE_EVIDENCE_DIR=artifacts/evidence/service-recheck-015 LLM_MODE=fake uv run --locked python scripts/check_services.py
+EXIT_CODE: 0
+SOURCE_CANDIDATE: 436ef8e746bea7c2747c9774ec844e546ce61e6b
+NETWORK: loopback P03 services; fake LLM; test credentials only for LocalStack

@@ -1,0 +1,2 @@
+COMMAND: PYTHONPATH=. uv run --locked pytest -q --basetemp artifacts/evidence/service-recheck-015/offline-pytest tests
+EXIT_CODE: 0

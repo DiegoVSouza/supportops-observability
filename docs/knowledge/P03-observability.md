@@ -43,3 +43,8 @@ P03 instrumentation exports a fixed error category and span status for sync and 
 ### EN - How are instrumentation errors kept private?
 
 Sync and async spans use fixed error categories and status without exception events, messages, arguments, or tracebacks. Setup, flush, and shutdown return boolean status and update a bounded failure counter. Those checks cover observed lifecycle errors only and do not establish production exporter delivery reliability.
+## 2026-10-27 — Phase 015 isolated service recheck
+
+The actual P03 synthetic service path passed using a unique Compose project: loopback HTTP ingress, PostgreSQL/SQS worker, installed P01/P04 packages, OTLP Collector/Jaeger export, Grafana dashboard, and all four existing Prometheus alert rules reaching `firing`. The fake runner produced three synthetic traces (`slow_tool`, `agent_loop`, `cost_spike`); no real model/provider was called. Alert waiting follows the existing 0/2/5-minute `for` windows and a 600-second deadline; thresholds were not changed.
+
+Set `P03_SERVICE_EVIDENCE_DIR` to a new path under `artifacts/evidence/` to keep outputs separate; outside paths are rejected. All phase Compose resources were removed. The service gate does not replace the service-enabled project full gate or establish live quality, account quota, or promotion. Evidence: `artifacts/evidence/service-recheck-015/report.md`.

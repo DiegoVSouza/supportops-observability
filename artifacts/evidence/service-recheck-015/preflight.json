@@ -1,0 +1,46 @@
+{
+  "ports_free": true,
+  "ports": [
+    24317,
+    24318,
+    24686,
+    24319,
+    29090,
+    23000,
+    37432,
+    34566
+  ],
+  "phase_namespace_empty": true,
+  "required_images": [
+    {
+      "image": "otel/opentelemetry-collector-contrib:0.161.0",
+      "image_id": "sha256:fd328de2552466ad78385e1b1289c3f2402b1c45f265b252aab1955b42845ac1"
+    },
+    {
+      "image": "jaegertracing/jaeger:2.18.0",
+      "image_id": "sha256:d2cbd047e44b50c11454820f84fd5f34c24a435e5301cf94fe026bf055db80b3"
+    },
+    {
+      "image": "prom/prometheus:v3.14.0",
+      "image_id": "sha256:5ce7540c3c00ef4ab0c9d2c995c6a5b9c421f44b4a115d97a2c7af3b1c21cbb0"
+    },
+    {
+      "image": "grafana/grafana:12.4.11",
+      "image_id": "sha256:3ea272e5cab64a4a62240c682e2c62433b25614d956d44c299a10cb6994f6f2e"
+    },
+    {
+      "image": "python:3.13.12-slim",
+      "image_id": "sha256:f1927c75e81efd1e091dbd64b6c0ecaa5630b38635a3d1c04034ac636e1f94c8"
+    },
+    {
+      "image": "postgres:17.11-alpine3.24",
+      "image_id": "sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24"
+    },
+    {
+      "image": "localstack/localstack:4.14.0",
+      "image_id": "sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a"
+    }
+  ],
+  "protected_historical_evidence_files": 134,
+  "compose_config_exit": 0
+}

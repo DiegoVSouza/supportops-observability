@@ -15,3 +15,7 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 ## 2026-10-27 - Phase 014 exception event leakage
 
 - Removing explicit `span.record_exception(exc)` did not remove private data: the OpenTelemetry context manager records exception events automatically when the wrapped function raises. Decorators now set `record_exception=False` and emit only an allowlisted category/status. A regression asserts no exception events or message/traceback content for both sync and async failures.
+
+## 2026-10-27 - Phase 015 evidence destination
+
+- `demo/service_trace.py` and `scripts/check_services.py` previously wrote service results to phase-009 files unconditionally. Added `P03_SERVICE_EVIDENCE_DIR`, constrained to the project's evidence subtree, and confirmed an outside path exits INCOMPLETE before Compose. The isolated recheck wrote only new phase evidence; all 134 pre-existing evidence files kept their exact SHA-256 and size.

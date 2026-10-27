@@ -58,3 +58,10 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 - Telemetry setup now reports exporter-construction failure as `False`; flush and shutdown return safe boolean status and increment a fixed-cardinality failure counter. Shutdown remains idempotent. Focused tests pass (18); full gate has 50 passing tests and zero failures.
 - Docker/Prometheus rule validation and Compose config passed using the already-cached local image; `P03_SKIP_SERVICES=1` intentionally leaves service integration INCOMPLETE (full-gate exit 2). P03 container identities and Compose projects were unchanged and already exited before/after. One unrelated container status field changed across read-only inventory snapshots; no command targeted other stacks.
 - Pre-existing artifact files were restored byte-for-byte after full checks. No provider, OTLP service, external network, paid spend, or service lifecycle operation was used. Independent review and production exporter reliability remain PENDING. Evidence: `artifacts/evidence/content-safe-exporter-failures/`.
+
+## 2026-10-27 - Phase 015 isolated real service recheck
+
+- Routed synthetic HTTP/SQS traces, Jaeger export, and alert snapshots to a phase-owned evidence directory, protecting historical phase-009 output. Output paths outside `artifacts/evidence/` are rejected before Compose starts.
+- Actual local integration passed: HTTP task ingress, PostgreSQL/SQS worker, installed P01/P04 adapters, three Jaeger traces with required stages, Grafana dashboard, and four synthetic Prometheus alerts firing. Runner used fake LLM behavior; no provider was contacted.
+- Offline suite passed 50 tests; fast and Compose config checks passed. 134 prior evidence files remained byte-identical. Docker remained at 102 containers, 21 networks, and 89 volumes after phase cleanup; prior container identities/states, network IDs, and volume names matched.
+- The P03 service scenario is PASS, but the service-enabled full project gate, model quality/account limits, and human/independent/promotion reviews remain INCOMPLETE/PENDING. Evidence: `artifacts/evidence/service-recheck-015/`.

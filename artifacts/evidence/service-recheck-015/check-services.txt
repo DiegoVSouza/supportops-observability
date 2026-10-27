@@ -1,0 +1,30 @@
+Command: docker compose -p p03-phase015-service -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml up -d --wait
+Exit code: 0
+time="2026-10-27T19:54:48-03:00" level=warning msg="No services to build"
+ Container p03-phase015-service-postgres-1 Running
+ Container p03-phase015-service-jaeger-1 Running
+ Container p03-phase015-service-synthetic-metrics-1 Running
+ Container p03-phase015-service-localstack-1 Running
+ Container p03-phase015-service-prometheus-1 Running
+ Container p03-phase015-service-otel-collector-1 Running
+ Container p03-phase015-service-grafana-1 Running
+ Container p03-phase015-service-localstack-1 Waiting
+ Container p03-phase015-service-prometheus-1 Waiting
+ Container p03-phase015-service-grafana-1 Waiting
+ Container p03-phase015-service-otel-collector-1 Waiting
+ Container p03-phase015-service-jaeger-1 Waiting
+ Container p03-phase015-service-synthetic-metrics-1 Waiting
+ Container p03-phase015-service-postgres-1 Waiting
+ Container p03-phase015-service-synthetic-metrics-1 Healthy
+ Container p03-phase015-service-otel-collector-1 Healthy
+ Container p03-phase015-service-localstack-1 Healthy
+ Container p03-phase015-service-grafana-1 Healthy
+ Container p03-phase015-service-prometheus-1 Healthy
+ Container p03-phase015-service-postgres-1 Healthy
+ Container p03-phase015-service-jaeger-1 Healthy
+
+Command: C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe demo/service_trace.py
+Exit code: 0
+{"traces": [{"incident": "slow_tool", "task_id": "3f0ee2ca-63aa-4ab0-bf9a-981dda7ea53e", "trace_id": "fb8a6a468cda510dd67338efd3aa3d1e"}, {"incident": "agent_loop", "task_id": "23ed1c72-57df-4abf-8011-97f1bc57a1e2", "trace_id": "183de5b3f877db5ddbd619e35367cf7a"}, {"incident": "cost_spike", "task_id": "8edcc0f3-ed53-464c-bc05-2af73ad25588", "trace_id": "704b2a201e056450f70f776c3dc8d0ea"}], "synthetic": true}
+
+service-integration: PASS; real HTTP/SQS/P04/P01/PostgreSQL trace; three synthetic incidents; dashboard; four live synthetic alerts

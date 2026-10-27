@@ -1,0 +1,12 @@
+{
+  "service_trace_records": 3,
+  "jaeger_trace_records": 3,
+  "jaeger_spans": 42,
+  "firing_alerts": [
+    "AgentErrorRateHigh",
+    "AgentLoopDetected",
+    "LLMCostAnomaly",
+    "LLMp95LatencyHigh"
+  ],
+  "alert_count": 4
+}

@@ -1,0 +1,14 @@
+{
+  "all_historical_evidence_unchanged": true,
+  "historical_evidence_count": 134,
+  "docker_container_identity_state_unchanged": true,
+  "container_count_before": 102,
+  "container_count_after": 102,
+  "network_ids_unchanged": true,
+  "networks_before": 21,
+  "networks_after": 21,
+  "volume_names_unchanged": true,
+  "volumes_before": 89,
+  "volumes_after": 89,
+  "phase_namespace_empty": true
+}
