@@ -51,3 +51,10 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 - Added P03-local append-only reservations, atomic cumulative caps, a cross-process lease, and content-free read-only resume inspection. Unknown usage remains reserved; attempts are not replayed.
 - Focused checks passed: 6 ledger tests and 8 campaign preparation tests. Fast check passed. Full gate returned 2 (`INCOMPLETE`) with zero failures because Docker/promtool validators and service integration were intentionally skipped; deterministic tests/eval/simulation/lock checks passed.
 - Groq dispatch, authorized finite limits/reviews, crash recovery, live-path lease integration, and clean-context review remain pending. No provider or telemetry service call occurred. Evidence: `artifacts/evidence/live-campaign-ledger/`.
+
+## 2026-10-27 - Phase 014 content-safe exporter failures
+
+- Removed automatic and explicit OpenTelemetry exception events from the sync/async decorators. Failures keep the original exception behavior and span ERROR status while adding only a fixed allowlisted error category; exception text, traceback, prompt, and argument values are not exported.
+- Telemetry setup now reports exporter-construction failure as `False`; flush and shutdown return safe boolean status and increment a fixed-cardinality failure counter. Shutdown remains idempotent. Focused tests pass (18); full gate has 50 passing tests and zero failures.
+- Docker/Prometheus rule validation and Compose config passed using the already-cached local image; `P03_SKIP_SERVICES=1` intentionally leaves service integration INCOMPLETE (full-gate exit 2). P03 container identities and Compose projects were unchanged and already exited before/after. One unrelated container status field changed across read-only inventory snapshots; no command targeted other stacks.
+- Pre-existing artifact files were restored byte-for-byte after full checks. No provider, OTLP service, external network, paid spend, or service lifecycle operation was used. Independent review and production exporter reliability remain PENDING. Evidence: `artifacts/evidence/content-safe-exporter-failures/`.

@@ -1,0 +1,23 @@
+{
+  "commands": [
+    {
+      "command": "uv run --locked --extra dev pytest tests/test_instrumentation.py tests/test_live_groq_eval.py -q",
+      "exit_code": 0,
+      "output": "focused-tests.txt"
+    },
+    {
+      "command": "uv run --locked --extra dev python scripts/check_full.py",
+      "exit_code": 2,
+      "output": "full-gate.txt"
+    }
+  ],
+  "preexisting_artifact_count": 185,
+  "preexisting_artifacts_unchanged": true,
+  "changed_artifact_paths": [],
+  "p03_container_ids_unchanged": true,
+  "p03_compose_projects_unchanged": true,
+  "unrelated_compose_projects_unchanged": true,
+  "unrelated_container_snapshot_identical": false,
+  "before": "docker-before.json",
+  "after": "docker-after.json"
+}

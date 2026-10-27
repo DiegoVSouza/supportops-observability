@@ -1,13 +1,14 @@
 # Verify — Content-safe telemetry failures
 
-Status: PLANNED. Store all command output and exits under `artifacts/evidence/content-safe-exporter-failures/`.
+Status: OFFLINE IMPLEMENTATION PASS; SERVICE GATE INCOMPLETE. Implementer verification only; independent review remains PENDING. Store command output and exits under `artifacts/evidence/content-safe-exporter-failures/`.
 
-- [ ] Sync and async operation errors retain application exceptions/status while spans contain only allowlisted error categories and no message, repr, traceback, or exception event payload.
-- [ ] Exporter construction, force-flush, and shutdown errors produce bounded telemetry health counters and safe boolean status, without escaping into caller business operations.
-- [ ] Setup failure does not claim an exporter is configured; shutdown remains idempotent; invalid flush timeout remains rejected.
-- [ ] Offline fake exporter/provider tests cover these failures without credentials, network, OTLP service, or Docker.
-- [ ] Existing content-capture opt-in/default tests and LLM/agent spans still pass.
-- [ ] Locked fast/full gates pass; any missing Docker/promtool/service integration is accurately reported INCOMPLETE.
-- [ ] Pre-existing historical evidence, eval data/rubric/campaign ledger, alert/dashboard/stack files are byte-identical.
-- [ ] Staged paths are phase-owned; diff and secret scan pass; local atomic commit is recorded.
-- [ ] No production telemetry reliability, live campaign, or promotion gate is declared approved; independent/human review remains PENDING.
+- [x] Sync and async operation errors retain application exceptions/status while spans contain only allowlisted error categories and no message, repr, traceback, or exception event payload.
+- [x] Exporter construction, force-flush, and shutdown errors produce bounded telemetry health counters and safe boolean status without escaping into caller business operations.
+- [x] Setup failure does not claim an exporter is configured; shutdown remains idempotent; invalid flush timeout remains rejected.
+- [x] Offline fake exporter/provider tests cover these failures without credentials, network, OTLP service, or Docker. The full gate uses only the cached local promtool image and a transient `--rm` container.
+- [x] Existing content-capture opt-in/default tests and LLM/agent spans still pass.
+- [x] Fast gate passes. Full gate has 50 passing tests, zero failures, and exit 2 only because service integration was explicitly skipped; Docker rule checks, Compose config, and lock check passed. Detail: `generated-check-full.txt`.
+- [x] All 185 pre-existing artifact files outside the phase evidence directory are byte-identical; evaluation, rubric, campaign ledger, stack, and historical evidence are unchanged.
+- [x] P03 Docker identities (14 containers in two stopped Compose projects) are unchanged before/after. One unrelated container status transition was observed in read-only inventory polls; unrelated Compose project identities remained unchanged, and no command targeted another stack. Details: `docker-inventory-observation.md`.
+- [ ] Staged paths, secret scan, and atomic local commit remain to be completed.
+- [x] No production telemetry reliability, live campaign, or promotion gate is declared approved; independent/human review remains PENDING.

@@ -10,3 +10,8 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 
 - A campaign completion without usage must retain the pre-dispatch reservation; P03 includes a regression for this accounting rule so unknown usage cannot become zero in cumulative totals.
 - The project full gate writes incident simulation and check artifacts and can start a Prometheus validator container when Docker is visible. This offline ledger phase hid Docker, skipped service integration, and restored the historical simulation/check outputs; the gate is accurately recorded as `INCOMPLETE`, with zero test failures.
+
+
+## 2026-10-27 - Phase 014 exception event leakage
+
+- Removing explicit `span.record_exception(exc)` did not remove private data: the OpenTelemetry context manager records exception events automatically when the wrapped function raises. Decorators now set `record_exception=False` and emit only an allowlisted category/status. A regression asserts no exception events or message/traceback content for both sync and async failures.

@@ -23,6 +23,7 @@ _tracer = trace.get_tracer("supportops_obs")
 _provider: TracerProvider | None = None
 _capture_content = False
 _provider_shutdown = False
+_shutdown_result: bool | None = None
 _provider_lock = threading.RLock()
 _registry = CollectorRegistry()
 llm_calls = Counter("supportops_llm_calls_total", "LLM calls", ["provider", "outcome"], registry=_registry)
@@ -38,6 +39,12 @@ tool_retries_by_type = Counter("supportops_tool_retries_by_task_type_total", "To
 loop_signals = Counter("supportops_agent_loop_signals_total", "Detected agent loop signals", ["reason"], registry=_registry)
 operation_calls = Counter("supportops_operation_calls_total", "Instrumented operation calls", ["kind", "outcome"], registry=_registry)
 operation_latency = Histogram("supportops_operation_latency_seconds", "Agent/tool/database/HTTP operation latency", ["kind", "outcome"], registry=_registry)
+telemetry_export_failures = Counter(
+    "supportops_telemetry_export_failures_total",
+    "Telemetry setup or lifecycle failures",
+    ["operation"],
+    registry=_registry,
+)
 
 
 @dataclass(frozen=True)
@@ -77,21 +84,36 @@ def _install_log_correlation() -> None:
     setattr(logging, "_supportops_trace_factory_installed", True)
 
 
-def setup_telemetry(service_name: str, *, otlp_endpoint: str | None, capture_content: bool = False) -> None:
-    """Configure the process tracer. Repeated calls are safe and first call wins."""
+def setup_telemetry(service_name: str, *, otlp_endpoint: str | None, capture_content: bool = False) -> bool:
+    """Configure the process tracer; return false if exporter setup fails."""
     global _provider, _capture_content, _provider_shutdown
     if not service_name.strip():
         raise ValueError("service_name must not be blank")
     with _provider_lock:
-        if _provider is not None or _provider_shutdown:
-            return
-        provider = TracerProvider(resource=Resource.create({"service.name": service_name}))
-        if otlp_endpoint:
-            provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=otlp_endpoint, insecure=otlp_endpoint.startswith("http://"))))
-        trace.set_tracer_provider(provider)
+        if _provider is not None:
+            return not _provider_shutdown
+        if _provider_shutdown:
+            return False
+        try:
+            exporter = (
+                OTLPSpanExporter(
+                    endpoint=otlp_endpoint,
+                    insecure=otlp_endpoint.startswith("http://"),
+                )
+                if otlp_endpoint
+                else None
+            )
+            provider = TracerProvider(resource=Resource.create({"service.name": service_name}))
+            if exporter is not None:
+                provider.add_span_processor(BatchSpanProcessor(exporter))
+            trace.set_tracer_provider(provider)
+        except Exception:
+            telemetry_export_failures.labels(operation="setup").inc()
+            return False
         _provider = provider
         _capture_content = bool(capture_content)
         _install_log_correlation()
+        return True
 
 
 def flush_telemetry(*, timeout_millis: int = 30000) -> bool:
@@ -103,17 +125,46 @@ def flush_telemetry(*, timeout_millis: int = 30000) -> bool:
             return True
         if _provider_shutdown:
             return False
-        return bool(_provider.force_flush(timeout_millis=timeout_millis))
+        try:
+            flushed = bool(_provider.force_flush(timeout_millis=timeout_millis))
+        except Exception:
+            flushed = False
+        if not flushed:
+            telemetry_export_failures.labels(operation="flush").inc()
+        return flushed
 
 
-def shutdown_telemetry() -> None:
+def shutdown_telemetry() -> bool:
     """Flush and shut down the configured provider; repeated calls are safe."""
-    global _provider_shutdown
+    global _provider_shutdown, _shutdown_result
     with _provider_lock:
-        if _provider is None or _provider_shutdown:
-            return
-        _provider.shutdown()
+        if _provider is None:
+            return True
+        if _provider_shutdown:
+            return bool(_shutdown_result)
+        try:
+            _provider.shutdown()
+        except Exception:
+            telemetry_export_failures.labels(operation="shutdown").inc()
+            _provider_shutdown = True
+            _shutdown_result = False
+            return False
         _provider_shutdown = True
+        _shutdown_result = True
+        return True
+
+
+def _safe_error_category(exc: Exception) -> str:
+    """Map exception types to fixed labels without inspecting message or traceback."""
+    if isinstance(exc, TimeoutError):
+        return "timeout"
+    if isinstance(exc, ConnectionError):
+        return "transport"
+    if isinstance(exc, PermissionError):
+        return "authorization"
+    if isinstance(exc, (TypeError, ValueError)):
+        return "validation"
+    return "application"
 
 
 def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
@@ -122,7 +173,9 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
         if inspect.iscoroutinefunction(fn):
             @functools.wraps(fn)
             async def async_wrapped(*args: Any, **kwargs: Any) -> Any:
-                with _tracer.start_as_current_span(f"{kind}.{span_name}") as span:
+                with _tracer.start_as_current_span(
+                    f"{kind}.{span_name}", record_exception=False
+                ) as span:
                     span.set_attribute("supportops.operation.kind", kind)
                     started = time.perf_counter()
                     outcome = "success"
@@ -133,7 +186,7 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
                     except Exception as exc:
                         outcome = "error"
                         operation_calls.labels(kind=kind, outcome="error").inc()
-                        span.record_exception(exc)
+                        span.set_attribute("supportops.error.category", _safe_error_category(exc))
                         span.set_status(trace.Status(trace.StatusCode.ERROR))
                         raise
                     finally:
@@ -142,7 +195,9 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
 
         @functools.wraps(fn)
         def wrapped(*args: Any, **kwargs: Any) -> Any:
-            with _tracer.start_as_current_span(f"{kind}.{span_name}") as span:
+            with _tracer.start_as_current_span(
+                f"{kind}.{span_name}", record_exception=False
+            ) as span:
                 span.set_attribute("supportops.operation.kind", kind)
                 started = time.perf_counter()
                 outcome = "success"
@@ -153,7 +208,7 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
                 except Exception as exc:
                     outcome = "error"
                     operation_calls.labels(kind=kind, outcome="error").inc()
-                    span.record_exception(exc)
+                    span.set_attribute("supportops.error.category", _safe_error_category(exc))
                     span.set_status(trace.Status(trace.StatusCode.ERROR))
                     raise
                 finally:

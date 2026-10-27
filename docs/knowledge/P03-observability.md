@@ -34,3 +34,12 @@ Sampling reduz volume de traces, mas deve preservar erros e execuções raras. P
 The reproducible command is `uv run --locked python scripts/check_full.py`. It runs unit/package checks, Docker `promtool check rules` and `test rules`, then the isolated local service flow. Evidence in `artifacts/evidence/phase-009-full-gate-v013-final.txt` and `phase-009-full-gate-v013-detail-final.txt` records exit 0. The service run uses P01 0.1.1 and P04 0.1.3 wheels, LocalStack SQS, PostgreSQL, HTTP, Jaeger, Grafana, and Prometheus; it exercises three synthetic incidents and all four synthetic alerts.
 
 Setting `P03_SKIP_SERVICES=1` intentionally omits a required gate. The full check reports INCOMPLETE and exits 2, saved in `phase-009-fail-closed.txt` and `phase-009-fail-closed-detail.txt`. Metrics and model quality from production traffic remain PENDING; the local fixtures do not support production readiness claims.
+
+
+## Telemetry failure privacy and reporting
+
+P03 instrumentation exports a fixed error category and span status for sync and async failures. Exception event recording is disabled so exception messages, arguments, and tracebacks cannot be copied into spans by OpenTelemetry defaults. Setup, flush, and shutdown report boolean results and a bounded `supportops_telemetry_export_failures_total` counter. This reports failures visible at those lifecycle boundaries; it is not proof that every telemetry batch reached a production collector.
+
+### EN - How are instrumentation errors kept private?
+
+Sync and async spans use fixed error categories and status without exception events, messages, arguments, or tracebacks. Setup, flush, and shutdown return boolean status and update a bounded failure counter. Those checks cover observed lifecycle errors only and do not establish production exporter delivery reliability.

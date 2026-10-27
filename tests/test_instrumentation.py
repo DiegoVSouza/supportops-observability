@@ -47,6 +47,44 @@ def test_nested_agent_tool_spans_and_error(monkeypatch):
     assert exporter.get_finished_spans()[-1].status.status_code.name == "ERROR"
 
 
+def test_sync_failure_span_omits_exception_message_and_traceback(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    secret = "private prompt and ticket body"
+
+    @traced_tool("private-failure")
+    def fails():
+        raise ValueError(secret)
+
+    import pytest
+    with pytest.raises(ValueError, match="private prompt"):
+        fails()
+    span = exporter.get_finished_spans()[0]
+    assert span.status.status_code.name == "ERROR"
+    assert span.attributes["supportops.error.category"] == "validation"
+    assert secret not in repr(span.attributes)
+    assert secret not in repr(span.events)
+    assert span.events == ()
+
+
+def test_async_failure_span_omits_exception_message_and_traceback(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    secret = "private async prompt"
+
+    @traced_tool("private-async-failure")
+    async def fails():
+        raise RuntimeError(secret)
+
+    import pytest
+    with pytest.raises(RuntimeError, match="private async prompt"):
+        asyncio.run(fails())
+    span = exporter.get_finished_spans()[0]
+    assert span.status.status_code.name == "ERROR"
+    assert span.attributes["supportops.error.category"] == "application"
+    assert secret not in repr(span.attributes)
+    assert secret not in repr(span.events)
+    assert span.events == ()
+
+
 def test_operation_metrics_work_with_non_recording_span(monkeypatch):
     from opentelemetry import trace
 
@@ -167,11 +205,62 @@ def test_provider_flush_and_shutdown_are_exposed(monkeypatch):
     provider = Provider()
     monkeypatch.setattr(inst, "_provider", provider)
     monkeypatch.setattr(inst, "_provider_shutdown", False)
+    monkeypatch.setattr(inst, "_shutdown_result", None)
     assert inst.flush_telemetry(timeout_millis=1234) is True
-    inst.shutdown_telemetry()
-    inst.shutdown_telemetry()
+    assert inst.shutdown_telemetry() is True
+    assert inst.shutdown_telemetry() is True
     assert provider.flushed == [1234]
     assert provider.shutdowns == [True]
+
+
+def test_flush_and_shutdown_errors_are_counted_and_do_not_escape(monkeypatch):
+    class BrokenProvider:
+        def __init__(self):
+            self.shutdowns = 0
+
+        def force_flush(self, timeout_millis=30000):
+            raise RuntimeError("private exporter response")
+
+        def shutdown(self):
+            self.shutdowns += 1
+            raise RuntimeError("private shutdown detail")
+
+    provider = BrokenProvider()
+    monkeypatch.setattr(inst, "_provider", provider)
+    monkeypatch.setattr(inst, "_provider_shutdown", False)
+    monkeypatch.setattr(inst, "_shutdown_result", None)
+    flush_before = inst.telemetry_export_failures.labels(operation="flush")._value.get()
+    shutdown_before = inst.telemetry_export_failures.labels(operation="shutdown")._value.get()
+    assert inst.flush_telemetry(timeout_millis=10) is False
+    assert inst.telemetry_export_failures.labels(operation="flush")._value.get() == flush_before + 1
+    assert inst.shutdown_telemetry() is False
+    assert inst.shutdown_telemetry() is False
+    assert provider.shutdowns == 1
+    assert inst.telemetry_export_failures.labels(operation="shutdown")._value.get() == shutdown_before + 1
+
+
+def test_exporter_setup_failure_is_reported_and_does_not_install_provider(monkeypatch):
+    class Provider:
+        def __init__(self, **kwargs):
+            self.processors = []
+
+        def add_span_processor(self, processor):
+            self.processors.append(processor)
+
+    def broken_exporter(**kwargs):
+        raise RuntimeError("private endpoint detail")
+
+    monkeypatch.setattr(inst, "_provider", None)
+    monkeypatch.setattr(inst, "_provider_shutdown", False)
+    monkeypatch.setattr(inst, "TracerProvider", Provider)
+    monkeypatch.setattr(inst, "OTLPSpanExporter", broken_exporter)
+    installed = []
+    monkeypatch.setattr(inst.trace, "set_tracer_provider", lambda provider: installed.append(provider))
+    before = inst.telemetry_export_failures.labels(operation="setup")._value.get()
+    assert inst.setup_telemetry("setup-failure-test", otlp_endpoint="http://127.0.0.1:4317") is False
+    assert installed == []
+    assert inst._provider is None
+    assert inst.telemetry_export_failures.labels(operation="setup")._value.get() == before + 1
 
 
 def test_async_tool_span_and_exception_status(monkeypatch):

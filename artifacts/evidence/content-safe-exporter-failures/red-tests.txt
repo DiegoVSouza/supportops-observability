@@ -1,0 +1,119 @@
+.FF.........FF...                                                        [100%]
+================================== FAILURES ===================================
+________ test_sync_failure_span_omits_exception_message_and_traceback _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F1812DE00>
+
+    def test_sync_failure_span_omits_exception_message_and_traceback(monkeypatch):
+        exporter = memory_tracer(monkeypatch)
+        secret = "private prompt and ticket body"
+    
+        @traced_tool("private-failure")
+        def fails():
+            raise ValueError(secret)
+    
+        import pytest
+        with pytest.raises(ValueError, match="private prompt"):
+            fails()
+        span = exporter.get_finished_spans()[0]
+        assert span.status.status_code.name == "ERROR"
+>       assert span.attributes["supportops.error.category"] == "validation"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_instrumentation.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = {'supportops.operation.kind': 'tool'}, key = 'supportops.error.category'
+
+    def __getitem__(self, key: str) -> types.AnyValue:
+>       return self._dict[key]
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'supportops.error.category'
+
+.venv\Lib\site-packages\opentelemetry\attributes\__init__.py:166: KeyError
+________ test_async_failure_span_omits_exception_message_and_traceback ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F180D3650>
+
+    def test_async_failure_span_omits_exception_message_and_traceback(monkeypatch):
+        exporter = memory_tracer(monkeypatch)
+        secret = "private async prompt"
+    
+        @traced_tool("private-async-failure")
+        async def fails():
+            raise RuntimeError(secret)
+    
+        import pytest
+        with pytest.raises(RuntimeError, match="private async prompt"):
+            asyncio.run(fails())
+        span = exporter.get_finished_spans()[0]
+        assert span.status.status_code.name == "ERROR"
+>       assert span.attributes["supportops.error.category"] == "application"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_instrumentation.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = {'supportops.operation.kind': 'tool'}, key = 'supportops.error.category'
+
+    def __getitem__(self, key: str) -> types.AnyValue:
+>       return self._dict[key]
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'supportops.error.category'
+
+.venv\Lib\site-packages\opentelemetry\attributes\__init__.py:166: KeyError
+________ test_flush_and_shutdown_errors_are_counted_and_do_not_escape _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F181582F0>
+
+    def test_flush_and_shutdown_errors_are_counted_and_do_not_escape(monkeypatch):
+        class BrokenProvider:
+            def __init__(self):
+                self.shutdowns = 0
+    
+            def force_flush(self, timeout_millis=30000):
+                raise RuntimeError("private exporter response")
+    
+            def shutdown(self):
+                self.shutdowns += 1
+                raise RuntimeError("private shutdown detail")
+    
+        provider = BrokenProvider()
+        monkeypatch.setattr(inst, "_provider", provider)
+        monkeypatch.setattr(inst, "_provider_shutdown", False)
+>       flush_before = inst.telemetry_export_failures.labels(operation="flush")._value.get()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'supportops_obs.instrumentation' has no attribute 'telemetry_export_failures'
+
+tests\test_instrumentation.py:230: AttributeError
+____ test_exporter_setup_failure_is_reported_and_does_not_install_provider ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F18150BB0>
+
+    def test_exporter_setup_failure_is_reported_and_does_not_install_provider(monkeypatch):
+        class Provider:
+            def __init__(self, **kwargs):
+                self.processors = []
+    
+            def add_span_processor(self, processor):
+                self.processors.append(processor)
+    
+        def broken_exporter(**kwargs):
+            raise RuntimeError("private endpoint detail")
+    
+        monkeypatch.setattr(inst, "_provider", None)
+        monkeypatch.setattr(inst, "_provider_shutdown", False)
+        monkeypatch.setattr(inst, "TracerProvider", Provider)
+        monkeypatch.setattr(inst, "OTLPSpanExporter", broken_exporter)
+        installed = []
+        monkeypatch.setattr(inst.trace, "set_tracer_provider", lambda provider: installed.append(provider))
+>       before = inst.telemetry_export_failures.labels(operation="setup")._value.get()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'supportops_obs.instrumentation' has no attribute 'telemetry_export_failures'
+
+tests\test_instrumentation.py:257: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_instrumentation.py::test_sync_failure_span_omits_exception_message_and_traceback
+FAILED tests/test_instrumentation.py::test_async_failure_span_omits_exception_message_and_traceback
+FAILED tests/test_instrumentation.py::test_flush_and_shutdown_errors_are_counted_and_do_not_escape
+FAILED tests/test_instrumentation.py::test_exporter_setup_failure_is_reported_and_does_not_install_provider

@@ -1,0 +1,120 @@
+{
+  "ps_exit": 0,
+  "p03_containers": [
+    {
+      "ID": "01c8f9a37450",
+      "Names": "p03-live-012-synthetic-metrics-1",
+      "Image": "python:3.13.12-slim",
+      "Status": "Exited (255) 26 hours ago",
+      "Project": "p03-live-012"
+    },
+    {
+      "ID": "08d16349a94f",
+      "Names": "p03-live-012-jaeger-1",
+      "Image": "jaegertracing/jaeger:2.18.0",
+      "Status": "Exited (255) 26 hours ago",
+      "Project": "p03-live-012"
+    },
+    {
+      "ID": "22deea1a82a6",
+      "Names": "p03-live-012-grafana-1",
+      "Image": "grafana/grafana:12.4.11",
+      "Status": "Exited (255) 26 hours ago",
+      "Project": "p03-live-012"
+    },
+    {
+      "ID": "3ee26c4c45b0",
+      "Names": "p03-remediation-localstack-1",
+      "Image": "localstack/localstack:4.14.0",
+      "Status": "Exited (255) 4 days ago",
+      "Project": "p03-remediation"
+    },
+    {
+      "ID": "44cafadc1e86",
+      "Names": "p03-remediation-postgres-1",
+      "Image": "postgres:17.11-alpine3.24",
+      "Status": "Exited (255) 4 days ago",
+      "Project": "p03-remediation"
+    },
+    {
+      "ID": "5190d14b6486",
+      "Names": "p03-live-012-localstack-1",
+      "Image": "localstack/localstack:4.14.0",
+      "Status": "Exited (255) 26 hours ago",
+      "Project": "p03-live-012"
+    },
+    {
+      "ID": "5b43fb7598e6",
+      "Names": "p03-live-012-otel-collector-1",
+      "Image": "otel/opentelemetry-collector-contrib:0.161.0",
+      "Status": "Exited (255) 26 hours ago",
+      "Project": "p03-live-012"
+    },
+    {
+      "ID": "8e59a8e44ef9",
+      "Names": "p03-remediation-synthetic-metrics-1",
+      "Image": "python:3.13.12-slim",
+      "Status": "Exited (255) 4 days ago",
+      "Project": "p03-remediation"
+    },
+    {
+      "ID": "bfcf69a48db6",
+      "Names": "p03-remediation-otel-collector-1",
+      "Image": "otel/opentelemetry-collector-contrib:0.161.0",
+      "Status": "Exited (255) 4 days ago",
+      "Project": "p03-remediation"
+    },
+    {
+      "ID": "c20b67dbfa4a",
+      "Names": "p03-remediation-grafana-1",
+      "Image": "grafana/grafana:12.4.11",
+      "Status": "Exited (255) 4 days ago",
+      "Project": "p03-remediation"
+    },
+    {
+      "ID": "c373bb20ec80",
+      "Names": "p03-remediation-jaeger-1",
+      "Image": "jaegertracing/jaeger:2.18.0",
+      "Status": "Exited (255) 4 days ago",
+      "Project": "p03-remediation"
+    },
+    {
+      "ID": "c51abecfedf8",
+      "Names": "p03-live-012-prometheus-1",
+      "Image": "prom/prometheus:v3.14.0",
+      "Status": "Exited (255) 26 hours ago",
+      "Project": "p03-live-012"
+    },
+    {
+      "ID": "e1c132d82099",
+      "Names": "p03-remediation-prometheus-1",
+      "Image": "prom/prometheus:v3.14.0",
+      "Status": "Exited (255) 4 days ago",
+      "Project": "p03-remediation"
+    },
+    {
+      "ID": "f59ac4742bef",
+      "Names": "p03-live-012-postgres-1",
+      "Image": "postgres:17.11-alpine3.24",
+      "Status": "Exited (255) 26 hours ago",
+      "Project": "p03-live-012"
+    }
+  ],
+  "other_container_count": 88,
+  "other_snapshot_sha256": "eb30313f0c1b3204f9c8a39d8588d13475c6374ecfddeae4ee7c91ecd8b6d1c3",
+  "compose_ls_exit": 0,
+  "p03_compose_projects": [
+    {
+      "Name": "p03-live-012",
+      "Status": "exited(7)",
+      "ConfigFiles": "C:\\estudo\\Golpe\\lab\\projects\\p03\\stack\\docker-compose.obs.yml,C:\\estudo\\Golpe\\lab\\projects\\p03\\artifacts\\evidence\\phase-008-compose.override.yml,C:\\estudo\\Golpe\\lab\\projects\\p03\\stack\\docker-compose.integration.yml"
+    },
+    {
+      "Name": "p03-remediation",
+      "Status": "exited(7)",
+      "ConfigFiles": "C:\\estudo\\Golpe\\lab\\projects\\p03\\stack\\docker-compose.obs.yml,C:\\estudo\\Golpe\\lab\\projects\\p03\\artifacts\\evidence\\phase-008-compose.override.yml,C:\\estudo\\Golpe\\lab\\projects\\p03\\stack\\docker-compose.integration.yml"
+    }
+  ],
+  "other_compose_count": 15,
+  "other_compose_sha256": "28e7490c539f5f904c494a6e302a8cd6e254651ab35a1898adcb764d2d9c4669"
+}

@@ -71,6 +71,12 @@
       "description": "Database/HTTP operation metrics work when tracing is disabled or provider is non-recording",
       "status": "PASS",
       "evidence": "tests/test_instrumentation.py::test_operation_metrics_work_with_non_recording_span; artifacts/evidence/phase-003-nonrecording-green.txt"
+    },
+    {
+      "id": "content-safe-telemetry-failures",
+      "status": "PASS_UNIT",
+      "evidence": "artifacts/evidence/content-safe-exporter-failures/",
+      "detail": "Sync/async spans omit exception payloads and record fixed error categories; setup/flush/shutdown failures are observable through bounded counters and boolean status. Production exporter delivery and service integration remain INCOMPLETE."
     }
   ]
 }

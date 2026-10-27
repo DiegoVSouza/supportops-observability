@@ -1,0 +1,4 @@
+$ uv run --locked --extra dev pytest tests/test_instrumentation.py tests/test_live_groq_eval.py -q
+..................                                                       [100%]
+
+exit_code=0

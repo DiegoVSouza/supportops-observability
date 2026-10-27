@@ -1,0 +1,4 @@
+$ uv run --locked --extra dev python scripts/check_full.py
+check-full: INCOMPLETE; failures=0; incomplete=1
+
+exit_code=2
