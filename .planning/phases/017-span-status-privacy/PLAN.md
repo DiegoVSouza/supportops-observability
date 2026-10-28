@@ -2,7 +2,7 @@
 
 ## Execution controls
 
-- `llm_mode`: `fake`; no credentials, provider, network, OTLP endpoint, Docker lifecycle, or external service.
+- `llm_mode`: `fake`; no credentials, provider, network, OTLP endpoint, Compose service lifecycle, or external service. The full check may perform read-only Docker readiness/config inspection and a single transient `docker run --rm` of the already-cached `prom/prometheus:v3.14.0` solely as a local rule validator; capture Docker container/network/volume identities before and after and require exact restoration.
 - `allowed_write_paths`:
   - `.planning/phases/017-span-status-privacy/**`
   - `supportops_obs/instrumentation.py`
@@ -13,7 +13,7 @@
   - `docs/harness/feature_list.json`
   - `docs/knowledge/P03-observability.md`
   - `artifacts/evidence/span-status-privacy-017/**`
-- `forbidden_changes`: historical campaign/dataset/rubric/live evidence; phases 014–016; exporter endpoints, capture policy, lock/dependencies, stack/dashboards/alerts, other projects/root lab, secrets, provider/network/Docker service operations, paid spend, publication/push, and weakened tests.
+- `forbidden_changes`: historical campaign/dataset/rubric/live evidence; phases 014–016; exporter endpoints, capture policy, lock/dependencies, stack/dashboards/alerts, other projects/root lab, secrets, provider/network/Compose service operations, uncached image use, paid spend, publication/push, and weakened tests.
 - Budget: USD 0; local CPU only.
 - Stop if verification requires real OTLP/provider access, changes to capture/retention policy, dependency updates, or mutation of protected history.
 
@@ -27,7 +27,7 @@
 
 - `uv run --locked --offline python -m pytest tests/test_instrumentation.py -q`
 - `uv run --locked --offline python scripts/check_fast.py`
-- `LLM_MODE=fake uv run --locked --offline python scripts/check_full.py` (if the gate requires cached promtool/Docker validators unavailable in this environment, preserve its exact INCOMPLETE result; do not start services).
+- `P03_CHECK_EVIDENCE_DIR=artifacts/evidence/span-status-privacy-017/run P03_SKIP_SERVICES=1 LLM_MODE=fake uv run --locked --offline python scripts/check_full.py` (permits only the cached one-shot promtool validator and read-only Docker config checks; service E2E is intentionally INCOMPLETE).
 - Verify phase-014–016 evidence, all tracked artifacts outside the phase-017 evidence directory, datasets, campaign and stack files unchanged.
 - `git -c core.whitespace=cr-at-eol diff --cached --check`; inspect staged names/diff; secret-pattern scan.
 
