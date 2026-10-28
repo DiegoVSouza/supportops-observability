@@ -47,6 +47,10 @@ Sync and async spans use fixed error categories and status without exception eve
 ### Phase 017 — exception status privacy
 
 Removing exception events alone is insufficient: the OpenTelemetry context manager can automatically populate `span.status.description` with the exception type and message. The decorators now pass `set_status_on_exception=False`, then set only a generic ERROR code and the fixed allowlisted category. Sync and async in-memory tests assert that the description is empty and a unique synthetic sentinel is absent while the original exception still reaches the caller. Production OTLP behavior remains unverified.
+
+### Phase 018 — service-gate disconnect
+
+On the phase-017 candidate, the local synthetic service path created and completed three tasks and later read-only diagnostics retrieved all three Jaeger traces. The original full gate nevertheless failed its Jaeger read with `RemoteDisconnected` before it could assert required stage names. Do not count those later GETs as a successful gate. The phase-owned stack was cleaned and unrelated Docker identities were preserved. A bounded retry for idempotent Jaeger GETs requires a separate reviewed phase and fresh service run.
 ## 2026-10-27 — Phase 015 isolated service recheck
 
 The actual P03 synthetic service path passed using a unique Compose project: loopback HTTP ingress, PostgreSQL/SQS worker, installed P01/P04 packages, OTLP Collector/Jaeger export, Grafana dashboard, and all four existing Prometheus alert rules reaching `firing`. The fake runner produced three synthetic traces (`slow_tool`, `agent_loop`, `cost_spike`); no real model/provider was called. Alert waiting follows the existing 0/2/5-minute `for` windows and a 600-second deadline; thresholds were not changed.

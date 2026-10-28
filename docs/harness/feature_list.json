@@ -63,8 +63,9 @@
     {
       "id": "service-integrated-trace",
       "description": "Network API, durable broker/worker and database service trace",
-      "status": "PASS",
-      "evidence": "artifacts/evidence/phase-009-full-gate-detail.txt; artifacts/evidence/phase-009-jaeger-export.json; artifacts/evidence/phase-009-live-alerts.json"
+      "status": "PASS_HISTORICAL; CURRENT_CANDIDATE_INCOMPLETE",
+      "evidence": "artifacts/evidence/phase-009-full-gate-detail.txt; artifacts/evidence/phase-009-jaeger-export.json; artifacts/evidence/span-status-service-018/",
+      "detail": "The phase-009/016 service gate passed on historical candidates. On the phase-017 span-privacy candidate, the service path and Jaeger lookups ran but the gate's Jaeger read raised RemoteDisconnected before required stage assertions; see phase 018 INCOMPLETE."
     },
     {
       "id": "non-recording-span-metrics",

@@ -1,0 +1,4 @@
+COMMAND: P03_CHECK_EVIDENCE_DIR=artifacts/evidence/span-status-service-018/run P03_SERVICE_EVIDENCE_DIR=artifacts/evidence/span-status-service-018/run P03_COMPOSE_PROJECT=p03-phase018-span-status P03_ALERT_TIMEOUT_S=600 LLM_MODE=fake uv run --locked --offline python scripts/check_full.py
+EXIT_CODE: 2
+MODE: fake; no provider credentials loaded
+OUTPUT_ROOT: artifacts/evidence/span-status-service-018/run

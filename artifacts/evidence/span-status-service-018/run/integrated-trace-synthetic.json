@@ -1,0 +1,75 @@
+{
+  "classification": "synthetic in-process functions; no network API, broker, worker service, live LLM, or database",
+  "result": {
+    "classification": "billing_question",
+    "requested_ticket": "T-SYNTHETIC",
+    "status": "open",
+    "ticket_id": "T-SYNTHETIC"
+  },
+  "spans": [
+    {
+      "name": "http.api.request",
+      "parent_span_id": null,
+      "span_id": "0000000000000065",
+      "status": "UNSET",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    },
+    {
+      "name": "queue.ticket.publish",
+      "parent_span_id": "0000000000000065",
+      "span_id": "0000000000000066",
+      "status": "UNSET",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    },
+    {
+      "name": "worker.ticket.consume",
+      "parent_span_id": "0000000000000066",
+      "span_id": "0000000000000067",
+      "status": "UNSET",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    },
+    {
+      "name": "agent.supportops.triage",
+      "parent_span_id": "0000000000000067",
+      "span_id": "0000000000000068",
+      "status": "UNSET",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    },
+    {
+      "name": "llm.inference",
+      "parent_span_id": "0000000000000068",
+      "span_id": "0000000000000069",
+      "status": "UNSET",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    },
+    {
+      "name": "tool.ticket.lookup",
+      "parent_span_id": "0000000000000068",
+      "span_id": "000000000000006a",
+      "status": "UNSET",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    },
+    {
+      "name": "database.ticket.read",
+      "parent_span_id": "000000000000006a",
+      "span_id": "000000000000006b",
+      "status": "ERROR",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    },
+    {
+      "name": "database.ticket.read",
+      "parent_span_id": "000000000000006a",
+      "span_id": "000000000000006c",
+      "status": "UNSET",
+      "synthetic": true,
+      "trace_id": "00000000000000000000000000000042"
+    }
+  ]
+}

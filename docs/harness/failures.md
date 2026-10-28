@@ -27,3 +27,7 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 ## 2026-10-27 - Phase 017 automatic exception status description
 
 - Disabling `record_exception` did not prevent the OpenTelemetry context manager from automatically setting ERROR status description to `RuntimeError: <message>` when sync or async decorated work raised. A synthetic sentinel reproduced the leak in both in-memory spans. Decorator spans now use `set_status_on_exception=False` and set a generic ERROR status plus a fixed error category themselves; caller exceptions remain unchanged. Production OTLP privacy remains unverified.
+
+## 2026-10-27 - Phase 018 transient Jaeger query disconnect
+
+- The service-enabled full gate started the isolated seven-service stack and `demo/service_trace.py` completed all three synthetic tasks. The subsequent `check_services.py` Jaeger read exited INCOMPLETE with `RemoteDisconnected`; the exact request site was not identified in the gate output. Later bounded read-only diagnostics returned HTTP 200 for Jaeger service/trace endpoints, Grafana dashboard search, and Prometheus alerts, but did not perform the missing stage assertions. The failed gate was not replayed. Cleanup of the exact phase Compose namespace passed and all pre-existing container/network/volume identities and 216 tracked artifact hashes were preserved. A future phase may add a bounded retry for idempotent read-only Jaeger GETs, then use a fresh candidate and service run.

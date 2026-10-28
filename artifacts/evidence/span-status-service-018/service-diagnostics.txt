@@ -1,0 +1,6 @@
+Gate result: INCOMPLETE / exit 2; failures=0; service integration incomplete.
+The gate started seven services in its own Compose project and demo/service_trace.py returned exit 0 after three fake task submissions.
+The subsequent service checker returned RemoteDisconnected during Jaeger retrieval; the exact request site was not reported.
+Later read-only local diagnostics returned HTTP 200 for Jaeger service listing, all three trace lookups, Grafana dashboard search with the fixture auth, and Prometheus alerts.
+Those follow-up reads did not run the missing required span-stage assertions and do not turn the original gate into PASS.
+No provider/model completion, customer data, external network, or paid spend occurred.

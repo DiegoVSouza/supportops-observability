@@ -1,0 +1,4 @@
+candidate_commit=24f4d2b78fff09322c6fa286a08da8d27be55b71
+candidate_tree=4b11c8935eae838dc5158a42458e17f6bfe45627
+phase_plan_commit=1eb094f7faf9fa983bba8a244006da7dd524efb6
+preflight_worktree_status=
