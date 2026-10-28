@@ -1,0 +1,6 @@
+Container identities unchanged: 102 before / 102 after; same IDs, names, images and Compose project labels.
+No containers were added or removed.
+One unrelated existing gossett_backend container retained the same ID/name/image/project; its restart-age status advanced from Restarting (1) 18 seconds ago to Restarting (1) 47 seconds ago during read-only snapshots. No operation targeted it.
+Network identities unchanged: 21 before / 21 after.
+Volume identities unchanged: 89 before / 89 after.
+P03 Compose services were not started/stopped. Only the cached one-shot Prometheus rule validator ran with --rm.

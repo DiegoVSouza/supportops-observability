@@ -174,7 +174,9 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
             @functools.wraps(fn)
             async def async_wrapped(*args: Any, **kwargs: Any) -> Any:
                 with _tracer.start_as_current_span(
-                    f"{kind}.{span_name}", record_exception=False
+                    f"{kind}.{span_name}",
+                    record_exception=False,
+                    set_status_on_exception=False,
                 ) as span:
                     span.set_attribute("supportops.operation.kind", kind)
                     started = time.perf_counter()
@@ -196,7 +198,9 @@ def _decorator(kind: str, name: str | None) -> Callable[[F], F]:
         @functools.wraps(fn)
         def wrapped(*args: Any, **kwargs: Any) -> Any:
             with _tracer.start_as_current_span(
-                f"{kind}.{span_name}", record_exception=False
+                f"{kind}.{span_name}",
+                record_exception=False,
+                set_status_on_exception=False,
             ) as span:
                 span.set_attribute("supportops.operation.kind", kind)
                 started = time.perf_counter()

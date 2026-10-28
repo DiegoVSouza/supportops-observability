@@ -1,0 +1,3 @@
+COMMAND: P03_CHECK_EVIDENCE_DIR=artifacts/evidence/span-status-privacy-017/run P03_SKIP_SERVICES=1 LLM_MODE=fake uv run --locked --offline python scripts/check_full.py
+EXIT_CODE: 2
+NOTES: Service integration intentionally skipped; gate may return INCOMPLETE. Cached promtool validator only.

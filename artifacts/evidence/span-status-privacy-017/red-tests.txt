@@ -1,0 +1,51 @@
+...FF..............                                                      [100%]
+================================== FAILURES ===================================
+______ test_sync_failure_span_status_description_omits_exception_message ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021DC7624380>
+
+    def test_sync_failure_span_status_description_omits_exception_message(monkeypatch):
+        exporter = memory_tracer(monkeypatch)
+        sentinel = "private-status-sentinel-sync"
+    
+        @traced_tool("private-status-sync")
+        def fails():
+            raise RuntimeError(sentinel)
+    
+        import pytest
+        with pytest.raises(RuntimeError, match=sentinel):
+            fails()
+        span = exporter.get_finished_spans()[0]
+        assert span.status.status_code.name == "ERROR"
+>       assert span.status.description is None
+E       AssertionError: assert 'RuntimeError: private-status-sentinel-sync' is None
+E        +  where 'RuntimeError: private-status-sentinel-sync' = <opentelemetry.trace.status.Status object at 0x0000021DC75E1750>.description
+E        +    where <opentelemetry.trace.status.Status object at 0x0000021DC75E1750> = <opentelemetry.sdk.trace.ReadableSpan object at 0x0000021DC757F770>.status
+
+tests\test_instrumentation.py:101: AssertionError
+_____ test_async_failure_span_status_description_omits_exception_message ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021DC73C7680>
+
+    def test_async_failure_span_status_description_omits_exception_message(monkeypatch):
+        exporter = memory_tracer(monkeypatch)
+        sentinel = "private-status-sentinel-async"
+    
+        @traced_tool("private-status-async")
+        async def fails():
+            raise RuntimeError(sentinel)
+    
+        import pytest
+        with pytest.raises(RuntimeError, match=sentinel):
+            asyncio.run(fails())
+        span = exporter.get_finished_spans()[0]
+        assert span.status.status_code.name == "ERROR"
+>       assert span.status.description is None
+E       AssertionError: assert 'RuntimeError: private-status-sentinel-async' is None
+E        +  where 'RuntimeError: private-status-sentinel-async' = <opentelemetry.trace.status.Status object at 0x0000021DC755F7A0>.description
+E        +    where <opentelemetry.trace.status.Status object at 0x0000021DC755F7A0> = <opentelemetry.sdk.trace.ReadableSpan object at 0x0000021DC7624160>.status
+
+tests\test_instrumentation.py:118: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_instrumentation.py::test_sync_failure_span_status_description_omits_exception_message
+FAILED tests/test_instrumentation.py::test_async_failure_span_status_description_omits_exception_message

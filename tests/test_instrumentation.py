@@ -85,6 +85,40 @@ def test_async_failure_span_omits_exception_message_and_traceback(monkeypatch):
     assert span.events == ()
 
 
+def test_sync_failure_span_status_description_omits_exception_message(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    sentinel = "private-status-sentinel-sync"
+
+    @traced_tool("private-status-sync")
+    def fails():
+        raise RuntimeError(sentinel)
+
+    import pytest
+    with pytest.raises(RuntimeError, match=sentinel):
+        fails()
+    span = exporter.get_finished_spans()[0]
+    assert span.status.status_code.name == "ERROR"
+    assert span.status.description is None
+    assert sentinel not in repr(span)
+
+
+def test_async_failure_span_status_description_omits_exception_message(monkeypatch):
+    exporter = memory_tracer(monkeypatch)
+    sentinel = "private-status-sentinel-async"
+
+    @traced_tool("private-status-async")
+    async def fails():
+        raise RuntimeError(sentinel)
+
+    import pytest
+    with pytest.raises(RuntimeError, match=sentinel):
+        asyncio.run(fails())
+    span = exporter.get_finished_spans()[0]
+    assert span.status.status_code.name == "ERROR"
+    assert span.status.description is None
+    assert sentinel not in repr(span)
+
+
 def test_operation_metrics_work_with_non_recording_span(monkeypatch):
     from opentelemetry import trace
 

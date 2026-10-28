@@ -74,9 +74,15 @@
     },
     {
       "id": "content-safe-telemetry-failures",
+      "status": "PASS_LOCAL_SPAN_PRIVACY; SERVICE_INTEGRATION_INCOMPLETE",
+      "evidence": "artifacts/evidence/content-safe-exporter-failures/; artifacts/evidence/span-status-privacy-017/",
+      "detail": "Sync/async spans omit exception events and status descriptions and record fixed error categories; setup/flush/shutdown failures are observable through bounded counters and boolean status. Production exporter delivery and service integration remain INCOMPLETE."
+    },
+    {
+      "id": "exception-status-description-content-free",
+      "description": "OpenTelemetry context manager does not copy exception text into sync or async span status descriptions",
       "status": "PASS_UNIT",
-      "evidence": "artifacts/evidence/content-safe-exporter-failures/",
-      "detail": "Sync/async spans omit exception payloads and record fixed error categories; setup/flush/shutdown failures are observable through bounded counters and boolean status. Production exporter delivery and service integration remain INCOMPLETE."
+      "evidence": "artifacts/evidence/span-status-privacy-017/focused-tests.txt"
     }
   ]
 }

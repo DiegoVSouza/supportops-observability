@@ -23,3 +23,7 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 ## 2026-10-27 - Phase 016 full-gate evidence destination
 
 - The project full gate, integrated-trace demo, and incident simulator each wrote into fixed historical evidence paths. Added `P03_CHECK_EVIDENCE_DIR`, constrained to `artifacts/evidence/`, and verified an outside path fails before checks. The full service gate then passed using a new run directory; all prior 160 evidence files remained byte-identical.
+
+## 2026-10-27 - Phase 017 automatic exception status description
+
+- Disabling `record_exception` did not prevent the OpenTelemetry context manager from automatically setting ERROR status description to `RuntimeError: <message>` when sync or async decorated work raised. A synthetic sentinel reproduced the leak in both in-memory spans. Decorator spans now use `set_status_on_exception=False` and set a generic ERROR status plus a fixed error category themselves; caller exceptions remain unchanged. Production OTLP privacy remains unverified.

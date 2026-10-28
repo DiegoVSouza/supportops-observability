@@ -6,4 +6,4 @@ The demo uses a local runner contract double. It does not import sibling project
 
 The optional local observability stack contains the Collector, Jaeger, Prometheus, and Grafana. Dashboards and alert rules are provisioned as project artifacts.
 
-Telemetry decorators record a fixed error category and span error status without exception events, messages, or tracebacks. Setup, flush, and shutdown return boolean status and increment the fixed-cardinality telemetry export failure counter on failure. This does not establish delivery of every batch or production exporter reliability.
+Telemetry decorators record a fixed error category and generic span error status without exception events, status descriptions, messages, or tracebacks. The OpenTelemetry context manager's automatic status mutation is disabled so the exception message cannot become the ERROR description; the original exception still propagates to the caller. Setup, flush, and shutdown return boolean status and increment the fixed-cardinality telemetry export failure counter on failure. This does not establish delivery of every batch or production exporter reliability.
