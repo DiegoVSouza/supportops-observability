@@ -11,11 +11,21 @@ import sys
 import time
 from urllib.request import Request,urlopen
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
 
 ROOT=Path(__file__).resolve().parents[1]
 
-READ_RETRY_ATTEMPTS=3
-READ_RETRY_DELAYS=(0.1,0.2)
+READ_RETRY_ATTEMPTS=5
+READ_RETRY_DELAYS=(0.25,0.5,1.0,2.0)
+
+
+def _read_endpoint_class(url):
+    path=urlsplit(url).path
+    if path=="/api/services": return "jaeger.services"
+    if path.startswith("/api/traces/"): return "jaeger.trace"
+    if path.startswith("/api/search"): return "grafana.search"
+    if path=="/api/v1/alerts": return "prometheus.alerts"
+    return "observability.other"
 
 
 def _is_transient_read_error(exc):
@@ -29,15 +39,16 @@ def fetch(url,auth=None):
     headers={}
     if auth: headers['Authorization']='Basic '+base64.b64encode(auth.encode()).decode()
     request=Request(url,headers=headers)
+    endpoint=_read_endpoint_class(url)
     for attempt in range(READ_RETRY_ATTEMPTS):
         try:
             with urlopen(request,timeout=5) as response: return json.load(response)
         except HTTPError as exc:
-            raise RuntimeError(f'HTTP {exc.code} from {url}') from exc
+            raise RuntimeError(f'HTTP {exc.code} from {endpoint}') from exc
         except (RemoteDisconnected,ConnectionError,TimeoutError,socket.timeout,URLError) as exc:
             if not _is_transient_read_error(exc) or attempt+1>=READ_RETRY_ATTEMPTS:
                 raise RuntimeError(
-                    f'{type(exc).__name__} reading observability endpoint after {attempt+1} attempts'
+                    f'{type(exc).__name__} from {endpoint} after {attempt+1} attempts'
                 ) from exc
             time.sleep(READ_RETRY_DELAYS[attempt])
 
