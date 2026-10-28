@@ -7,11 +7,11 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021DC7624380>
     def test_sync_failure_span_status_description_omits_exception_message(monkeypatch):
         exporter = memory_tracer(monkeypatch)
         sentinel = "private-status-sentinel-sync"
-    
+
         @traced_tool("private-status-sync")
         def fails():
             raise RuntimeError(sentinel)
-    
+
         import pytest
         with pytest.raises(RuntimeError, match=sentinel):
             fails()
@@ -30,11 +30,11 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021DC73C7680>
     def test_async_failure_span_status_description_omits_exception_message(monkeypatch):
         exporter = memory_tracer(monkeypatch)
         sentinel = "private-status-sentinel-async"
-    
+
         @traced_tool("private-status-async")
         async def fails():
             raise RuntimeError(sentinel)
-    
+
         import pytest
         with pytest.raises(RuntimeError, match=sentinel):
             asyncio.run(fails())
