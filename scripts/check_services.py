@@ -1,23 +1,45 @@
 """Execute local service requirements; dependency absence is never a green gate."""
 
 import base64
+from http.client import RemoteDisconnected
 import json
 import os
 from pathlib import Path
+import socket
 import subprocess
 import sys
 import time
 from urllib.request import Request,urlopen
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 ROOT=Path(__file__).resolve().parents[1]
+
+READ_RETRY_ATTEMPTS=3
+READ_RETRY_DELAYS=(0.1,0.2)
+
+
+def _is_transient_read_error(exc):
+    transport_errors=(RemoteDisconnected,ConnectionError,TimeoutError,socket.timeout)
+    if isinstance(exc,transport_errors):
+        return True
+    return isinstance(exc,URLError) and isinstance(exc.reason,transport_errors)
+
+
 def fetch(url,auth=None):
     headers={}
     if auth: headers['Authorization']='Basic '+base64.b64encode(auth.encode()).decode()
-    try:
-        with urlopen(Request(url,headers=headers),timeout=5) as response: return json.load(response)
-    except HTTPError as exc:
-        raise RuntimeError(f'HTTP {exc.code} from {url}') from exc
+    request=Request(url,headers=headers)
+    for attempt in range(READ_RETRY_ATTEMPTS):
+        try:
+            with urlopen(request,timeout=5) as response: return json.load(response)
+        except HTTPError as exc:
+            raise RuntimeError(f'HTTP {exc.code} from {url}') from exc
+        except (RemoteDisconnected,ConnectionError,TimeoutError,socket.timeout,URLError) as exc:
+            if not _is_transient_read_error(exc) or attempt+1>=READ_RETRY_ATTEMPTS:
+                raise RuntimeError(
+                    f'{type(exc).__name__} reading observability endpoint after {attempt+1} attempts'
+                ) from exc
+            time.sleep(READ_RETRY_DELAYS[attempt])
 
 def main():
     try:
