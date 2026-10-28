@@ -55,6 +55,8 @@ On the phase-017 candidate, the local synthetic service path created and complet
 ### Phase 019 — bounded GET retry
 
 `check_services.fetch` now retries only known transient transport exceptions from its idempotent local GETs, no more than three total attempts with 0.1 and 0.2 second waits. HTTP status failures are not retried; task/model actions do not pass through this helper. Unit tests pass, but the fresh full service gate exhausted the bound with `RemoteDisconnected` before Jaeger stage assertions. The exact endpoint remains unknown; keep current-candidate service acceptance INCOMPLETE.
+
+The next candidate adds fixed endpoint classes (`jaeger.services`, `jaeger.trace`, `grafana.search`, `prometheus.alerts`) and five GET attempts with at most 3.75 seconds of backoff. Phase 020 exhausted the budget at `grafana.search`; a later direct GET worked, but the root cause and successful full service acceptance remain unproven. Do not infer success from diagnostic requests.
 ## 2026-10-27 — Phase 015 isolated service recheck
 
 The actual P03 synthetic service path passed using a unique Compose project: loopback HTTP ingress, PostgreSQL/SQS worker, installed P01/P04 packages, OTLP Collector/Jaeger export, Grafana dashboard, and all four existing Prometheus alert rules reaching `firing`. The fake runner produced three synthetic traces (`slow_tool`, `agent_loop`, `cost_spike`); no real model/provider was called. Alert waiting follows the existing 0/2/5-minute `for` windows and a 600-second deadline; thresholds were not changed.

@@ -65,7 +65,7 @@
       "description": "Network API, durable broker/worker and database service trace",
       "status": "PASS_HISTORICAL; CURRENT_CANDIDATE_INCOMPLETE",
       "evidence": "artifacts/evidence/phase-009-full-gate-detail.txt; artifacts/evidence/phase-009-jaeger-export.json; artifacts/evidence/span-status-service-018/",
-      "detail": "The phase-009/016 service gate passed on historical candidates. On the phase-017/019 candidates, fake tasks ran and later read-only Jaeger lookups succeeded, but the service checker raised RemoteDisconnected before required stage assertions even after the bounded GET retry; see phases 018/019 INCOMPLETE."
+      "detail": "The phase-009/016 service gate passed on historical candidates. On later candidates fake tasks ran, but phases 018/019 failed during Jaeger reads and phase 020 failed on grafana.search after five GET attempts, before required assertions; later direct reads succeeded but did not pass those gates. Current candidate service acceptance is INCOMPLETE."
     },
     {
       "id": "non-recording-span-metrics",

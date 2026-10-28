@@ -1,0 +1,3 @@
+candidate_commit=2c06374e3e042dd2fdac8bbed3db66e2ff274ecd
+candidate_tree=ae8c49e47941c7751cdd3a54073d6a02bd8a3e97
+worktree_product_and_docs_clean=True

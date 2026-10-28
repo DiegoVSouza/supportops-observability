@@ -1,0 +1,5 @@
+After preserving the failed service gate, a separate direct loopback diagnostic GET to Grafana search returned HTTP 200.
+Response metadata: 680 bytes; 2 search items; response content was not saved.
+Python reported no proxy configuration in the process environment; urllib proxy bypass for 127.0.0.1 was false.
+This confirms transient availability of the endpoint after the gate failure, but does not identify the root cause or retroactively pass the service gate.
+The phase namespace was cleaned; final Docker and artifact reconciliation follows.

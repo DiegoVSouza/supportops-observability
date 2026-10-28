@@ -1,0 +1,68 @@
+$ parse YAML stack\docker-compose.integration.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\docker-compose.obs.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\dashboards\provider.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\datasources\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML alerts\observability.yml
+exit_code=0
+valid YAML
+
+$ validate JSON artifacts
+exit_code=0
+dashboard, source lock and incident fixtures valid
+
+$ C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests
+exit_code=0
+........................................................                 [100%]
+56 passed in 2.94s
+
+$ LLM_MODE=fake python demo/runner_double.py --once
+exit_code=0
+LLM_MODE=fake; metrics=http://localhost:8000; P01 integration=INCOMPLETE (local contract double); result={'ticket_id': 'T-DEMO', 'status': 'open', 'classification': 'billing_question'}
+
+$ python demo/integrated_trace.py (synthetic local exporter)
+exit_code=0
+synthetic_trace=PASS; spans=8; trace_id=00000000000000000000000000000042; output=C:\estudo\Golpe\lab\projects\p03\artifacts\evidence\span-status-endpoint-diagnostics-020\offline\integrated-trace-synthetic.json
+
+$ python incident-lab/simulate.py
+exit_code=0
+simulated_incidents=3 spans=11 output=artifacts\evidence\span-status-endpoint-diagnostics-020\offline\incident-simulation.json real_incident_traces=PENDING
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 check rules /rules/observability.yml
+exit_code=0
+Checking /rules/observability.yml
+  SUCCESS: 4 rules found
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 test rules /tests.yml
+exit_code=0
+  SUCCESS
+
+$ docker compose config --quiet
+exit_code=0
+(no output)
+
+$ service integration
+exit_code=127
+INCOMPLETE: required service gate not executed
+
+$ uv lock --check
+exit_code=0
+Resolved 50 packages in 3ms
+
+result=INCOMPLETE; failures=0; incomplete=required service gate explicitly not executed
+outer_exit_code=2

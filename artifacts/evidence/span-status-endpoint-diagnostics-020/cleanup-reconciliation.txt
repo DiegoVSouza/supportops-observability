@@ -1,0 +1,7 @@
+cleanup_exit_code=0
+namespace_empty=True
+containers=102/102; identity/state differences=0
+networks=21/21; identity differences=0
+volumes=89/89; identity differences=0
+protected tracked artifact hashes=281/281; changed=0; added=0
+Text emitted by docker compose cleanup was not captured to file and is not reconstructed.

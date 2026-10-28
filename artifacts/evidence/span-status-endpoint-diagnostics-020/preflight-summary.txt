@@ -1,0 +1,6 @@
+tracked_artifacts=281
+cached_images_match=True
+ports_free=True
+namespace_empty=True
+fast_exit=0
+compose_exit=0

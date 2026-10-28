@@ -11,3 +11,5 @@ Telemetry decorators record a fixed error category and generic span error status
 The latest isolated fake service run on the status-privacy candidate completed its three task submissions but did not complete the Jaeger stage assertions because one read ended in `RemoteDisconnected`. Subsequent diagnostic GETs succeeded; that does not convert the failed acceptance gate to PASS. See phase 018 for the exact scope and cleanup.
 
 The service checker retries only transport failures on read-only observability GETs, at most three requests with short fixed delays; HTTP errors and model/application actions are not retried. Phase 019's service gate still exhausted this bound, with the endpoint unidentified, so current-candidate service acceptance remains INCOMPLETE.
+
+Phase 020 reports failures by fixed endpoint class and never puts a trace ID or path in the error. Its five-attempt retry identified `grafana.search` as the endpoint that disconnected; a later direct diagnostic GET succeeded but did not pass the service gate. The exact cause remains unresolved and service acceptance is INCOMPLETE.
