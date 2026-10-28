@@ -1,0 +1,2 @@
+COMMAND: docker compose -p p03-phase019-read-retry -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml config --quiet
+EXIT_CODE: 0

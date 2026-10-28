@@ -51,6 +51,10 @@ Removing exception events alone is insufficient: the OpenTelemetry context manag
 ### Phase 018 — service-gate disconnect
 
 On the phase-017 candidate, the local synthetic service path created and completed three tasks and later read-only diagnostics retrieved all three Jaeger traces. The original full gate nevertheless failed its Jaeger read with `RemoteDisconnected` before it could assert required stage names. Do not count those later GETs as a successful gate. The phase-owned stack was cleaned and unrelated Docker identities were preserved. A bounded retry for idempotent Jaeger GETs requires a separate reviewed phase and fresh service run.
+
+### Phase 019 — bounded GET retry
+
+`check_services.fetch` now retries only known transient transport exceptions from its idempotent local GETs, no more than three total attempts with 0.1 and 0.2 second waits. HTTP status failures are not retried; task/model actions do not pass through this helper. Unit tests pass, but the fresh full service gate exhausted the bound with `RemoteDisconnected` before Jaeger stage assertions. The exact endpoint remains unknown; keep current-candidate service acceptance INCOMPLETE.
 ## 2026-10-27 — Phase 015 isolated service recheck
 
 The actual P03 synthetic service path passed using a unique Compose project: loopback HTTP ingress, PostgreSQL/SQS worker, installed P01/P04 packages, OTLP Collector/Jaeger export, Grafana dashboard, and all four existing Prometheus alert rules reaching `firing`. The fake runner produced three synthetic traces (`slow_tool`, `agent_loop`, `cost_spike`); no real model/provider was called. Alert waiting follows the existing 0/2/5-minute `for` windows and a 600-second deadline; thresholds were not changed.

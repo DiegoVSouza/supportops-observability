@@ -1,0 +1,4 @@
+After the original gate failure, bounded read-only diagnostics returned HTTP 200 for Jaeger service listing, each of three trace reads, Grafana dashboard search and Prometheus alert listing.
+Jaeger service response: 88 bytes; trace response sizes: 8551, 8565 and 8744 bytes; Grafana search: 680 bytes; Prometheus alerts: 41 bytes. Only status, byte counts and JSON shapes were retained.
+The original gate error remained RemoteDisconnected after three GET attempts; the exact endpoint was not emitted by the checker.
+These later reads do not make the failed service gate pass and did not rerun any task or model call.

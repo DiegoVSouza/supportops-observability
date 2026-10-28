@@ -1,0 +1,5 @@
+Cleanup command returned exit code 0.
+Its native Docker CLI text was not retained by the PowerShell stream adapter; no output is reconstructed here.
+After cleanup, the phase namespace filter returned no containers.
+Before/after inventory reconciliation: containers=102/102, networks=21/21, volumes=89/89; no identity/state differences.
+All 244 tracked pre-existing artifact hashes matched.

@@ -1,0 +1,120 @@
+FFF.                                                                     [100%]
+================================== FAILURES ===================================
+__________ test_fetch_retries_transient_disconnect_once[disconnect0] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013E3C543490>
+disconnect = RemoteDisconnected('closed')
+
+    @pytest.mark.parametrize(
+        "disconnect",
+        [RemoteDisconnected("closed"), URLError(RemoteDisconnected("closed"))],
+    )
+    def test_fetch_retries_transient_disconnect_once(monkeypatch, disconnect):
+        calls = []
+        sleeps = []
+
+        def opener(request, timeout):
+            calls.append((request.full_url, timeout))
+            if len(calls) == 1:
+                raise disconnect
+            return FakeResponse()
+
+        monkeypatch.setattr(check_services, "urlopen", opener)
+        monkeypatch.setattr(check_services.time, "sleep", sleeps.append)
+
+>       assert check_services.fetch("http://127.0.0.1:24686/api/services") == {"data": []}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_check_services.py:37:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\check_services.py:18: in fetch
+    with urlopen(Request(url,headers=headers),timeout=5) as response: return json.load(response)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = <urllib.request.Request object at 0x0000013E3C5B1160>, timeout = 5
+
+    def opener(request, timeout):
+        calls.append((request.full_url, timeout))
+        if len(calls) == 1:
+>           raise disconnect
+E           http.client.RemoteDisconnected: closed
+
+tests\test_check_services.py:31: RemoteDisconnected
+__________ test_fetch_retries_transient_disconnect_once[disconnect1] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013E3C542650>
+disconnect = URLError(RemoteDisconnected('closed'))
+
+    @pytest.mark.parametrize(
+        "disconnect",
+        [RemoteDisconnected("closed"), URLError(RemoteDisconnected("closed"))],
+    )
+    def test_fetch_retries_transient_disconnect_once(monkeypatch, disconnect):
+        calls = []
+        sleeps = []
+
+        def opener(request, timeout):
+            calls.append((request.full_url, timeout))
+            if len(calls) == 1:
+                raise disconnect
+            return FakeResponse()
+
+        monkeypatch.setattr(check_services, "urlopen", opener)
+        monkeypatch.setattr(check_services.time, "sleep", sleeps.append)
+
+>       assert check_services.fetch("http://127.0.0.1:24686/api/services") == {"data": []}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_check_services.py:37:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\check_services.py:18: in fetch
+    with urlopen(Request(url,headers=headers),timeout=5) as response: return json.load(response)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = <urllib.request.Request object at 0x0000013E3C5BA0D0>, timeout = 5
+
+    def opener(request, timeout):
+        calls.append((request.full_url, timeout))
+        if len(calls) == 1:
+>           raise disconnect
+E           urllib.error.URLError: <urlopen error closed>
+
+tests\test_check_services.py:31: URLError
+___________ test_fetch_caps_persistent_disconnect_at_three_attempts ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013E3C5A2E70>
+
+    def test_fetch_caps_persistent_disconnect_at_three_attempts(monkeypatch):
+        calls = []
+
+        def opener(request, timeout):
+            calls.append(request.full_url)
+            raise URLError(RemoteDisconnected("sentinel connection detail"))
+
+        monkeypatch.setattr(check_services, "urlopen", opener)
+        monkeypatch.setattr(check_services.time, "sleep", lambda _: None)
+
+        with pytest.raises(RuntimeError, match="after 3 attempts") as error:
+>           check_services.fetch("http://127.0.0.1:24686/api/services")
+
+tests\test_check_services.py:53:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\check_services.py:18: in fetch
+    with urlopen(Request(url,headers=headers),timeout=5) as response: return json.load(response)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = <urllib.request.Request object at 0x0000013E3C5B9A90>, timeout = 5
+
+    def opener(request, timeout):
+        calls.append(request.full_url)
+>       raise URLError(RemoteDisconnected("sentinel connection detail"))
+E       urllib.error.URLError: <urlopen error sentinel connection detail>
+
+tests\test_check_services.py:47: URLError
+=========================== short test summary info ===========================
+FAILED tests/test_check_services.py::test_fetch_retries_transient_disconnect_once[disconnect0]
+FAILED tests/test_check_services.py::test_fetch_retries_transient_disconnect_once[disconnect1]
+FAILED tests/test_check_services.py::test_fetch_caps_persistent_disconnect_at_three_attempts

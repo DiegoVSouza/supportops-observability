@@ -1,0 +1,3 @@
+COMMAND: P03_CHECK_EVIDENCE_DIR=artifacts/evidence/span-status-read-retry-019/offline P03_SKIP_SERVICES=1 LLM_MODE=fake uv run --locked --offline python scripts/check_full.py
+EXIT_CODE: 2
+EXPECTED: INCOMPLETE solely because service gate was explicitly skipped

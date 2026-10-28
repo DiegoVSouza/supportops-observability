@@ -1,0 +1,2 @@
+COMMAND: uv run --locked --offline python -m pytest tests/test_check_services.py -q
+EXIT_CODE: 0
