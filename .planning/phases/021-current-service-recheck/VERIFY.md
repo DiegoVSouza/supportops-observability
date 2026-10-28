@@ -1,3 +1,5 @@
 # Verification
 
-INCOMPLETE pending preflight and service gate.
+PASS for the local synthetic service-enabled gate on source candidate `eaf3390a25ef55e3bd4a66d01cf91eccd98d60eb`: fast check and locked full gate exit 0, 56 tests, Prometheus rule checks, three synthetic service traces with required stages, dashboard and four firing synthetic alerts. Output is in `artifacts/evidence/current-service-recheck-021/`. Earlier phases 018–020 remain historical INCOMPLETE events.
+
+All seven cached image IDs matched; the phase namespace was empty and the designated loopback ports were free. One initial inventory command failed because some containers lacked a Health field; the portable retry recorded all 102 containers. Cleanup of only the phase namespace exited 0. Before/after identities and normalized state matched for 102 containers, 21 networks and 89 volumes; no phase container remained. No provider calls, credentials or paid spend were used. Production exporter reliability, live quality, human and independent review and promotion remain PENDING/INCOMPLETE.

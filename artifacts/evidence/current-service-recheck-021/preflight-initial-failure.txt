@@ -1,0 +1,3 @@
+command: docker inspect with .State.Health
+exit_code: 1
+result: template error for containers without Health; preflight repeated with portable status fields; no resources changed

@@ -1,0 +1,5 @@
+cwd: C:\estudo\Golpe\lab\projects\p03
+command: uv run --locked --offline python scripts/check_fast.py
+exit_code: 0
+output:
+check-fast: OK

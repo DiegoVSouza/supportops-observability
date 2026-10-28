@@ -1,0 +1,5 @@
+cwd: C:\estudo\Golpe\lab\projects\p03
+command: P03_CHECK_EVIDENCE_DIR=<phase-owned> P03_SERVICE_EVIDENCE_DIR=<phase-owned> P03_COMPOSE_PROJECT=p03-phase021-current-recheck P03_ALERT_TIMEOUT_S=600 LLM_MODE=fake uv run --locked --offline python scripts/check_full.py
+exit_code: 0
+output:
+check-full: PASS; failures=0; incomplete=0
