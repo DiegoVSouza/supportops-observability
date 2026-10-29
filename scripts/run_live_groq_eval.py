@@ -182,31 +182,8 @@ def write_result(result: dict[str, object], code: int) -> None:
 
 
 def main() -> int:
-    result = {
-        "provider": "groq",
-        "model": MODEL,
-        "status": "INCOMPLETE",
-        "exit_code": 1,
-        "started_at_utc": datetime.now(UTC).isoformat(),
-        "content_capture": False,
-    }
-    code = 1
-    try:
-        if os.getenv("LLM_MODE", "").lower() != "live":
-            raise RuntimeError("explicit LLM_MODE=live required")
-        api_keys = load_credentials()
-        result["credential_count"] = len(api_keys)
-        response, latency, key_count = request_completion(api_keys)
-        result.update(record_response(response, latency))
-        result["model_available_key_count"] = key_count
-        code = 0 if result["status"] == "PASS" else 1
-    except Exception as exc:
-        result["error"] = {"class": type(exc).__name__}
-        code = 1
-    result.update(exit_code=code, finished_at_utc=datetime.now(UTC).isoformat())
-    write_result(result, code)
-    print(json.dumps(result, sort_keys=True))
-    return code
+    print(json.dumps({"status": "INCOMPLETE", "reason": "accounted_guard_required", "provider_accessed": False, "credentials_read": False}))
+    return 2
 
 
 if __name__ == "__main__":

@@ -1,0 +1,14 @@
+[
+  {
+    "command": "C:\\estudo\\Golpe\\lab\\projects\\p03\\.venv\\Scripts\\python.exe scripts/check_fast.py",
+    "cwd": "C:\\estudo\\Golpe\\lab\\projects\\p03",
+    "exit_code": 0,
+    "output": "check-fast: OK\n"
+  },
+  {
+    "command": "C:\\estudo\\Golpe\\lab\\projects\\p03\\.venv\\Scripts\\python.exe -m pytest -q tests",
+    "cwd": "C:\\estudo\\Golpe\\lab\\projects\\p03",
+    "exit_code": 0,
+    "output": ".........................................................                [100%]\n"
+  }
+]

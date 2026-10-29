@@ -32,3 +32,13 @@ def test_live_response_exports_content_safe_agent_and_llm_spans(monkeypatch):
         "llm.inference",
     }
     assert all("supportops.llm.content" not in span.attributes for span in exported)
+def test_legacy_entry_stops_before_credentials_provider_and_evidence(monkeypatch):
+    from scripts import run_live_groq_eval as evaluation
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("unexpected external access")
+
+    monkeypatch.setattr(evaluation, "load_credentials", forbidden)
+    monkeypatch.setattr(evaluation, "request_completion", forbidden)
+    monkeypatch.setattr(evaluation, "write_result", forbidden)
+    assert evaluation.main() == 2
