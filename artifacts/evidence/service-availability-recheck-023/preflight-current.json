@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "namespace": "p03-readiness-023-20261029",
+  "images": [
+    "grafana/grafana:12.4.11",
+    "jaegertracing/jaeger:2.18.0",
+    "localstack/localstack:4.14.0",
+    "otel/opentelemetry-collector-contrib:0.161.0",
+    "postgres:17.11-alpine3.24",
+    "prom/prometheus:v3.14.0",
+    "python:3.13.12-slim"
+  ],
+  "ports": [
+    23000,
+    24686,
+    24319,
+    34566,
+    24317,
+    24318,
+    37432,
+    29090
+  ]
+}
