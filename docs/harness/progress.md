@@ -110,3 +110,9 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 - No provider calls or new live allocation. Live integration, wire export of the new adapter, quality and reviews remain pending.
 
 - Phase 024 update: user explicitly authorized one extra service execution. Attempt 4 passed the current full fake gate (67 tests), dashboard/four firing alerts, and the new accounted adapter OTLP privacy/correlation probe. Cleanup exit 0 preserved prior inventories. Historical attempts 1–3 remain INCOMPLETE. Evidence: accounted-telemetry-024/attempt4/ and accounted-export.json. Live provider integration remains pending.
+
+## 2026-10-29 — Phase 025 accounted local live telemetry
+
+- Current full fake service gate passed 70 tests plus correlated service traces/dashboard/four alerts. Fixed synthetic operation passed one accounted live call (93 input/23 output), durable receipt matching and content-free parent/child spans queried from Jaeger. Candidate b0cf5bb, fingerprint ba0a9a19ccf08cfde039c478e93d94b0ba43625a9c7b7c40c02da55c3cf6eec5. Evidence: artifacts/evidence/accounted-local-live-025/.
+- Root phase 032 separately funded four operating calls; one used, three remain. Historical reservations and quality/review/holdout gates remain protected. Paid authorization USD 0; actual billed amount unknown.
+- Cleanup preserved previous inventories. The inherited wrapper call-count constant was corrected from its preserved incorrect zero summary to the ledger-proven one call in accounting-correction.json; no provider request was repeated. Model quality, human review and promotion remain pending.

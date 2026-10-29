@@ -1,0 +1,9 @@
+{
+  "status": "ok",
+  "provenance": "live",
+  "receipt": "e312fdc89e77414fa1bb67cf864d50eb",
+  "trace_id": "3abcd9d649aa4c8556f70a74ada97e0c",
+  "input_tokens": 93,
+  "output_tokens": 23,
+  "telemetry_flushed": true
+}

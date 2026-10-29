@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "receipt_matches": true,
+  "correlated_spans": 2,
+  "content_exported": false,
+  "provider_calls": 1,
+  "remaining_operating_calls": 3,
+  "input_tokens": 93,
+  "output_tokens": 23,
+  "trace_id": "3abcd9d649aa4c8556f70a74ada97e0c",
+  "actual_billed_usd": null
+}

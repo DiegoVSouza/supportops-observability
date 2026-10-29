@@ -79,7 +79,15 @@ finally:
     (out / "inventory-after.json").write_text(json.dumps(after, indent=2) + "\n", newline="\n")
     unchanged = all(set(before[kind]) <= set(after[kind]) for kind in before)
     remaining = run(["docker", "ps", "-a", "-q", "--filter", "label=com.docker.compose.project=" + namespace])
-    report = {"gate_exit_code": code, "cleanup_exit_code": cleanup.returncode, "prior_resources_preserved": unchanged, "phase_containers_remaining": bool(remaining.stdout.strip()), "provider_calls": 0}
+    # Generation is accounted by the durable ledger, never by a fixture constant.
+    import sqlite3
+    from contextlib import closing
+    provider_path = root / "artifacts/evals/live/provider-usage.sqlite"
+    provider_calls = 0
+    if provider_path.exists():
+        with closing(sqlite3.connect(provider_path.resolve().as_uri() + "?mode=ro", uri=True)) as db:
+            provider_calls = db.execute("SELECT COUNT(*) FROM usage_events WHERE event='reserved'").fetchone()[0]
+    report = {"gate_exit_code": code, "cleanup_exit_code": cleanup.returncode, "prior_resources_preserved": unchanged, "phase_containers_remaining": bool(remaining.stdout.strip()), "provider_calls": provider_calls}
     (out / "service-result.json").write_text(json.dumps(report, indent=2) + "\n", newline="\n")
     print(json.dumps(report))
     if cleanup.returncode or not unchanged or remaining.stdout.strip(): code = 1

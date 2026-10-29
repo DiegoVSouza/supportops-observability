@@ -1,0 +1,6 @@
+{
+  "command": "uv run --locked --extra dev python -m py_compile artifacts/evidence/accounted-local-live-025/run-services.py",
+  "cwd": "C:\\estudo\\Golpe\\lab\\projects\\p03",
+  "exit_code": 0,
+  "output": ""
+}
