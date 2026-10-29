@@ -1,0 +1,13 @@
+{
+  "project": "p03",
+  "campaign_id": "local-operation-v1",
+  "case_ids": [
+    "fixture-local-01",
+    "fixture-local-02",
+    "fixture-local-03",
+    "fixture-local-04"
+  ],
+  "paid_usd": 0,
+  "candidate": "b0cf5bbd60ba590217c32914b9aa694eae8e483d",
+  "source_fingerprint": "ba0a9a19ccf08cfde039c478e93d94b0ba43625a9c7b7c40c02da55c3cf6eec5"
+}
