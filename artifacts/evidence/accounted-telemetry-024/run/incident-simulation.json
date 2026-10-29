@@ -1,0 +1,114 @@
+{
+  "scenarios": {
+    "agent_loop": {
+      "detected": true,
+      "reason": "repeated_tool_arguments"
+    },
+    "cost_spike": {
+      "cost_usd": 8.75,
+      "input_tokens": 100000,
+      "output_tokens": 20000,
+      "synthetic": true
+    },
+    "tool_slow": {
+      "agent_span": "agent.slow_tool",
+      "expected_cause": "tool.lookup dominates latency",
+      "tool_span": "tool.lookup"
+    }
+  },
+  "source": "synthetic local test run; not a production incident",
+  "spans": [
+    {
+      "attributes": {
+        "supportops.simulated.cause": "slow tool dependency",
+        "supportops.simulated.duration_ms": 8200
+      },
+      "name": "tool.lookup",
+      "parent_span_id": "0fb6ea22a5778edc",
+      "trace_id": "ece618a2af4e71170c40530e0cc06c3b"
+    },
+    {
+      "attributes": {},
+      "name": "agent.slow_tool",
+      "parent_span_id": null,
+      "trace_id": "ece618a2af4e71170c40530e0cc06c3b"
+    },
+    {
+      "attributes": {
+        "supportops.simulated.step": 1
+      },
+      "name": "tool.search",
+      "parent_span_id": "7a58b3832adcd16e",
+      "trace_id": "4eab741f8d8afa3a88e0d7ecbad16fca"
+    },
+    {
+      "attributes": {
+        "supportops.simulated.step": 2
+      },
+      "name": "tool.search",
+      "parent_span_id": "7a58b3832adcd16e",
+      "trace_id": "4eab741f8d8afa3a88e0d7ecbad16fca"
+    },
+    {
+      "attributes": {
+        "supportops.simulated.step": 3
+      },
+      "name": "tool.search",
+      "parent_span_id": "7a58b3832adcd16e",
+      "trace_id": "4eab741f8d8afa3a88e0d7ecbad16fca"
+    },
+    {
+      "attributes": {
+        "supportops.simulated.step": 4
+      },
+      "name": "tool.search",
+      "parent_span_id": "7a58b3832adcd16e",
+      "trace_id": "4eab741f8d8afa3a88e0d7ecbad16fca"
+    },
+    {
+      "attributes": {
+        "supportops.simulated.step": 5
+      },
+      "name": "tool.search",
+      "parent_span_id": "7a58b3832adcd16e",
+      "trace_id": "4eab741f8d8afa3a88e0d7ecbad16fca"
+    },
+    {
+      "attributes": {
+        "supportops.simulated.step": 6
+      },
+      "name": "tool.search",
+      "parent_span_id": "7a58b3832adcd16e",
+      "trace_id": "4eab741f8d8afa3a88e0d7ecbad16fca"
+    },
+    {
+      "attributes": {
+        "supportops.loop.detected": true,
+        "supportops.loop.reason": "repeated_tool_arguments"
+      },
+      "name": "agent.loop",
+      "parent_span_id": null,
+      "trace_id": "4eab741f8d8afa3a88e0d7ecbad16fca"
+    },
+    {
+      "attributes": {
+        "supportops.llm.cost_usd": 8.75,
+        "supportops.llm.input_tokens": 100000,
+        "supportops.llm.latency_seconds": 2.1,
+        "supportops.llm.model": "synthetic-model",
+        "supportops.llm.output_tokens": 20000,
+        "supportops.llm.provider": "fake",
+        "supportops.llm.success": true
+      },
+      "name": "llm.inference",
+      "parent_span_id": "5ab0e8aef25b8752",
+      "trace_id": "fdba55cd1dc63d76664cf413bbd58711"
+    },
+    {
+      "attributes": {},
+      "name": "agent.cost_spike",
+      "parent_span_id": null,
+      "trace_id": "fdba55cd1dc63d76664cf413bbd58711"
+    }
+  ]
+}

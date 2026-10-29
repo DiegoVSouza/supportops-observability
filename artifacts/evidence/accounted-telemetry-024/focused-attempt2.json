@@ -1,0 +1,6 @@
+{
+  "command": "uv run --locked --extra dev python -m pytest tests/test_accounted.py --basetemp artifacts/evidence/accounted-telemetry-024/tmp-focused-2",
+  "cwd": "C:\\estudo\\Golpe\\lab\\projects\\p03",
+  "exit_code": 0,
+  "output": ".........                                                                [100%]\r\n9 passed in 0.47s\r\n"
+}

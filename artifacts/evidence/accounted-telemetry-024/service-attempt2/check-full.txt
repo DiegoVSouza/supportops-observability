@@ -1,0 +1,121 @@
+$ parse YAML stack\docker-compose.integration.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\docker-compose.obs.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\dashboards\provider.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\grafana-provisioning\datasources\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML stack\prometheus.yml
+exit_code=0
+valid YAML
+
+$ parse YAML alerts\observability.yml
+exit_code=0
+valid YAML
+
+$ validate JSON artifacts
+exit_code=0
+dashboard, source lock and incident fixtures valid
+
+$ C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe -m pytest tests
+exit_code=0
+..................................................................       [100%]
+66 passed in 1.77s
+
+$ LLM_MODE=fake python demo/runner_double.py --once
+exit_code=0
+LLM_MODE=fake; metrics=http://localhost:8000; P01 integration=INCOMPLETE (local contract double); result={'ticket_id': 'T-DEMO', 'status': 'open', 'classification': 'billing_question'}
+
+$ python demo/integrated_trace.py (synthetic local exporter)
+exit_code=0
+synthetic_trace=PASS; spans=8; trace_id=00000000000000000000000000000042; output=C:\estudo\Golpe\lab\projects\p03\artifacts\evidence\accounted-telemetry-024\service-attempt2\integrated-trace-synthetic.json
+
+$ python incident-lab/simulate.py
+exit_code=0
+simulated_incidents=3 spans=11 output=artifacts\evidence\accounted-telemetry-024\service-attempt2\incident-simulation.json real_incident_traces=PENDING
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 check rules /rules/observability.yml
+exit_code=0
+Checking /rules/observability.yml
+  SUCCESS: 4 rules found
+
+$ docker run --rm --entrypoint promtool -v C:\estudo\Golpe\lab\projects\p03\alerts:/rules:ro -v C:\estudo\Golpe\lab\projects\p03\tests\fixtures\alert_rules.yml:/tests.yml:ro prom/prometheus:v3.14.0 test rules /tests.yml
+exit_code=0
+  SUCCESS
+
+$ docker compose config --quiet
+exit_code=0
+(no output)
+
+$ python scripts/check_services.py
+exit_code=2
+Command: docker compose -p p03-accounted-024-20261029-b -f stack/docker-compose.obs.yml -f artifacts/evidence/phase-008-compose.override.yml -f stack/docker-compose.integration.yml up -d --wait
+Exit code: 0
+ Network p03-accounted-024-20261029-b_default Creating 
+ Network p03-accounted-024-20261029-b_default Creating 
+ Network p03-accounted-024-20261029-b_default Created 
+ Network p03-accounted-024-20261029-b_default Created 
+ Container p03-accounted-024-20261029-b-synthetic-metrics-1 Creating 
+ Container p03-accounted-024-20261029-b-postgres-1 Creating 
+ Container p03-accounted-024-20261029-b-grafana-1 Creating 
+ Container p03-accounted-024-20261029-b-localstack-1 Creating 
+ Container p03-accounted-024-20261029-b-jaeger-1 Creating 
+ Container p03-accounted-024-20261029-b-prometheus-1 Creating 
+ Container p03-accounted-024-20261029-b-jaeger-1 Created 
+ Container p03-accounted-024-20261029-b-otel-collector-1 Creating 
+ Container p03-accounted-024-20261029-b-synthetic-metrics-1 Created 
+ Container p03-accounted-024-20261029-b-grafana-1 Created 
+ Container p03-accounted-024-20261029-b-prometheus-1 Created 
+ Container p03-accounted-024-20261029-b-localstack-1 Created 
+ Container p03-accounted-024-20261029-b-postgres-1 Created 
+ Container p03-accounted-024-20261029-b-otel-collector-1 Created 
+ Container p03-accounted-024-20261029-b-prometheus-1 Starting 
+ Container p03-accounted-024-20261029-b-synthetic-metrics-1 Starting 
+ Container p03-accounted-024-20261029-b-jaeger-1 Starting 
+ Container p03-accounted-024-20261029-b-grafana-1 Starting 
+ Container p03-accounted-024-20261029-b-localstack-1 Starting 
+ Container p03-accounted-024-20261029-b-postgres-1 Starting 
+ Container p03-accounted-024-20261029-b-prometheus-1 Started 
+ Container p03-accounted-024-20261029-b-synthetic-metrics-1 Started 
+ Container p03-accounted-024-20261029-b-jaeger-1 Started 
+ Container p03-accounted-024-20261029-b-otel-collector-1 Starting 
+ Container p03-accounted-024-20261029-b-grafana-1 Started 
+ Container p03-accounted-024-20261029-b-localstack-1 Started 
+ Container p03-accounted-024-20261029-b-postgres-1 Started 
+ Container p03-accounted-024-20261029-b-otel-collector-1 Started 
+ Container p03-accounted-024-20261029-b-postgres-1 Waiting 
+ Container p03-accounted-024-20261029-b-localstack-1 Waiting 
+ Container p03-accounted-024-20261029-b-jaeger-1 Waiting 
+ Container p03-accounted-024-20261029-b-prometheus-1 Waiting 
+ Container p03-accounted-024-20261029-b-grafana-1 Waiting 
+ Container p03-accounted-024-20261029-b-otel-collector-1 Waiting 
+ Container p03-accounted-024-20261029-b-synthetic-metrics-1 Waiting 
+ Container p03-accounted-024-20261029-b-jaeger-1 Healthy 
+ Container p03-accounted-024-20261029-b-synthetic-metrics-1 Healthy 
+ Container p03-accounted-024-20261029-b-otel-collector-1 Healthy 
+ Container p03-accounted-024-20261029-b-grafana-1 Healthy 
+ Container p03-accounted-024-20261029-b-prometheus-1 Healthy 
+ Container p03-accounted-024-20261029-b-localstack-1 Healthy 
+ Container p03-accounted-024-20261029-b-postgres-1 Healthy 
+
+Command: C:\estudo\Golpe\lab\projects\p03\.venv\Scripts\python.exe demo/service_trace.py
+Exit code: 0
+{"traces": [{"incident": "slow_tool", "task_id": "95174cce-5679-4360-98da-61506a1dfb4f", "trace_id": "4cf349bad3222928cd459fe69fc1ea5c"}, {"incident": "agent_loop", "task_id": "646696e7-853b-4b8d-9e9f-9400c9baca18", "trace_id": "2feb55736571e769f1dceb402b4f0f5e"}, {"incident": "cost_spike", "task_id": "f1b306ae-96d7-4485-b8e5-a5b5c2e9dd2f", "trace_id": "fd80d715931d1a63cbd0c58e27426acd"}], "synthetic": true}
+
+service-integration: INCOMPLETE; RuntimeError: RemoteDisconnected from grafana.search after 5 attempts
+
+$ uv lock --check
+exit_code=0
+Resolved 50 packages in 1ms
+
+result=INCOMPLETE; failures=0; incomplete=required service integration unavailable or incomplete
+outer_exit_code=2

@@ -102,3 +102,9 @@ The first Docker gate exceeded its cold-start synthetic-alert wait. All four ale
 ## 2026-10-28 - Phase 021 current service recheck
 
 - The isolated fake service gate passed: 56 tests, three traces, dashboard and four alerts. Pre-existing container, network and volume inventories reconciled; evidence is in artifacts/evidence/current-service-recheck-021/. Production telemetry, model quality and reviews remain pending.
+
+## 2026-10-29 — Phase 024 accounted telemetry
+
+- Added injected fixture-session adapter for the shared envelope/receipt: durable reservations, exact validated usage, fixed model/provider labels, correlated operation/inference spans and no content capture even when global capture is enabled.
+- Nine adapter tests passed; complete fake unit suite passed 66 tests. Service gate INCOMPLETE after three attempts: grafana.search empty response; cleanup preserved all prior inventories. Fixed missing explicit Grafana HTTP readiness contract; ten focused tests now pass. Runtime acceptance of that correction remains unverified because service failure p03-024-grafana-startup exhausted 3/3 attempts. Do not reset/replay the gate without a separately authorized validation window. See phase 024 VERIFY and artifacts/evidence/accounted-telemetry-024/.
+- No provider calls or new live allocation. Live integration, wire export of the new adapter, quality and reviews remain pending.
