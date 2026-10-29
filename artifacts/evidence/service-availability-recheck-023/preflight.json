@@ -1,0 +1,8 @@
+{
+  "command": "docker info --format {{.ServerVersion}}",
+  "cwd": "C:\\estudo\\Golpe\\lab\\projects\\p03",
+  "exit_code": 1,
+  "output": "\nfailed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: O sistema n\u00c3\u00a3o pode encontrar o arquivo especificado.\n",
+  "status": "INCOMPLETE",
+  "stop": "docker_daemon_unavailable; no resources started; images, ports and namespace not assessed"
+}
