@@ -4,6 +4,8 @@ import sys
 import time
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from opentelemetry import trace
 from supportops_obs import setup_telemetry, flush_telemetry, shutdown_telemetry
 from supportops_obs.accounted import MODEL, run
@@ -32,6 +34,7 @@ path = out / "fixture-operation.sqlite"
 assert not path.exists(), "Do not replay the service probe"
 result = run(path, "fixture-export-024", session)
 assert flush_telemetry(timeout_millis=10000)
+time.sleep(0.5)
 try:
     data = None
     for index in range(5):

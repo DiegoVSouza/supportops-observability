@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "provenance": "fixture",
+  "trace_id": "bc4f0caff77b7c4db6fbb0b59706f30f",
+  "correlated_spans": 2,
+  "content_exported": false,
+  "provider_calls": 0,
+  "fixture_input_tokens": 101,
+  "fixture_output_tokens": 19
+}

@@ -1,0 +1,64 @@
+{
+  "status": "success",
+  "data": {
+    "alerts": [
+      {
+        "labels": {
+          "alertname": "AgentLoopDetected",
+          "instance": "synthetic-metrics:8000",
+          "job": "supportops-demo",
+          "severity": "warning",
+          "synthetic": "true",
+          "task_type": "triage"
+        },
+        "annotations": {
+          "runbook": "incident-lab/loop-agent.md",
+          "summary": "Agent loop detector signaled a repeated action or state cycle"
+        },
+        "state": "firing",
+        "activeAt": "2026-10-29T18:40:19.688807287Z",
+        "value": "2.0000912322316456e+01"
+      },
+      {
+        "labels": {
+          "alertname": "LLMCostAnomaly",
+          "instance": "synthetic-metrics:8000",
+          "job": "supportops-demo",
+          "severity": "warning",
+          "synthetic": "true"
+        },
+        "annotations": {
+          "runbook": "incident-lab/cost-spike.md",
+          "summary": "LLM spend exceeded the local configured threshold"
+        },
+        "state": "firing",
+        "activeAt": "2026-10-29T18:41:19.688807287Z",
+        "value": "2.415709523602475e+01"
+      },
+      {
+        "labels": {
+          "alertname": "AgentErrorRateHigh",
+          "severity": "warning"
+        },
+        "annotations": {
+          "summary": "LLM call error rate exceeds 10 percent"
+        },
+        "state": "firing",
+        "activeAt": "2026-10-29T18:40:19.688807287Z",
+        "value": "1e+00"
+      },
+      {
+        "labels": {
+          "alertname": "LLMp95LatencyHigh",
+          "severity": "warning"
+        },
+        "annotations": {
+          "summary": "LLM p95 latency exceeds five seconds"
+        },
+        "state": "firing",
+        "activeAt": "2026-10-29T18:40:19.688807287Z",
+        "value": "9.75e+00"
+      }
+    ]
+  }
+}
