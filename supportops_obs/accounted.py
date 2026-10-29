@@ -5,6 +5,7 @@ import sqlite3
 import time
 from contextlib import closing
 from decimal import Decimal
+from opentelemetry import trace
 
 from .instrumentation import LLMResponse, record_llm_call, traced_agent
 
@@ -15,13 +16,17 @@ class AccountedBlocked(RuntimeError):
     """Fixed categorical errors, without transport messages."""
 
 
-@traced_agent("accounted-operation")
 def run(path, request_id, session):
     if getattr(session, "provenance", None) != "fixture":
         raise AccountedBlocked("fixture_session_required")
+    return _run(path, request_id, session, campaign="fixture-telemetry-v1")
+
+
+@traced_agent("accounted-operation")
+def _run(path, request_id, session, *, campaign):
     if not isinstance(request_id, str) or not re.fullmatch(r"fixture-[A-Za-z0-9_-]{1,48}", request_id):
         raise AccountedBlocked("invalid_request")
-    envelope = {"campaign_id": "fixture-telemetry-v1", "case_id": request_id,
+    envelope = {"campaign_id": campaign, "case_id": request_id,
                 "trial": 1, "call_index": 1, "timeout_seconds": 20,
                 "payload": {"model": MODEL, "messages": [
                     {"role": "system", "content": "Answer this local synthetic status question briefly."},
@@ -67,5 +72,6 @@ def run(path, request_id, session):
     cost = (Decimal(usage["input_tokens"]) * Decimal("0.075") + Decimal(usage["output_tokens"]) * Decimal("0.30")) / 1000000
     # Never pass content, arbitrary model/provider labels or receipt IDs to telemetry.
     record_llm_call(LLMResponse("groq", MODEL, usage["input_tokens"], usage["output_tokens"], float(cost), elapsed))
-    return {"status": "ok", "provenance": "fixture", "receipt": result["attempt_id"],
+    return {"status": "ok", "provenance": session.provenance, "receipt": result["attempt_id"],
+            "trace_id": format(trace.get_current_span().get_span_context().trace_id, "032x"),
             "input_tokens": usage["input_tokens"], "output_tokens": usage["output_tokens"]}
