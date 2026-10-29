@@ -1,0 +1,8 @@
+# Plan
+
+1. Adapt the prepared adapter for an owning source-bound local live controller, preserving fixture-only defaults and content-free traces; test provenance/refusal/unknown/restart controls.
+2. Run locked focused/fast/full fake checks with phase-owned scratch/evidence and exclusive inventoried services. Commit sources and freeze manifest before provider access.
+3. On the frozen source and funded allocation, run at most one fixed synthetic live call, verify exact receipt/usage and exported parent/child privacy; clean only phase-owned services and save reconciliation.
+
+allowed_write_paths: .planning/phases/025-accounted-local-live/**; supportops_obs/accounted.py; scripts/local_operation.py; tests/test_local_operation.py; evals/live-execution.json; artifacts/evals/live/local-operation-v1/manifest.json; artifacts/evals/live/operations.sqlite* (new append/reserve/complete only); artifacts/evals/live/provider-usage.sqlite* (shared guard only); artifacts/evidence/accounted-local-live-025/**; docs/harness/progress.md; shared runtime registry (normal registration only) and account/campaign locks.
+forbidden_changes: historical attempts/evidence/ledgers, other allocations, holdout/confirmation, provider/model fallback, paid use, customer data, real effects, unrelated Docker resources, review fabrication. Fake default; at most one live call of funded four, 4096/512 input/output, timeout 20s, USD 0 paid. max_tries: 3 per new stable failure; retain phase-024 resolved 3+1 history. No completion replay. Stop on uncertainty/provider/quota/schema/semantic failure, source mismatch or cleanup discrepancy. Plan-check: implementer self-assessment.
