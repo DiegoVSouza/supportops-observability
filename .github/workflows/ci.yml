@@ -13,3 +13,5 @@ jobs:
       - run: uv run --locked python scripts/check_fast.py
       - run: uv run --locked python scripts/check_full.py
         env: {LLM_MODE: fake}
+      - if: failure()
+        run: cat artifacts/evidence/check-full.txt

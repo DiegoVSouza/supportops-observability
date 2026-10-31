@@ -1,0 +1,2 @@
+# Frozen datasets and manifests are hashed byte for byte.
+evals/** text eol=lf
