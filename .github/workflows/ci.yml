@@ -9,7 +9,7 @@ jobs:
         with: { python-version: '3.13' }
       - uses: astral-sh/setup-uv@v6
         with: {version: 0.12.7}
-      - run: uv sync --locked --extra dev
+      - run: uv sync --locked --all-extras
       - run: uv run --locked python scripts/check_fast.py
       - run: uv run --locked python scripts/check_full.py
         env: {LLM_MODE: fake}
