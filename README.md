@@ -1,5 +1,16 @@
 # P03 — Agent Observability
 
+<!-- case:start -->
+## The case
+
+- **Problem.** An agent can repeat, retry and spend across services, and teams still should not collect prompts to see it.
+- **Decision.** OpenTelemetry traces, trace-correlated logs, Prometheus metrics and deterministic loop detection. Content capture is off by default, and tests check that span status stays content-free.
+- **Measured.** The full fake service gate passed with 70 tests, correlated traces, a dashboard and four firing alerts. One accounted live synthetic call was traced with content-free parent and child spans in Jaeger (`docs/harness/progress.md`). No latency or cost number is claimed.
+- **Run it.** `uv sync --locked --extra dev && uv run --locked python scripts/check_full.py`
+- **Limits.** Trace content privacy is tested for the paths covered, not proven for every integration.
+- **Docs.** [Architecture](docs/architecture.md).
+<!-- case:end -->
+
 `supportops_obs` instruments Python agent workflows with OpenTelemetry traces, trace-correlated standard-library logs, Prometheus metrics, and deterministic loop detection. Content capture is disabled by default. No LLM calls are required.
 
 ## Problem

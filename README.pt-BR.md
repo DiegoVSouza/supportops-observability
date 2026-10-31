@@ -1,5 +1,16 @@
 # P03 — Observabilidade de agentes
 
+<!-- case:start -->
+## O case
+
+- **Problema.** Um agente pode repetir, tentar de novo e gastar entre serviços, e ainda assim não se deve coletar prompts para enxergar isso.
+- **Decisão.** Traces OpenTelemetry, logs correlacionados, métricas Prometheus e detecção determinística de loops. A captura de conteúdo vem desligada, e testes verificam que o status dos spans não carrega conteúdo.
+- **Medido.** O gate fake de serviços completo passou com 70 testes, traces correlacionados, dashboard e quatro alertas disparando. Uma chamada sintética live contabilizada foi rastreada com spans pai e filho sem conteúdo no Jaeger (`docs/harness/progress.md`). Nenhum número de latência ou custo é afirmado.
+- **Como rodar.** `uv sync --locked --extra dev && uv run --locked python scripts/check_full.py`
+- **Limites.** A privacidade do conteúdo é testada nos caminhos cobertos, não provada para toda integração.
+- **Docs.** [Arquitetura](docs/architecture.md).
+<!-- case:end -->
+
 `supportops_obs` instrumenta fluxos Python com traces OpenTelemetry, logs ligados ao trace, métricas Prometheus e detecção determinística de loops. A captura de conteúdo começa desativada. Nenhuma chamada a LLM é necessária.
 
 ## Arquitetura
