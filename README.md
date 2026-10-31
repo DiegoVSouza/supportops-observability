@@ -11,6 +11,25 @@
 - **Docs.** [Architecture](docs/architecture.md).
 <!-- case:end -->
 
+<!-- flow:start -->
+## How it works
+
+Generated from the same data as the diagram on the portfolio site (`projects/observability/`), so the two cannot drift.
+
+```mermaid
+flowchart LR
+  request["API request"]
+  worker["worker.run span"]
+  triage["agent.triage span"]
+  llm["Model call"]
+  loop["Loop detector"]
+  request --> worker
+  worker --> triage
+  triage --> llm
+  llm --> loop
+```
+<!-- flow:end -->
+
 `supportops_obs` instruments Python agent workflows with OpenTelemetry traces, trace-correlated standard-library logs, Prometheus metrics, and deterministic loop detection. Content capture is disabled by default. No LLM calls are required.
 
 ## Problem
