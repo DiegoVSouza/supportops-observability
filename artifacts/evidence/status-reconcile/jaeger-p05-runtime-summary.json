@@ -1,0 +1,229 @@
+{
+ "traces": 60,
+ "spans": 287,
+ "operations": [
+  [
+   "fastapi.dependencies",
+   43
+  ],
+  [
+   "fastapi.endpoint",
+   43
+  ],
+  [
+   "api.request",
+   43
+  ],
+  [
+   "fastapi.serialization",
+   32
+  ],
+  [
+   "database.ticket.get",
+   20
+  ],
+  [
+   "mcp.request",
+   12
+  ],
+  [
+   "GET /metrics",
+   10
+  ],
+  [
+   "GET /v1/tickets",
+   7
+  ],
+  [
+   "GET /healthz",
+   5
+  ],
+  [
+   "GET /v1/tasks/{task_id}",
+   5
+  ],
+  [
+   "GET /v1/tickets/{ticket_id}",
+   5
+  ],
+  [
+   "GET /v1/approvals",
+   4
+  ],
+  [
+   "database.ticket.add",
+   4
+  ],
+  [
+   "llm.inference",
+   4
+  ],
+  [
+   "queue.publish",
+   3
+  ],
+  [
+   "worker.run",
+   3
+  ],
+  [
+   "MCP send initialize",
+   3
+  ],
+  [
+   "MCP send tools/list",
+   3
+  ],
+  [
+   "initialize",
+   3
+  ],
+  [
+   "notifications/initialized",
+   3
+  ],
+  [
+   "tools/list",
+   3
+  ],
+  [
+   "GET /v1/demo/runs",
+   2
+  ],
+  [
+   "POST /v1/approvals/{approval_id}/decision",
+   2
+  ],
+  [
+   "database.approval.decide",
+   2
+  ],
+  [
+   "database.approval.request",
+   2
+  ],
+  [
+   "database.refund.simulated_effect",
+   2
+  ],
+  [
+   "POST /v1/tickets",
+   2
+  ],
+  [
+   "POST /v1/tickets/{ticket_id}/refund-approvals",
+   1
+  ],
+  [
+   "POST /v1/tasks",
+   1
+  ],
+  [
+   "queue.enqueue",
+   1
+  ],
+  [
+   "database.knowledge.hybrid_search",
+   1
+  ],
+  [
+   "agent.triage",
+   1
+  ],
+  [
+   "MCP send tools/call lookup_customer",
+   1
+  ],
+  [
+   "MCP send tools/call lookup_invoice",
+   1
+  ],
+  [
+   "MCP send tools/call propose_refund",
+   1
+  ],
+  [
+   "mcp.client.lookup_customer",
+   1
+  ],
+  [
+   "mcp.client.lookup_invoice",
+   1
+  ],
+  [
+   "mcp.client.propose_refund",
+   1
+  ],
+  [
+   "tools/call lookup_customer",
+   1
+  ],
+  [
+   "tools/call lookup_invoice",
+   1
+  ],
+  [
+   "tools/call propose_refund",
+   1
+  ],
+  [
+   "tool.lookup_customer",
+   1
+  ],
+  [
+   "tool.lookup_invoice",
+   1
+  ],
+  [
+   "tool.propose_refund",
+   1
+  ]
+ ],
+ "attribute_keys": [
+  "code.function.name",
+  "error",
+  "gen_ai.operation.name",
+  "gen_ai.tool.name",
+  "http.request.method",
+  "http.response.status_code",
+  "http.route",
+  "jsonrpc.request.id",
+  "llm.mode",
+  "mcp.method.name",
+  "mcp.protocol.version",
+  "network.protocol.version",
+  "otel.scope.name",
+  "otel.scope.version",
+  "otel.status_code",
+  "otel.status_description",
+  "server.address",
+  "server.port",
+  "span.kind",
+  "supportops.llm.cost_usd",
+  "supportops.llm.input_tokens",
+  "supportops.llm.latency_seconds",
+  "supportops.llm.model",
+  "supportops.llm.output_tokens",
+  "supportops.llm.provider",
+  "supportops.llm.success",
+  "supportops.operation.kind",
+  "url.path",
+  "url.query",
+  "url.scheme"
+ ],
+ "suspect_keys": [
+  [
+   "database.ticket.get",
+   "log:exception.message"
+  ],
+  [
+   "llm.inference",
+   "supportops.llm.input_tokens"
+  ],
+  [
+   "llm.inference",
+   "supportops.llm.output_tokens"
+  ]
+ ],
+ "has_triage_trace": true
+}

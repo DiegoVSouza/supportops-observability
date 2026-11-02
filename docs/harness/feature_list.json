@@ -84,6 +84,12 @@
       "description": "OpenTelemetry context manager does not copy exception text into sync or async span status descriptions",
       "status": "PASS_UNIT",
       "evidence": "artifacts/evidence/span-status-privacy-017/focused-tests.txt"
+    },
+    {
+      "id": "fly-trace-content-free",
+      "description": "Traces of a real triage on the Fly stack reach Jaeger with no content attributes",
+      "status": "PASS_FLY_ONE_RUN; PRODUCTION_METRICS_PENDING",
+      "evidence": "artifacts/evidence/status-reconcile/jaeger-p05-runtime-summary.json (60 traces, 287 spans, one full triage trace with agent.triage, four llm.inference, three MCP tool calls; the only attribute keys matching prompt/content/message/token are token counts)"
     }
   ]
 }
