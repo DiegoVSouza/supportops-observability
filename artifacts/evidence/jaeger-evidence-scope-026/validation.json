@@ -1,0 +1,7 @@
+{
+  "command": "parse saved Jaeger summary and feature JSON; assert exception log key",
+  "exit_code": 0,
+  "exception_log_key_present": true,
+  "has_triage_trace": true,
+  "raw_value_review": "PENDING"
+}
