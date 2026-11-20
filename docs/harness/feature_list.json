@@ -88,8 +88,8 @@
     {
       "id": "fly-trace-content-free",
       "description": "Real Fly triage trace read back from Jaeger; value-level log and failure privacy not established",
-      "status": "PASS_FLY_TRACE_READ_ONE_RUN; LOG_CONTENT_PRIVACY_AND_PRODUCTION_METRICS_PENDING",
-      "evidence": "artifacts/evidence/status-reconcile/jaeger-p05-runtime-summary.json: 60 traces, 287 spans, one triage with four inference spans and MCP calls. suspect_keys also includes database.ticket.get / log:exception.message; raw values are unavailable in this summary, so log-content and failure-path privacy remain unaccepted."
+      "status": "PASS_FLY_TRACE_READ; PASS_FLY_LOG_AND_API_FAILURE_PRIVACY_ONE_RUN",
+      "evidence": "artifacts/evidence/status-reconcile/jaeger-p05-runtime-summary.json: 60 traces, 287 spans, one triage with four inference spans and MCP calls. suspect_keys also includes database.ticket.get / log:exception.message; raw values are unavailable in this summary, so log-content and failure-path privacy remain unaccepted. Lab artifacts/evidence/fly-prod-privacy-20261120/SUMMARY.md: 340 Jaeger traces from a 55/55 production probe, 0 content hits, fixed exception messages only; one run, API and MCP paths. Production cost, latency and model-quality metrics are tracked under production-metrics."
     }
   ]
 }
